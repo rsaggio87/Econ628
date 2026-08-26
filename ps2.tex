@@ -1,0 +1,324 @@
+%% LyX 2.3.3 created this file.  For more info, see http://www.lyx.org/.
+%% Do not edit unless you really know what you are doing.
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{geometry}
+\usepackage{longtable}
+\geometry{verbose,tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
+\setlength{\parskip}{\medskipamount}
+\setlength{\parindent}{0pt}
+\usepackage{amsmath}
+\usepackage{url}
+\usepackage{amssymb}
+\usepackage{setspace}
+\onehalfspacing
+\begin{document}
+\begin{center}
+{\Large{}Problem set \#2}{\Large\par}
+\par\end{center}
+
+\begin{center}
+Due on October 28th. Send solution to dealberti.francesco@gmail.com \\
+Answers must be typed. You can work in teams under the constraint: Max(Team Size)=2 \\
+
+\par\end{center}
+
+\bigskip{}
+\begin{enumerate}
+
+  \item \textbf{Weighted Least Squares and OverID}
+Download the CPS extract and the build do-file from canvas.
+
+a) Regress lnwage on
+dummies for the categories of the variables agecat, educcat, and sex. Use main effects only -- i.e. no interactions. 
+
+b) Construct a
+dataset of means and number of observations of the variable lnwage
+within cells defined by combinations of the variables agecat, educcat,
+and sex. To keep things simple don't use the person weights.
+
+c) Run a weighted least squares (WLS) regression of cell wages on dummies for age, education,
+and sex (main effects only) using the number of observations in each
+cell as a weight. How do the coefficients compare to what you got
+in a)?
+
+d) If wages are $iid$ within cell, what is the variance of each cell
+mean?
+
+e) Construct an estimate of the variance of each cell
+mean. Do not assume the data are homoscedastic across cells.
+
+f) Run a WLS regression of cell wages on dummies for age, education,
+and sex (main effects only) using the inverse of your estimate of
+the cell variance as a weight.
+
+g) Compute a over-id specification test (as described in class) from the weighted sum of squared residuals
+of this regression. What do you conclude about the fit of the main effects model?
+
+h) Run a WLS regression of cell wages on main effects for age, education,
+and sex plus all two-way interactions (e.g. age$\times$education,
+education$\times$sex, and age$\times$sex).
+
+i) Compute the over-id specification test. Can you reject this model at the
+5\% level?
+
+j) Compute the predicted cell means from the model you estimated in
+h). Graph the predicted and actual cell means against age by subgroup.
+Look for signs of misspecification.
+
+k) Can you find a simple regression specification that passes the
+over-id test?
+
+\item \textbf{MLE:} Let $Y_{i}$ be a dichotomous $0/1$ random variable and
+$X_{i}$ a $K\times1$ vector of predictor variables. Consider the
+Logit log-likelihood:
+
+\begin{eqnarray*}
+l_{i} & = & Y_{i}\ln\Lambda\left(X_{i}^{\prime}\beta\right)+\left(1-Y_{i}\right)\ln\left[1-\Lambda\left(X_{i}^{\prime}\beta\right)\right]\\
+\Lambda\left(X_{i}^{\prime}\beta\right) & = & \frac{\exp\left(X_{i}^{\prime}\beta\right)}{1+\exp\left(X_{i}^{\prime}\beta\right)}
+\end{eqnarray*}
+
+Denote the maximizer of $E[l_{i}]$ as $\beta_{ML}$ and the maximizer
+of $\frac{1}{N}\sum\limits _{i}l_{i}$ as $\widehat{\beta}_{ML}$.
+
+a) Derive the score of the logit log-likelihood
+
+b) Using iterated expectations provide a discussion of the moment
+conditions identifying $\beta_{ML}$.
+
+c) Define 
+\[
+\beta_{NLLS}=\underset{\beta}{\arg\min}E\left[\left(Y-\Lambda\left(X_{i}^{\prime}\beta\right)\right)^{2}\right]
+\]
+
+Derive the population moment conditions identifying $\beta_{NLLS}$
+
+d) Under what conditions will $\beta_{NLLS}$ and $\beta_{ML}$ coincide?
+
+e) Derive an expression for the asymptotic variance of $\widehat{\beta}_{ML}$
+under the assumption of proper model specification
+
+f) Derive an expression for the asymptotic variance without the assumption
+of proper specification but with the assumption of independence across
+observations.
+
+    \item \textbf{SML:} Consider the following random coefficient binary choice
+model:
+
+\[
+Y_{i}=1\left[b_{i}X_{i}+\varepsilon_{i}>0\right]
+\]
+
+where $\varepsilon_{i}\sim Logistic(0,1)$ and $b_{i}\sim N\left(\mu,\sigma^{2}\right)$.
+
+a) Write an expression for the simulated log likelihood and its derivatives
+with respect to $\mu$ and $\sigma$.
+
+b) Load the dataset ``logit". The first column of the matrix
+``data'' gives observations on $Y_{i}$ and second on $X_{i}$.
+Generate a 2000x1000
+matrix $V$ of draws from a standard  normal distribution. The columns of this matrix index simulation draws while the rows index
+observations.
+
+c) Write a program ``SML" that takes as arguments the data vectors,
+the matrix $V$ of random variates, and the parameters $\left(\mu,\ln\sigma\right)$
+and returns the negative of the simulated log likelihood and its analytic
+gradient (or score). 
+
+
+d) Maximize the simulated likelihood and
+ compute the Hessian (second derivative of the objective function with respect to $\mu$ and $\sigma$) of the SML criterion. Make sure that your maximization routine uses the analytical gradient that your provided in the previous part.
+Report your SML parameter estimates of $\left(\mu,\ln\sigma\right)$.
+Verify that your estimates are not sensitive to starting values.
+
+e) Report standard errors for $\left(\mu,\ln\sigma\right)$ computed
+under the assumption of proper specification.
+
+f) Report robust standard errors based upon the sandwich matrix.
+
+ 
+\item \textbf{Cluster Robust Standard Errors} Generate 100 clusters and 100 observations
+within each cluster from the following DGP: 
+\begin{eqnarray*}
+Y_{ic} & = & \nu_{c}+D_{ic}\eta_{c}+\varepsilon_{ic}\\
+D_{ic} & = & I\left[D_{ic}^{\ast}>.5\right]\\
+D_{ic}^{\ast} & \sim & U\left[0,1\right]\\
+\eta_{c} & \sim & N\left(1,\sigma_{\eta}^{2}\right),\nu_{c}\sim N\left(0,1\right)\\
+\varepsilon_{ic} & \sim & N\left(0,1\right)
+\end{eqnarray*}
+This DGP can be thought of as representing the effect of some randomized
+treated $D_{ic}$ assigned at the individual level with probability
+$\frac{1}{2}$ which has heterogeneous effects $\eta_{c}$ across
+clusters (sites) but an average effect of 1. There is also site heterogeneity
+in untreated outcomes as captured by the $\nu_{c}$.
+
+a) Simulate data from this DGP setting $\sigma_{\eta}^{2}=1$ and fixing the seed simulator to 1234 for replication purposes. Regress
+$Y_{ic}$ on $D_{ic}$. What is the standard error of the
+estimated coefficient on $D_{ic}$ under homoskedasticity? What is the ``robust\textquotedblright{} or White
+standard error? What is the ``clustered\textquotedblright{} standard
+error?
+
+
+b) Repeat step a) \underline{using the same simulated values} that you used in part (a) but this time setting $\sigma_{\eta}^{2}=0$.
+What is the ``robust\textquotedblright{} standard error? What is
+the ``clustered\textquotedblright{} standard error?
+
+c) Comment on the differences between your answers in a) and b).
+
+d) Now perform a Monte
+Carlo exercise generating data from the above DGP 1000 times when
+$\sigma_{\eta}^{2}=1$. Each time perform a t-test of the (true) null
+that the population regression coefficient on $D_{c}$ equals one
+based upon: i) the robust standard error from the microlevel regression,
+ii) the clustered standard error (iii) a block-level bootstrap where the ``block" is going to be given by a given cluster. Use a significance level of 5\% and
+in each simulation record whether the test in question rejects. What
+fraction of the time does each test reject the null that the regression
+coefficient is equal to 1?
+
+e) Now conduct a Monte Carlo where the $\left\{ \eta_{c}\right\} _{c=1}^{100}$
+are fixed in repeated draws as would be the case if we considered
+re-running the experiment on the same 100 sites in our study. What
+fraction of the time does each test reject the true null that the
+regression coefficient equals $\frac{1}{100}\sum_{c=1}^{100}\eta_{c}$? 
+
+f) Compare and contrast your answers from parts d) and e). What does
+this say about the appropriate level of clustering in randomized experiments?
+
+\item (\textbf{Bootstrap OLS)} Download the Stata dataset ``bootstrap.dta''
+from the course website. This dataset has a binary outcome y, a binary
+regressor of interest D, a cluster level control X, and a micro control
+X2. There are 20 clusters. Set the seed to ``123''. Use 1,000 reps
+for all bootstrap procedures.
+
+a) Regress y on D, X, and X2 clustering by the variable ``id''.
+Report the clustered standard error for the coefficient on D.
+
+b) What is the p-value for the null hypothesis that the coefficient
+on D equals zero?
+
+c) Block bootstrap the regression (make sure to use the ``, cluster(id)''
+switch). What is the bootstrap standard error on the coefficient on
+D? Use this standard error to compute a new p-value.
+
+d) Block bootstrap the clustered t-statistic from the regression (make
+sure to use both the cluster() switch and the idcluster() switch).
+Use a symmetric bootstrap percentile t-test to compute a new p-value.
+
+e) Use the Wild bootstrap procedure of Cameron, Gelbach, and Miller
+(2008) to test the null that the coefficient on D equals zero. Use
+Rademacher weights and make sure to ``impose the null'' hypothesis
+on the coefficient on D in the manner they describe. Report the corresponding
+p-value.
+
+f) Discuss the different answers given by parts b)-e) in light of
+econometric theory. Which answer do you think is most accurate?
+
+\item  (\textbf{Bootstrap Probit}) 
+
+a) Using bootstrap.dta again, fit a Probit of y on D, X, and X2. Report
+the clustered standard error for the coefficient on D. What is the
+p-value for the hypothesis that the coefficient on D equals zero?
+
+b) Block bootstrap the clustered t-statistic from the Probit. Use
+a symmetric bootstrap percentile-t test to compute a new p-value.
+
+c) Conduct a cluster robust score test of the null hypothesis that
+the coefficient on D equals zero. Report the p-value.
+
+d) Now block bootstrap the clustered t-statistic.
+Use a symmetric bootstrap percentile t-test to compute a new p-value.
+
+e) Which of these p-values do you think is most accurate? Discuss
+the tradeoff involved in choosing between alternative bootstrap methods.
+
+\item (\textbf{Reweighting}) Go to David Autor's webpage and download
+the cleaned 1979 and 1997 MORG files from:
+
+https://economics.mit.edu/people/faculty/david-h-autor/data-archive
+
+the paper is Trends in U.S. Wage Inequality: Revising the Revisionists.
+
+
+a) Read through the cleaning programs associated with the MORG files.
+Describe the important decisions being made.
+
+b) Make a new variable ``lnhr\_wage'' which is the log of the ``hr\_wage''
+variable. Restrict attention to the cleaned sample with ``hr\_wage\_sample==1''.
+Use the ``kdensity'' command to plot kernel density estimates of
+lnhr\_wage using the variable wgt\_hrs (which is the product of the
+sample weights and the number of hours worked) as an ``aweight''.
+Make density plots for both years on the same grid.
+
+c) How has the wage distribution changed over time?
+
+d) A number of demographic shifts occured between 1979 and 1997 that
+might alter the aggregate wage distribution even if the distribution
+for each demographic subgroup remained unaltered. Repeat the exercise
+in b) separately for black men age 25-50 and for white women age 25-50.
+How are the patterns different?
+
+e) One way of adjusting the distribution for compositional differences
+is to use propensity score reweighting.
+
+Append the 1979 and 1997 files together and create a dummy variable
+equal to one for observations in the 1997 sample. Estimate a logit
+of the 1997 dummy on a dummy for female, a black dummy, an ``other
+race'' dummy, and a quadratic polynomial in age. Use the ``aweights''
+when estimating the logit.
+
+f) Use the propensity score implied by this logit to reweight the
+1997 wage distribution so that it has the 1979 demographic distribution.
+Make a kernel density plot of the actual 1979 and 1997 wage distributions
+against the ``counterfactual'' reweighted 1997 distribution.
+
+g) Use the propensity score to reweight the 1979 wage distribution
+so that it has the 1997 demographic distribution (if you get stuck
+read the Dinardo, Fortin, and Lemieux paper). Make a kernel density
+plot of the actual 1979 and 1997 wage distributions against the ``counterfactual''
+reweighted 1979 distribution. Be sure to use the product of the wgt\_hrs
+variable and the propensity score based weights when computing the
+kernel density.
+
+h) Based upon your analysis what would you say was the effect of the
+demographic changes between 1979 and 1997 on the evolution of the
+aggregate wage distribution?
+
+i) Examine the suitability of your propensity score specification
+by comparing the reweighted mean, standard deviation, and the 10th,
+25th, 50th, 75th, and 90th percentiles of age in the 1997 sample to
+the equivalent moments in the 1979 sample.
+
+j) Do the same exercise restricting attention to blacks.
+
+k) Try experimenting with different specifications for age in the
+propensity score logit and checking how the results of i) and j) change.
+
+l) What do you conclude about the suitability of the propensity score
+specification?
+
+\item (\textbf{Duflo, Hanna and Ryan (2012)}) This question asks you to solve and estimate a simplified version of the model from Duflo, Hanna and Ryan (2012). Consider a teacher deciding between work and leisure in two time periods, \(t \in \{0,1\}\). Let \(L_t \in \{0,1\}\) indicate whether the teacher takes leisure in period \(t\). The teacher's flow utility in period \(t\) is given by
+
+\[
+U_t = \beta C_t + L_t \cdot (\mu + \varepsilon_t),
+\]
+
+where \(C_t\) is consumption in period \(t\). All income and consumption is assumed to happen in period 2, so \(C_1 = 0\). In period 2, the teacher receives a salary payment of 5, and an extra bonus of 5 if she worked in both periods (that is, if \(L_1 = L_2 = 0\)). Assume that the teacher has a discount factor \(\delta \in [0,1]\).
+
+\begin{enumerate}
+    \item What are the state variables in period 2? Write an expression for the teacher's value function in period 2.
+    
+    \item Suppose that \(\varepsilon_t \sim \mathcal{N}(0,1)\). Compute the teacher's expected second-period payoff. Use this to write an expression for the teacher’s value function in period 1.
+    
+    \item Suppose you have a sample of teachers' choices \((L_{1i}, L_{2i})\) for \(i \in \{1, \dots, N\}\). Write an expression for the likelihood of teacher \(i\)'s choice sequence, \(\Pr[(L_1 = L_{1i}) \cap (L_2 = L_{2i})]\), as a function of the parameters \(\beta\), \(\mu\) and \(\delta\). Use this to write an expression for the sample log-likelihood.
+    
+    \item Download the data set \texttt{``dhr\_example.csv"} from the course website. This data set includes 800 observations on teachers' choice sequences \((L_{1i}, L_{2i})\). Import the data into a statistical software package. Estimate the parameters \((\beta, \mu, \delta)\) by maximum likelihood, and report your parameter estimates.
+    
+    \item Estimate an alternative version of the model where you assume that teachers are not forward-looking. Use your results from the two models to test the null hypothesis that teachers are not forward-looking. Discuss intuitively the features of the data that allow you to determine whether teachers are forward-looking.
+
+    \item Estimate an alternative version of the model where $\mu\sim N(\mu_{1};\sigma_{1})$. How does this version of the model differs from the previous one? Write down the associated likelihood and provide estimate of $(\beta,\delta, \mu_{1},\sigma_{1},$) along with their standard errors using SML. Make sure to explain how you derived the standard errors for your coefficients. 
+
+\end{enumerate}
+
+\end{enumerate}
+
+\end{document}

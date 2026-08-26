@@ -1,0 +1,221 @@
+%% LyX 2.3.3 created this file.  For more info, see http://www.lyx.org/.
+%% Do not edit unless you really know what you are doing.
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{geometry}
+\usepackage{longtable}
+\geometry{verbose,tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
+\setlength{\parskip}{\medskipamount}
+\setlength{\parindent}{0pt}
+\usepackage{amsmath}
+\usepackage{url}
+\usepackage{amssymb}
+\usepackage{setspace}
+\onehalfspacing
+\begin{document}
+\begin{center}
+{\Large{}Problem set \#4}{\Large\par}
+\par\end{center}
+
+\begin{center}
+Due on December 9th by 12.30pm. Send solution to dealberti.francesco@gmail.com  \\
+Answers must be typed. You can work in teams under the constraint: Max(Team Size)=2 \\
+
+\par\end{center}
+\begin{enumerate}
+\item (\textbf{Control Function}) 
+Suppose you are interested in the nonlinear triangular system:
+\begin{eqnarray*}
+Y_{i} & = & \beta_{0}+\beta_{1}X_{i}+\beta_{2}X_{i}^{2}+\varepsilon_{i}\\
+X_{i} & = & \gamma_{0}+\gamma_{1}Z_{i}+v_{i}\\
+ &  & \left(\varepsilon_{i},v_{i}\right)\overset{iid}{\sim}N\left(0,\begin{array}{cc}
+\sigma_{\varepsilon}^{2} & \sigma_{\varepsilon v}\\
+\sigma_{\varepsilon v} & \sigma_{v}^{2}
+\end{array}\right)
+\end{eqnarray*}
+The parameters of interest are $\beta=\left[\beta_{0},\beta_{1},\beta_{2}\right]$.
+One method of estimating these parameters is via 2SLS using $Z_{i}$
+and $Z_{i}^{2}$ as instruments for $X_{i}$ and $X_{i}^{2}$. A second
+approach uses the observation that, given the structure of the above
+model, we can write
+\[
+E\left[Y_{i}|X_{i},X_{i}^{2},v_{i}\right]=\beta_{0}+\beta_{1}X_{i}+\beta_{2}X_{i}^{2}+\rho\frac{\sigma_{\varepsilon}}{\sigma_{v}}v_{i}
+\]
+where $\rho\equiv\frac{\sigma_{\varepsilon v}}{\sigma_{\varepsilon}\sigma_{v}}$.
+The two step control function estimator constructs the error $\widehat{v}_{i}$
+as a first stage residual from the regression of $X_{i}$ on $Z_{i}$
+and then regresses $Y_{i}$ on $X_{i},X_{i}^{2}$, and the first stage
+residual $\widehat{v}_{i}$ to get estimates of $\beta$ and $\rho\frac{\sigma_{\varepsilon}}{\sigma_{v}}$.
+
+a) Write the moment conditions defining the 2SLS estimator.
+
+b) Write the moment conditions defining the Control Function estimator
+(Hint: there are six of them).
+
+c) Does one estimator rely on stronger conditions than the other?
+
+d) Which estimator do you think would work better when the instrument
+$Z$ is not very strong?
+
+e) Write a Stata program named 'getestimates' that, for a given value
+of the parameter $\gamma_{1}$, simulates 1,000 observations from
+the above model using the following assumptions regarding the DGP:
+\begin{eqnarray*}
+\left(Z_{i},\varepsilon_{i},v_{i}\right) & \sim & N\left(0,\begin{array}{ccc}
+1 & 0 & 0\\
+0 & 1 & .2\\
+0 & .2 & 1
+\end{array}\right)\\
+\gamma_{0} & = & \beta_{0}=0\\
+\beta_{1} & = & \beta_{2}=1
+\end{eqnarray*}
+After simulating the data, the getestimates program should report
+2SLS and Control Function estimates of $\left(\beta_{1},\beta_{2}\right)$
+which we will refer to as $\left(\beta_{1}^{2SLS},\beta_{2}^{2SLS},\beta_{1}^{CF},\beta_{2}^{CF}\right)$
+using the 'return scalar' command. Set the random number generator
+seed to 12345 and use the 'simulate' command to simulate your getestimates
+program 1,000 times for parameter values $\gamma_{1}\in\left\{ .3,.2,.1\right\} $.
+Use the 'tabstat' command to report the mean, median, standard deviation,
+and interquartile range across simulations of $\left(\beta_{1}^{2SLS},\beta_{2}^{2SLS},\beta_{1}^{CF},\beta_{2}^{CF}\right)$
+for each value of $\gamma_{1}$.
+
+\ i) Which approach appears to be more efficient? Why?
+
+\ ii) What happens to the 2SLS estimator as the parameter $\gamma_{1}$
+shrinks? How about the CF estimator?
+
+\ iii) Suppose you want to test the null hypothesis that $\rho\frac{\sigma_{\varepsilon}}{\sigma_{v}}=0$
+(no endogeneity). Describe a technique for accounting for the fact
+that the control function $\widehat{v}_{i}$ was generated when conducting
+hypothesis tests in Stata.
+
+\item (\textbf{IV with Heterogeneous Effects) }There is an
+outcome variable $Y_{i}$, a binary treatment $T_{i}$, a binary instrument
+$Z_{i}$, and a covariate $X_{i}$ taking discrete values $1....K$.
+$Y_{i}(1)$ and $Y_{i}(0)$ denote potential outcomes indexed against
+treatment, while $T_{i}(1)$ and $T_{i}(0)$ denote potential treatment
+statuses indexed against $Z_{i}$. Assume
+
+\begin{center}
+$(Y_{i}(1),Y_{i}(0),T_{i}(1),T_{i}(0))\bot Z_{i} \vert X_{i}$
+\par\end{center}
+
+\begin{center}
+$Pr\left[T_{i}(1)\geq T_{i}(0)\right]=1$,
+\par\end{center}
+
+\begin{center}
+$Pr\left[T_{i}(1)>T_{i}(0)|X_{i}=x\right]>0\ \forall x\in\{1,...,K\}$.
+\par\end{center}
+
+a) Let $D_{ik}=1\left\{ X_{i}=k\right\} $, and $D_{i}=\left(D_{i1},...,D_{iK}\right)^{\prime}$.
+Consider the two-stage least squares system
+\begin{center}
+$T_{i}=D_{i}^{\prime}\lambda+\pi Z_{i}+\eta_{i}$,
+\par\end{center}
+
+\begin{center}
+$Y_{i}=D_{i}^{\prime}\gamma+\rho\hat{T}_{i}+e_{i}$.
+\par\end{center}
+
+\noindent Show that the 2SLS coefficient $\rho$ is
+
+\begin{center}
+$\rho={\displaystyle \sum_{k=1}^{K}\omega_{k}}\cdot E\left[Y_{i}(1)-Y_{i}(0)|T_{i}(1)>T_{i}(0),X_{i}=k\right]$,
+\par\end{center}
+
+\noindent where $\omega_{k}\geq0\ \forall k$ and $\sum_{k}\omega_{k}=1$.
+What is the interpretation of this expression? What are the weights
+$\omega_{k}$? How do these compare to the weights from a model that
+includes the interaction of $D_{i}$ and $Z_{i}$ in the first stage? 
+
+b) Prove that
+\begin{center}
+$\dfrac{E\left[X_{i}T_{i}|Z_{i}=1\right]-E\left[X_{i}T_{i}|Z_{i}=0\right]}{E\left[T_{i}|Z_{i}=1\right]-E\left[T_{i}|Z_{i}=0\right]}=E\left[X_{i}|T_{i}(1)>T_{i}(0)\right]$.
+\par\end{center}
+
+\noindent What does this equation mean? Why is it useful?
+
+c) Suppose that the monotonicity condition does not hold. Abstracting from covariates, derive and expression for the Wald estimand in terms of the complier and defier treatment effects. What are the conditions under which the Wald estimand is still a valid treatment effect estimate?
+
+d) Two-sample 2SLS is a 2SLS estimator that we can use when there is data on $T$ and $Z$ in one sample, and $Y$ and $Z$ in another. We estimate the first stage in the first sample and the reduced form in the second sample, then divide. Formally, we estimate 
+
+\begin{center}
+$T_{i} = \alpha_0 + \alpha_1 Z_{i}+\varepsilon_{i}$,
+\par\end{center}
+
+\begin{center}
+$Y_{i} = \theta_0 + \theta_1 Z_{i}+\epsilon_{i}$,
+\par\end{center}
+
+and estimate the two-sample 2SLS as
+
+\begin{eqnarray*}
+    \beta^{TS2SLS} \equiv \frac{\widehat{\theta}}{\widehat{\alpha}}
+\end{eqnarray*}
+
+Usually best practise is to estimate the standard errors via the bootstrap, which can accomodate potential correlation between the samples. However, sometimes this is infeasible, and so an alternative is to use the delta method while assuming that the estimates are uncorrelated. Do this (note: take a linear approximation of the $\widehat{\beta}^{TS2SLS}$ around the population value, then take the variance of that).
+
+
+\item  (\textbf{IV and CF}) Consider the following triangular
+model of treatment effects:
+
+\[
+Y_{i}\left(1\right)=\mu_{1}+\rho_{1}V_{i}+\varepsilon_{i1}
+\]
+
+\[
+Y_{i}\left(0\right)=\mu_{0}+\rho_{0}V_{i}+\varepsilon_{i0}
+\]
+
+\[
+D_{i}=1\left\{ \gamma Z_{i}>V_{i}\right\} 
+\]
+
+\[
+Y_{i}=DY_{i}\left(1\right)+\left(1-D\right)Y_{i}\left(0\right)
+\]
+where $\theta\equiv\left(\mu_{1},\mu_{0},\rho_{0},\rho_{1},\gamma\right)$
+are constants and $Z_{i}$ is a binary random variable taking values
+in $\left\{ 0,1\right\} $. Assume that
+\[
+V_{i}|Z_{i},\varepsilon_{i0},\varepsilon_{i1}\sim Uniform\left(0,1\right)
+\]
+
+\[
+E\left[\varepsilon_{id}|v_{i},Z_{i}\right]=0\mbox{ for \ensuremath{d\in\left\{ 0,1\right\} }}
+\]
+
+\noindent Answer the following questions assuming you have an $iid$
+random sample of size $N$ comprised of the observations $\left\{ Y_{i},D_{i},Z_{i}\right\} _{i=1}^{N}$
+
+a) Derive an expression for $P\left(D_{i}=1|Z_{i}\right)$.
+
+b) Derive an expression for $E\left[V_{i}|D_{i}=1,Z_{i}\right]$.
+
+c) Use your answer above to derive an expression for $E\left[Y_{i}|D_{i}=d,Z_{i}\right]$
+for $d\in\left\{ 0,1\right\} $.
+
+d) Use your answers above to propose a 2-step ``control function''
+estimator of $\left(\rho_{0},\mu_{0}\right)$ (hint: note that compliance
+is '1-sided' here which prevents you from fitting an OLS regression
+of $Y$ on $\left(1,Z\right)$ in the $D=1$ sample).
+
+e) Derive an expression for the local average treatment effect (LATE)
+in terms of the elements of $\theta$.
+
+f) Derive an expression for $E\left[Y_{i}|D_{i}=1\right]$ in terms
+of the elements of $\theta$.
+
+g) Propose an estimator of LATE that uses the control function estimates
+of $\left(\rho_{0},\mu_{0}\right)$ from part (d).
+
+h) How does this estimator differ from IV?
+
+i) Discuss why the average treatment effect (ATE) is not identified
+in this setting.
+
+\end{enumerate}
+
+
+\end{document}

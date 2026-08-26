@@ -1,0 +1,122 @@
+%% LyX 2.3.3 created this file.  For more info, see http://www.lyx.org/.
+%% Do not edit unless you really know what you are doing.
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{geometry}
+\usepackage{longtable}
+\geometry{verbose,tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
+\setlength{\parskip}{\medskipamount}
+\setlength{\parindent}{0pt}
+\usepackage{amsmath}
+\usepackage{url}
+\usepackage{amssymb}
+\usepackage{setspace}
+\onehalfspacing
+\begin{document}
+\begin{center}
+{\Large{}Problem set \#3}{\Large\par}
+\par\end{center}
+
+\begin{center}
+Due on November 25th by 12.30pm. Send solution to dealberti.francesco@gmail.com \\
+Answers must be typed. You can work in teams under the constraint: Max(Team Size)=2 \\
+
+\par\end{center}
+
+\bigskip{}
+\begin{enumerate}
+\item (\textbf{Reweighting}) Go to David Autor's webpage and download
+the cleaned 1979 and 1997 MORG files from:
+
+https://economics.mit.edu/people/faculty/david-h-autor/data-archive
+
+the paper is Trends in U.S. Wage Inequality: Revising the Revisionists.
+
+
+a) Read through the cleaning programs associated with the MORG files.
+Describe the important decisions being made.
+
+b) Make a new variable ``lnhr\_wage'' which is the log of the ``hr\_wage''
+variable. Restrict attention to the cleaned sample with ``hr\_wage\_sample==1''.
+Use the ``kdensity'' command to plot kernel density estimates of
+lnhr\_wage using the variable wgt\_hrs (which is the product of the
+sample weights and the number of hours worked) as an ``aweight''.
+Make density plots for both years on the same grid.
+
+c) How has the wage distribution changed over time?
+
+d) A number of demographic shifts occured between 1979 and 1997 that
+might alter the aggregate wage distribution even if the distribution
+for each demographic subgroup remained unaltered. Repeat the exercise
+in b) separately for black men age 25-50 and for white women age 25-50.
+How are the patterns different?
+
+e) One way of adjusting the distribution for compositional differences
+is to use propensity score reweighting.
+
+Append the 1979 and 1997 files together and create a dummy variable
+equal to one for observations in the 1997 sample. Estimate a logit
+of the 1997 dummy on a dummy for female, a black dummy, an ``other
+race'' dummy, and a quadratic polynomial in age. Use the ``aweights''
+when estimating the logit.
+
+f) Use the propensity score implied by this logit to reweight the
+1997 wage distribution so that it has the 1979 demographic distribution.
+Make a kernel density plot of the actual 1979 and 1997 wage distributions
+against the ``counterfactual'' reweighted 1997 distribution.
+
+g) Use the propensity score to reweight the 1979 wage distribution
+so that it has the 1997 demographic distribution (if you get stuck
+read the Dinardo, Fortin, and Lemieux paper). Make a kernel density
+plot of the actual 1979 and 1997 wage distributions against the ``counterfactual''
+reweighted 1979 distribution. Be sure to use the product of the wgt\_hrs
+variable and the propensity score based weights when computing the
+kernel density.
+
+h) Based upon your analysis what would you say was the effect of the
+demographic changes between 1979 and 1997 on the evolution of the
+aggregate wage distribution?
+
+i) Examine the suitability of your propensity score specification
+by comparing the reweighted mean, standard deviation, and the 10th,
+25th, 50th, 75th, and 90th percentiles of age in the 1997 sample to
+the equivalent moments in the 1979 sample.
+
+j) Do the same exercise restricting attention to blacks.
+
+k) Try experimenting with different specifications for age in the
+propensity score logit and checking how the results of i) and j) change.
+
+l) What do you conclude about the suitability of the propensity score
+specification?
+
+\item (\textbf{Duflo, Hanna and Ryan (2012)}) This question asks you to solve and estimate a simplified version of the model from Duflo, Hanna and Ryan (2012). Consider a teacher deciding between work and leisure in two time periods, \(t \in \{0,1\}\). Let \(L_t \in \{0,1\}\) indicate whether the teacher takes leisure in period \(t\). The teacher's flow utility in period \(t\) is given by
+
+\[
+U_t = \beta C_t + L_t \cdot (\mu + \varepsilon_t),
+\]
+
+where \(C_t\) is consumption in period \(t\). All income and consumption is assumed to happen in period 2, so \(C_1 = 0\). In period 2, the teacher receives a salary payment of 5, and an extra bonus of 5 if she worked in both periods (that is, if \(L_1 = L_2 = 0\)). Assume that the teacher has a discount factor \(\delta \in [0,1]\).
+
+\begin{enumerate}
+    \item What are the state variables in period 2? Write an expression for the teacher's value function in period 2.
+    
+    \item Suppose that \(\varepsilon_t \sim \mathcal{N}(0,1)\). Compute the teacher's expected second-period payoff. Use this to write an expression for the teacher’s value function in period 1.
+    
+    \item Suppose you have a sample of teachers' choices \((L_{1i}, L_{2i})\) for \(i \in \{1, \dots, N\}\). Write an expression for the likelihood of teacher \(i\)'s choice sequence, \(\Pr[(L_1 = L_{1i}) \cap (L_2 = L_{2i})]\), as a function of the parameters \(\beta\), \(\mu\) and \(\delta\). Use this to write an expression for the sample log-likelihood.
+    
+    \item Download the data set \texttt{``dhr\_example.csv"} from the course website. This data set includes 800 observations on teachers' choice sequences \((L_{1i}, L_{2i})\). Import the data into a statistical software package. Estimate the parameters \((\beta, \mu, \delta)\) by maximum likelihood, and report your parameter estimates.
+    
+    \item Estimate an alternative version of the model where you assume that teachers are not forward-looking. Use your results from the two models to test the null hypothesis that teachers are not forward-looking. Discuss intuitively the features of the data that allow you to determine whether teachers are forward-looking.
+
+    \item Estimate an alternative version of the model where you assume that teachers are not forward-looking. Use your results from the two models to test the null hypothesis that teachers are not forward-looking. Discuss intuitively the features of the data that allow you to determine whether teachers are forward-looking.
+
+    \item Estimate an alternative version of the model where $\mu\sim N(\mu_{1};\sigma_{1})$. How does this version of the model differs from the previous one? Write down the associated likelihood and provide estimate of $(\beta,\delta, \mu_{1},\sigma_{1},$) along with their standard errors using SML. Make sure to explain how you derived the standard errors for your coefficients. 
+
+
+    
+    
+\end{enumerate}
+\end{enumerate}
+
+\end{document}

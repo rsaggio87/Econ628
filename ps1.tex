@@ -1,0 +1,182 @@
+%% LyX 2.3.3 created this file.  For more info, see http://www.lyx.org/.
+%% Do not edit unless you really know what you are doing.
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{geometry}
+\usepackage{longtable}
+\geometry{verbose,tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
+\setlength{\parskip}{\medskipamount}
+\setlength{\parindent}{0pt}
+\usepackage{amsmath}
+\usepackage{url}
+\usepackage{amssymb}
+\usepackage{setspace}
+\onehalfspacing
+\begin{document}
+\begin{center}
+{\Large{}Problem set \#1}{\Large\par}
+\par\end{center}
+
+\begin{center}
+Due on September 23rd by 12.30pm. Send solution to dealberti.francesco@gmail.com \\
+Answers must be typed in Latex. You can work in teams under the constraint: Max(Team Size)=2 \\
+
+\par\end{center}
+
+\bigskip{}
+\begin{enumerate}
+\item \textbf{Identification} Consider
+a population of agents with the following utility function:
+\begin{eqnarray*}
+u_{i}\left(h_{i}\right) & = & e_{i}-\frac{d_{i}}{1+a}h_{i}^{1+a}\\
+ & = & w_{i}h_{i}-\frac{d_{i}}{1+a}h_{i}^{1+a}
+\end{eqnarray*}
+where $e_{i}=w_{i}h_{i}$ is weekly earnings, $w_{i}$ is the wage,
+$h_{i}$ is hours worked per week, $a\in\left(0,\infty\right)$ is
+a parameter governing curvature in the utility function, and $d_{i}$
+is a random variable representing heterogeneity in tastes for work.
+
+Suppose $\log(d_{i})\overset{iid}{\sim}N\left(\mu,\sigma\right)$
+and that the choice set for hours per week is $\left\{ 20,40\right\} $.
+Agents are assumed to maximize utility. We observe hours worked and
+earnings, but not $d_{i}$.
+
+a) Derive the payoffs $\left(u_{20},u_{40}\right)$ to working 20
+and 40 hours per week respectively.
+
+b) Derive the probability of working 40 hours per week given wages.
+
+c) Derive an individual's contribution to the likelihood of the observed
+data
+
+d) To which estimator does this likelihood correspond?
+
+e) Which parameters (or combinations of parameters) are identified?
+
+Suppose now that the choice set for hours is $\left\{ 10,20,40\right\} $,
+
+f) Derive an expression for the probability of working 20 hours per
+week and the probability of working 40 hours per week.
+
+g) Which parameters (or combinations of parameters) are identified?
+
+
+
+  \item  \textbf{Iterated Projections.} Prove the law of iterated projections
+
+\[
+E^{\ast}\left[Y_{i}|X_{i}\right]=E^{\ast}\left[E^{\ast}\left[Y_{i}|X_{i},Z_{i}\right]|X_{i}\right]
+\]
+
+   \item  \textbf{FWL theorem}. Suppose the population projection $E^{\ast}\left[Y_{i}|X_{i},Z_{i}\right]=X_{i}^{\prime}\beta+Z_{i}^{\prime}\gamma$.
+Let $\widetilde{Z}_{i}=Z_{i}-E^{\ast}\left[Z_{i}|X_{i}\right]$ and
+$\widetilde{Y}_{i}=Y_{i}-E^{\ast}\left[Y_{i}|X_{i}\right]$:
+
+a) Show that $\gamma=E\left[\widetilde{Z}_{i}\widetilde{Z}_{i}^{\prime}\right]^{-1}E\left[\widetilde{Z}_{i}\widetilde{Y}_{i}\right]$
+
+b) Show that $Y_{i}-E^{\ast}\left[Y_{i}|X_{i},Z_{i}\right]=(Y_{i}-E^{\ast}\left[Y_{i}|X_{i}\right])-\left(Z_{i}-E^{\ast}\left[Z_{i}|X_{i}\right]\right)'\gamma$
+ 
+\item \textbf{Saturated Models}
+
+a) Download the dataset ``veneto.csv". This file contains the actual log daily wages of workers in the region of Veneto, Italy (\url{https://en.wikipedia.org/wiki/Veneto}) in the year 2001. The dataset contains also information on gender and birth year. 
+
+b) Create a dummy variable ``female" taking value 1 if the worker is female. Generate also a variable ``age" recording the age of the worker in 2001.	
+
+c) Plot the wages of individuals across the age distribution defined between 19 and 60 years old. 
+
+d) Now obtain this age profile using a regression framework. Explain your steps carefully. In particular, explain how the regression coefficients maps to the raw data profiles that you showed in point (c.
+
+e) Plot the wages of male individuals across the age distribution. Do the same for females.
+
+f) Now obtain both of these age profiles using one simple regression. Explain your steps carefully. In particular, explain how the regression coefficients maps to the raw data profiles that you showed in point (e.
+
+g) You are now interested to test whether these age profiles can be captured by a simple regression model of the form:
+
+ \[
+y_{i} = \beta_{0}+\beta_{1}female_{i}+\beta_{2}Age_{i}+\beta_{3}Age_{i}^{2}+r_{i}
+\]
+
+Estimate the model above and carefully interpret each coefficient. 
+
+h) Present a ``graphical test" of whether the gender-specific age profiles implied by the parametric model in part(g) are close to the raw moments that you plotted in part (e). How many overidentifying restrictions are present?
+
+\item \textbf{Response Function and Propensity Score}
+
+Let $D \in \{0,1\}$ be a binary treatment indicator, $X$ a vector of pre-treatment respondent attributes and $Y$ an observed outcome of interest. Consider the following potential outcome function: 
+\[
+    Y(d) = \alpha + \beta D + U,
+\]
+so that 
+\[
+    Y(1)-Y(0) = \beta
+\]
+You further assume that $U \perp D|X$.
+
+a) Consider the alternative response function
+\[
+    Y(d) = \alpha + \beta D + U(d),
+\]
+with $(U(0),U(1)) \perp D|X$. In what sense is this model less restrictive? [3 to 5 sentences].
+
+b) Let $e(x)=\Pr(D=1|X=x)$ denote the conditional probability of treatment given $X=x$. Using the original (restrictive) model show that: 
+\[
+    E[Y(D - e(X))] = \beta E[D(D-e(X))].
+\]
+
+c) Consider the estimator 
+\[
+    \Hat{\beta} = \frac{\frac{1}{N} \sum_{i=1}^{N} Y_{i}(D_{i}-\Hat{e}(X_{i}))}{\frac{1}{N} \sum_{i=1}^{N} D_{i}(D_{i}-\Hat{e}(X_{i}))}
+\]
+with $\Hat{e}(X_{i})$ an estimate of $e(X_{i})$. Sketch an argument for the consistency of this estimate for $\beta$. Can you provide an intuitive explanation for it? 
+
+d) Assume that 
+\[
+    E[U|X] = X'\gamma
+\]
+Consider the linear regression of $Y$ onto a constant, $D$ and $X$. Show that the coefficient on $D$ coincides with $\beta$. Do you feel this is more/less restrictive than the model $Y(d) = \alpha + \beta D + U(d)$? Please explain your reasoning.
+
+
+\item{\textbf{On Binscatter}} Download the data ``binscatter.dta". The data are obtained from the American Community Survey (ACS) using the 5-year survey estimates beginning in 2013 and ending in 2017 (available from the Census Bureau website). Information is at the zip code tabulation area level for the United States.  
+
+a) Provide a scatter plot where the outcome variable is the share of uninsured and the regressor is income per-capita. 
+
+b) Replicate Figure 1, Panel (b) of Cattaneo, Crump, Farrell and Feng (2022). 
+
+c) Show now the corresponding binscatter using vingtiles. Do the same using centiles.  
+
+d) Replicate Figure 1, Panel (d) of Cattaneo, Crump, Farrell and Feng (2022). 
+
+e) Replicate Figure 1, Panel (e) of Cattaneo, Crump, Farrell and Feng (2022). 
+
+f) Replicate Figure 1, Panel (f) of Cattaneo, Crump, Farrell and Feng (2022).
+
+g) (Extra!) You are interested in the relationship between uninsurance rates and income after controlling for the percentage of residents with a high school degree, the percentage of residents with a bachelor's degree, the median age of residents, and the local unemployment rate. Display a binscatter plot that uses the residualization/FWL approach discussed in class and confront it with the methodology proposed by Cattaneo et al. (2022)  (i.e. replicate Figure 2(a) and 2(b) of Cattaneo et al. (2022)).   
+
+
+\item{\textbf{Contamination Bias in STAR Experiment}} Here we will replicate and extend the results from the so-called STAR experiment studied by Krueger (1999). Begin by downloading the STAR student-level data, available here: \url{https://www.openicpsr.org/openicpsr/project/207983/version/V1/view?path=/openicpsr/207983/fcr:versions/V1/original_data/STAR&type=folder}  
+
+a) Restrict the dataset to students with a non-missing \emph{class type} (\texttt{classroomtypekindergarten}). For each test score in kindergarten in reading, math and word skills, compute percentile ranks when excluding students in small classes from the distribution (i.e. those with \texttt{classroomtypekindergarten == 1}). 
+
+b) Define \texttt{y} as the average of the percentile rank in \texttt{read}, \texttt{math}, and \texttt{word}, multiplied by 100. If all three components are missing, set \texttt{y} to missing.
+
+c) In the STAR experiment, students are randomly assigned to smaller classes. However, Kruger (1999) argues that the fraction of
+students assigned to small classes varies by school due to the varying number of total students in each school. Verify the accuracy of this statement in the data. Make sure to use the school identifier present in the data for kindergarten.
+
+d) Since the probability of being assigned to a small class size varies across schools, Kruger (1999) estimates the impact of this treatment by regressing \texttt{y} on an indicator for being in a small class (\texttt{classroomtypekindergarten == 1}) with school fixed effects. Comment on the logic behind this choice. Does this specification identifies a well defined ATE?
+
+e) Estimate the regression in part d) (using robust standard errors) and interpret the coefficient that you obtain.
+
+f) Suppose now instead you fit this regression separately for each of the 79 schools available in your data. What each school-specific regression identifies? Suppose that in a second step you then average each of these 79 schools school-specific regression coefficients weighting each of them by the number of total students present in a school. What is this weighted average of regression coefficients identifying? How does this weighting scheme compare to the weighting scheme implied in point e? Which one you like most and why? Is the final number you obtain from this procedure very different from the regression coefficient obtained in part d?
+
+g) It turns out that actually Project STAR randomized students to three mutually exclusive conditions within schools: a control group with a regular class (\texttt{classroomtypekindergarten == 2}), a treatment that reduced class size (\texttt{classroomtypekindergarten == 1}), and a treatment that introduced full-time teaching aides (\texttt{classroomtypekindergarten == 3}). For this reason, Krueger (1999) fits a regression of test scores on the reduced class size and aide treatment arms, while also controlling for school fixed effects. Is the coefficient on the small class size dummy now identifying a well defined ATE? Explain your reasoning.
+
+h) Run a regression of an indicator of reduced class-size on an indicator for full-time teaching aide and school fixed effects. Is this regression saturated? How does the fit from this regression compares to its fully saturated version? Based on this, do you expect the regression in part g to have considerable ``contamination bias" as discussed in class?
+
+i) Now repeat the steps of part f but applied to this regression with two (instead of 1) treatment arms introduced in part g. Is that resulting average of school-specific regression coefficients identifying a well-defined ATE? Why?
+
+j) Estimate one of the three approaches introduced by Goldsmith-Pinkham, Hull, and Kolesar in their AER paper to control for contamination bias. Report a table with the results from the regression in part g, part i and part j and comment on the results.
+
+
+\end{enumerate}
+
+\end{document}

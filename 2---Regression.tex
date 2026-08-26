@@ -1,0 +1,1110 @@
+\documentclass[notes=show]{beamer}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\AtBeginSubsection[
+  {\frame<beamer>{\frametitle{Outline}   
+    \tableofcontents[currentsection,currentsubsection]}}%
+]%
+{
+  \frame<beamer>{ 
+    \frametitle{Outline}   
+    \tableofcontents[currentsection,currentsubsection]}
+}
+\usepackage{ulem}
+\usepackage{pdflscape}
+\setbeamertemplate{caption}{\insertcaption}
+\usepackage{color,xcolor,ucs}
+\usepackage{beamerthemesplit}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{adjustbox}
+\usepackage{pdfpages} 
+\definecolor{mintgreen}{rgb}{0.6, 1.0, 0.6}
+\makeatletter
+\@addtoreset{subfigure}{framenumber}% subfigure counter resets every frame
+\makeatother
+\newcommand*{\Scale}[2][4]{\scalebox{#1}{$#2$}}%
+\newcommand*{\Resize}[2]{\resizebox{#1}{!}{$#2$}}%
+\usepackage{amsfonts}
+\usepackage{booktabs}
+\usepackage{color,soul}
+\usepackage{pdfpages}
+\setboolean{@twoside}{false}
+\usepackage{amsmath}
+\usepackage{pdflscape} 
+\usepackage{eurosym}
+\usepackage{amstext} % for \text
+\DeclareRobustCommand{\officialeuro}{%
+  \ifmmode\expandafter\text\fi
+  {\fontencoding{U}\fontfamily{eurosym}\selectfont e}}
+\usepackage[caption = false]{subfig}
+\usepackage{appendixnumberbeamer} 
+\usepackage{graphicx}
+\usepackage{mathpazo}
+\usepackage{hyperref}
+\usepackage{multimedia}
+\usepackage{graphicx}
+\usepackage{multirow}
+\usepackage{subfig}
+\usepackage{verbatim}
+\usepackage{booktabs, multicol, multirow}
+\setcounter{MaxMatrixCols}{10}
+\input{Macros.tex}
+\AtBeginSection[]
+{
+  \begin{frame}[noframenumbering]
+    \frametitle{Outline for section \thesection}
+    \tableofcontents[currentsection]
+  \end{frame}
+}
+
+
+\usepackage{xcolor,soul}
+\renewcommand<>{\hl}[1]{\only#2{\beameroriginal{\hl}}{#1}}
+
+% https://tex.stackexchange.com/questions/41683/why-is-it-that-coloring-in-soul-in-beamer-is-not-visible
+\makeatletter
+\newcommand\SoulColor{%
+  \let\set@color\beamerorig@set@color
+  \let\reset@color\beamerorig@reset@color}
+\makeatother
+\SoulColor
+\AtBeginSection{\frame{\sectionpage}}
+
+\newsavebox\mybox
+\newenvironment{aquote}[1]
+  {\savebox\mybox{#1}\begin{quote}\openautoquote\hspace*{-.7ex}}
+  {\unskip\closeautoquote\vspace*{1mm}\signed{\usebox\mybox}\end{quote}}
+
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{Assumption}[theorem]{Assumption}
+\newenvironment{stepenumerate}{\begin{enumerate}[<+->]}{\end{enumerate}}
+\newenvironment{stepitemize}{\begin{itemize}[<+->]}{\end{itemize} }
+\newenvironment{stepenumeratewithalert}{\begin{enumerate}[<+-| alert@+>]}{\end{enumerate}}
+\newenvironment{stepitemizewithalert}{\begin{itemize}[<+-| alert@+>]}{\end{itemize} }
+\usetheme{Madrid}
+\makeatletter
+\setbeamertemplate{footline}
+{
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}%
+    \usebeamerfont{author in head/foot}\insertshortauthor~~\beamer@ifempty{\insertshortinstitute}{}{(\insertshortinstitute)}
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+    \usebeamerfont{title in head/foot}\insertshorttitle
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,right]{date in head/foot}%
+    \usebeamerfont{date in head/foot}\insertshortdate{}\hspace*{2em}
+%    \insertframenumber{} / \inserttotalframenumber\hspace*{2ex} % DELETED
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+\makeatother
+\usepackage{pdfpages}
+\begin{document}
+	\title[]{\large Regression \vspace{0.5cm}
+	}
+	\author[Raffaele Saggio - Econ 628]{Raffaele Saggio}
+	\institute[]{UBC}
+	\date{\today \\
+}
+	\maketitle
+
+
+
+\begin{frame}[plain]{Your life in the next 3-4 years}
+
+\includegraphics[scale=0.4]{aux/auto}
+\end{frame}
+
+\begin{frame}[plain]{Data is chaotic, need to make sense of this chaos}
+\centering
+\includegraphics[scale=0.3]{aux/fog}
+\end{frame}
+
+\begin{frame}[plain]{Regression must become your security blanket}
+\centering
+\includegraphics[scale=1]{aux/linus}
+\end{frame}
+
+\begin{frame}[plain]{Regression as Reduction}
+\includegraphics[scale=0.2]{aux/fisher2}
+\end{frame}
+
+
+\begin{frame}{Linear model}
+
+\begin{itemize}
+\item Typical justification for OLS is a linear structural equation relating
+a dependent variable (the regressand) $Y_{i}$ to a vector of independent
+variables (regressors) $X_{i}$:
+\end{itemize}
+\begin{center}
+$Y_{i}=X_{i}^{\prime}\beta+u_{i}$
+\par\end{center}
+\begin{itemize}
+\item {\small{}Suppose $E\left[X_{i}u_{i}\right]=0$.\medskip{}
+}{\small\par}
+\item {\small{}Then $E\left[X_{i}Y_{i}\right]=E\left[X_{i}X_{i}^{\prime}\right]\beta$,
+so }{\small\par}
+\end{itemize}
+\begin{center}
+{\small{}$\beta=E\left[X_{i}X_{i}^{\prime}\right]^{-1}E\left[X_{i}Y_{i}\right]$.}{\small\par}
+\par\end{center}
+\begin{itemize}
+\item {\small{}This is the population OLS regression coefficient vector.
+\medskip{}
+}{\small\par}
+\item {\small{}Analogy principle $\implies$ estimate $\beta$ by replacing
+population moments with sample moments, so $\hat{\beta}=\left(\frac{1}{N}\sum_{i}X_{i}X_{i}^{\prime}\right)^{-1}\left(\frac{1}{N}\sum_{i}X_{i}Y_{i}\right)$. }{\small\par}
+\end{itemize}
+\pause
+\item Pop quiz: what do we mean by ``linear structural equation relating [...]"?
+\end{frame}
+
+\begin{frame}{Linear model}
+
+\begin{center}
+{\small{}$Y_{i}=X_{i}^{\prime}\beta+u_{i}$}{\small\par}
+\par\end{center}
+
+{\small{}\vspace{-0.1in}}
+
+\begin{itemize}
+\bigskip
+\item {\small{}We have seen in the previous class when a regression coefficient has a causal interpretation thanks to random assignment.
+}{\small\par}
+\bigskip
+\item {\small{}Without random assignment, regression coefficient may or may not have a causal interpretation as we shall see. 
+}
+\bigskip
+\item {\small{}Setting causality aside, regression estimates have ``mechanical" statistical properties that are important to know that are intimately related with a fundamental statistical object: the CEF.}{\small\par}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{CEFs}
+
+\begin{itemize}
+\item Recall the \textbf{conditional expectation }of $Y_{i}$ given $X_{i}$:
+\end{itemize}
+\begin{center}
+$E\left[Y_{i}|X_{i}=x\right]=\int_{-\infty}^{\infty}ydF_{Y|X}(y|X_{i}=x)$
+\par\end{center}
+\begin{itemize}
+\item The conditional expectation function (CEF), $\mu(x)=E\left[Y_{i}|X_{i}=x\right]$,
+describes how the conditional mean of $Y_{i}$ changes as we vary
+$x${\small{}\medskip{}
+}{\small\par}
+\item The CEF can be defined for any $Y_{i}$ and $X_{i}$. It has no behavioral/causal
+content per se.
+\item Yet, it is often the starting point to establish the existence of ``statistical relationships" between variables.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[plain]{Summarizing a complex world...}
+\centering
+\includegraphics[scale=0.4]{aux/cef}
+\end{frame}
+
+\begin{frame}{CEF Residuals}
+
+\begin{itemize}
+\item {\small{}We can always write}{\small\par}
+\end{itemize}
+\begin{center}
+{\small{}$Y_{i}=\mu\left(X_{i}\right)+u_{i}$}{\small\par}
+\par\end{center}
+\begin{itemize}
+\item {\small{}Here $u_{i}\equiv Y_{i}-\mu(X_{i})$.\medskip{}
+}{\small\par}
+\item {\small{}By taking conditional expectations on both sides we obtain}{\small\par}
+\end{itemize}
+\begin{center}
+{\small{}$E\left[Y_{i}|X_{i}\right]=\mu(X_{i})+E\left[u_{i}|X_{i}\right]$}{\small\par}
+\par\end{center}
+\begin{itemize}
+\item {\small{}Since $E\left[Y_{i}|X_{i}\right]=\mu(X_{i})$, we have $E\left[u_{i}|X_{i}\right]=0$.
+\medskip{}
+}{\small\par}
+\item {\small{}Note that the CEF residual (or ``error term'') $u_{i}$
+has conditional mean zero }\emph{\small{}by definition.}{\small\par}
+\item We have also that
+\begin{enumerate}
+\item  $\E[u_{i}]=0$.
+\item  $\E[h(X_{i})u_{i}]=0$.
+\end{enumerate}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Optimal Predictor}
+
+\begin{itemize}
+\item {\small{}Suppose we want to use $X_{i}$ to predict $Y_{i}$\medskip{}
+}{\small\par}
+\item {\small{}Formally, consider the following minimization problem:}{\small\par}
+\end{itemize}
+\begin{center}
+{\small{}${\displaystyle \min_{m\in\mathcal{M}}}\ E\left[\left(Y_{i}-m\left(X_{i}\right)\right)^{2}\right]$}{\small\par}
+\par\end{center}
+\begin{itemize}
+\item {\small{}Here $\mathcal{M}$ is the set of all measureable functions
+mapping $\mathcal{R}^{K}$ to $\mathcal{R}^{1}$ \medskip{}
+}{\small\par}
+\item {\small{}This is a complicated problem since we are optimizing over
+all possible functions}{\small\par}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Optimal Predictor}
+
+\begin{itemize}
+\item {\small{}Rewrite the problem}{\small\par}
+\end{itemize}
+\begin{center}
+{\small{}${\displaystyle \min_{m\in\mathcal{M}}}\ E\left[\left(\left[Y_{i}-\mu(X_{i})\right]+\left[\mu(X_{i})-m(X_{i})\right]\right)^{2}\right]$}{\small\par}
+\par\end{center}
+
+\begin{center}
+{\small{}$={\displaystyle \min_{m\in\mathcal{M}}}\ E\left[\left(Y_{i}-\mu(X_{i})\right)^{2}\right]+2E\left[(Y_{i}-\mu(X_{i}))(\mu(X_{i})-m(X_{i}))\right]$}{\small\par}
+\par\end{center}
+
+\begin{center}
+{\small{}$+E\left[\left(\mu(X_{i})-m(X_{i})\right)^{2}\right]$}{\small\par}
+\par\end{center}
+\begin{itemize}
+\item {\small{}First term doesn't depend on $m\left(.\right)$ and the second
+is zero (why?), so this is equivalent to solving}{\small\par}
+\end{itemize}
+\begin{center}
+{\small{}${\displaystyle \min_{m\in\mathcal{M}}}\ E\left[\left(\mu(X_{i})-m(X_{i})\right)^{2}\right]$}{\small\par}
+\par\end{center}
+
+\end{frame}
+
+\begin{frame}{CEF as Optimal Predictor}
+
+\begin{center}
+${\displaystyle \min_{m\in\mathcal{M}}}\ E\left[\left(\mu(X_{i})-m(X_{i})\right)^{2}\right]$
+\par\end{center}
+\begin{itemize}
+\item This is minimized at zero by setting $\mu(X_{i})=m(X_{i})$. \medskip{}
+\item In other words, the CEF is the minimum mean squared error (MMSE) predictor
+of $Y_{i}$.
+\end{itemize}
+\end{frame}
+\begin{frame}{ANOVA - Law of Total Variance}
+\begin{itemize}
+\item Law of total variance
+\be
+\nn
+\Var(Y_{i}) = \underbrace{\Var[\E[Y_{i}\vert X_{i}]]}_{\text{Variability in explained components}} + \underbrace{\E[\Var[Y_{i}\vert X_{i}]]}_{\text{Variability in Unexplained Components}}
+\ee
+\item Important to study inequality (wage inequality, health inequality, etc...).
+\medskip
+\item Well defined statistical decomposition. 
+\pause
+\bigkskip
+\bigskip
+\item Ok, great but who tells me $\mu(X_{i})$? 
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{Linear Projections}
+
+\begin{itemize}
+\item {\small{}Suppose we want to predict $Y_{i}$, but limit ourselves
+to linear functions\medskip{}
+}{\small\par}
+\item {\small{}The }\textbf{\small{}linear projection}{\small{} of $Y_{i}$
+on $X_{i}$ is $X_{i}^{\prime}\beta$, where}{\small\par}
+\end{itemize}
+\begin{center}
+{\small{}$\beta\equiv\arg{\displaystyle \min_{b}\ }E\left[\left(Y_{i}-X_{i}^{\prime}b\right)^{2}\right]$}{\small\par}
+\par\end{center}
+\begin{itemize}
+\item {\small{}First-order conditions: $E\left[X_{i}\left(Y_{i}-X_{i}^{\prime}\beta\right)\right]=0$
+\medskip{}
+}{\small\par}
+\item {\small{}Then}{\small\par}
+\end{itemize}
+\begin{center}
+{\small{}$\beta=E\left[X_{i}X_{i}^{\prime}\right]^{-1}E\left[X_{i}Y_{i}\right]$}{\small\par}
+\par\end{center}
+\begin{itemize}
+\item {\small{}This is the OLS coefficient vector\medskip{}
+}{\small\par}
+\item {\small{}The OLS projection $X_{i}^{\prime}\beta$ is the MMSE}\textbf{\small{}
+linear}{\small{} predictor of $Y_{i}$.}{\small\par}
+\item We define $\E^{*}[Y \vert X]=X_{i}'\beta$.
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{Linear Projections and the CEF}
+
+\begin{itemize}
+\item {\small{}By applying the same trick we saw with the CEF, we can rewrite}{\small\par}
+\end{itemize}
+\begin{center}
+{\small{}$\beta\equiv\arg{\displaystyle \min_{b}\ }E\left[\left(Y_{i}-X_{i}^{\prime}b\right)^{2}\right]$}{\small\par}
+\par\end{center}
+
+\begin{center}
+{\small{}$={\displaystyle \arg\min_{b}}\ E\left[\left(\mu(X_{i})-X_{i}^{\prime}b\right)^{2}\right]$}{\small\par}
+\par\end{center}
+\begin{itemize}
+\item {\small{}OLS therefore also gives the MMSE linear prediction of the
+}\textbf{\small{}CEF}{\small{} of $Y_{i}$ given $X_{i}$\medskip{}
+}{\small\par}
+\item {\small{}Note: This also implies that when the CEF is linear, OLS
+fits it exactly}{\small\par}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[plain]{BLP $\rightarrow$ Linear approximation of the CEF}
+\centering
+\includegraphics[scale=0.4]{aux/cef}
+\end{frame}
+
+\begin{frame}[plain]{BLP $\rightarrow$ Linear approximation of the CEF}
+\centering
+\includegraphics[scale=0.4]{aux/blp}
+\end{frame}
+
+\begin{frame}{OLS Residuals}
+
+\begin{itemize}
+\item {\footnotesize{}Projection model:
+\[
+Y_{i}=X_{i}^{\prime}\beta+U_{i}
+\]
+}{\footnotesize\par}
+\item {\footnotesize{}Here $U_{i}\equiv Y_{i}-X_{i}^{\prime}\beta$ is defined
+as the difference between $Y_{i}$ and the least squares projection}{\footnotesize\par}
+\item {\footnotesize{}Note that}{\footnotesize\par}
+\end{itemize}
+\begin{center}
+{\footnotesize{}$E\left[X_{i}U_{i}\right]=E\left[X_{i}\left(Y_{i}-X_{i}^{\prime}\beta\right)\right]$}{\footnotesize\par}
+\par\end{center}
+
+\begin{center}
+{\footnotesize{}$=0$.}{\footnotesize\par}
+\par\end{center}
+\begin{itemize}
+\item {\footnotesize{}Note: the projection errors $U_{i}$ are }\emph{\footnotesize{}defined}{\footnotesize{}
+so that $X_{i}$ and $U_{i}$ are uncorrelated. They have no ``life
+of their own''.}{\footnotesize\par}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Omitted Variable Bias}
+
+\begin{itemize}
+\item {\small{}Consider two regression models:}{\small\par}
+\end{itemize}
+\begin{center}
+{\small{}$Y_{i}=\alpha_{s}+\beta_{s}S_{i}+u_{is}$}{\small\par}
+\par\end{center}
+
+\begin{center}
+{\small{}$Y_{i}=\alpha_{\ell}+\beta_{\ell}S_{i}+\gamma_{\ell}A_{i}+u_{i\ell}$}{\small\par}
+\par\end{center}
+\begin{itemize}
+\item {\small{}Example: ``Short'' regression of log earnings on schooling,
+vs. ``long'' regression of log earnings on schooling and ability
+(SAT score)\medskip{}
+}{\small\par}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Omitted Variable Bias}
+
+\begin{center}
+{\small{}$Y_{i}=\alpha_{s}+\beta_{s}S_{i}+u_{is}$}{\small\par}
+\par\end{center}
+
+\begin{center}
+{\small{}$Y_{i}=\alpha_{\ell}+\beta_{\ell}S_{i}+\gamma_{\ell}A_{i}+u_{i\ell}$}{\small\par}
+\par\end{center}
+\begin{itemize}
+\item {\small{}We might prefer the long regression coefficient
+$\beta_{\ell}$\medskip{}
+}{\small\par}
+\item {\small{}Perhaps higher-ability people go to school longer, but schooling
+is as good as randomly assigned among people with the same ability\medskip{}
+}{\small\par}
+\item {\small{}In other words, the CEF of $Y_{i}$ given $(S_{i},A_{i})$
+might be more economically interesting than the CEF of $Y_{i}$ given
+$S_{i}$}{\small\par}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Omitted Variables Bias}
+
+\begin{itemize}
+\item {\footnotesize{}Short regression coefficient:}{\footnotesize\par}
+\end{itemize}
+\begin{center}
+{\footnotesize{}$\beta_{s}=\dfrac{Cov(Y_{i},S_{i})}{Var(S_{i})}$}{\footnotesize\par}
+\par\end{center}
+
+\begin{center}
+{\footnotesize{}$=\dfrac{Cov\left(\alpha_{\ell}+\beta_{\ell}S_{i}+\gamma_{\ell}A_{i}+u_{i\ell},S_{i}\right)}{Var(S_{i})}$}{\footnotesize\par}
+\par\end{center}
+
+\begin{center}
+{\footnotesize{}$=\beta_{\ell}+\gamma_{\ell}\dfrac{Cov\left(A_{i},S_{i}\right)}{Var(S_{i})}$}{\footnotesize\par}
+\par\end{center}
+\begin{itemize}
+\item {\footnotesize{}The short coefficient equals the long coefficient,
+plus the coefficient on the omitted variable times the regression
+of the omitted variable on the included variable.\medskip{}
+}{\footnotesize\par}
+\item {\footnotesize{}This is the standard ``omitted variables bias''
+(OVB) formula. It shows how OLS coefficients change when more regressors
+are added. \medskip{}
+}{\footnotesize\par}
+\item {\footnotesize{}The long regression coefficient is not necessarily
+better. Again, it depends on which CEF is of interest.}{\footnotesize\par}
+\end{itemize}
+\end{frame}
+\begin{frame}
+\frametitle{Good, Bad and Ugly Controls}
+\centering
+\includegraphics[scale=0.4]{aux/good}
+\end{frame}
+\begin{frame}
+\frametitle{Good or Bad?}
+\begin{itemize}
+\item You want to study whether women are systematically discriminated in the labor market. 
+\medskip
+\item Regression of earnings on gender using age and race as controls returns a coefficient of -10,000 dollars. 
+\medskip
+\item  But then you run the same regression also controlling for occupation. Coefficient on gender dummy shrinks to zero.
+\medskip
+\item Is occupation a good control variable in this context? 
+\end{itemize}
+
+\end{frame}
+\begin{frame}
+\frametitle{Good, Bad and Ugly Controls}
+\begin{itemize}
+\item Good controls: 
+\medskip
+\begin{itemize}
+\item Within each value of control, the treatment is as good as randomly assigned. 
+\medskip
+\item Fixed at the time in which treatment was assigned. 
+\end{itemize}
+\bigskip 
+\item Bad controls: more is not always better!
+\medskip
+\begin{itemize}
+\item Variables that should be considered as outcomes per se! 
+\medskip
+\item Contaminates interpretation of the treatment. 
+\end{itemize}
+\bigskip 
+\item Ugly controls: what most of us ended up dealing with
+\medskip
+\begin{itemize}
+\item Need to argue why they are good controls in observational data. 
+\medskip
+\item Lots of them can create statistical/inference problems $\rightarrow$ what variation drives my ``treatment"  (next classes + FWL)?
+\end{itemize}
+\end{itemize}
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Estimation}
+\begin{itemize}
+\item Let's now think about how to obtain an estimate of $\beta$ from a single sample.
+\be
+Y_{i} = X_{i}'\beta + u_{i}
+\ee
+\medskip
+\item Analogy principle!
+\be
+\hat{\beta}=\left(\frac{1}{N}\sum_{i}X_{i}X_{i}^{\prime}\right)^{-1}\left(\frac{1}{N}\sum_{i}X_{i}Y_{i}\right)
+\ee
+\pause
+\item We will now think about some key algebraic properties of the LS solution (finite sample perspective).  
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{Projection Matrices}
+
+\begin{itemize}
+\item Define the projection matrix:
+\end{itemize}
+\begin{center}
+$P_{X}=X\left(X^{\prime}X\right)^{-1}X^{\prime}$
+\par\end{center}
+\begin{itemize}
+\item The OLS predicted values are $\hat{y}=X\hat{\beta}=P_{X}y$.{\small{}\medskip{}
+}{\small\par}
+\item $P_{X}$ projects any vector into the column space of $X$. {\small{}\medskip{}
+}{\small\par}
+\item Likewise, $M_{X}=I-P_{X}$ projects any vector into the orthogonal
+complement. The OLS residual is $\hat{u}=M_{X}y$.{\small{}\medskip{}
+}{\small\par}
+\item $P_{X}$ is called the ``hat'' matrix since it ``puts a hat''
+on $y$, while $M_{X}$ is the ``residual maker'' since it turns
+$y$ into a residual orthogonal to the columns of $X$
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Projection Matrices are awesome! Pt.1}
+
+\begin{itemize}
+\item The diagonal element of the matrix $P_{X}$ is sometimes called the statistical leverage, call the ith element $P_{ii}$.
+\medskip
+\item Important property: $P_{ii}\in[0;1]$.
+\medskip
+\item The statistical leverage measures how influential a given observation $i$ in deriving $\hat{\beta}$.
+\be
+P_{ii} = \dfrac{\partial \hat{y}_{i}}{\partial y_{i}}
+\ee 
+\medskip
+\item ``Balanced design" means that all observations have equal $P_{ii}$.
+\medskip
+\item How influential is observation $i$ for my OLS coefficients?
+\be
+\begin{aligned}
+\hat{\beta}_{-i}  & = \left(\sum X_{-i}X_{-i}'\right)^{-1}\left(\sum X_{-i}Y_{-i}\right) \\
+& = \hat{\beta}  - \left(\sum X_{i}X_{i}'\right)^{-1}\left(\sum X_{i}\dfrac{\hat{u}_{i}}{(1-P_{ii})}\right)
+\end{aligned}
+\ee
+
+\end{itemize}
+\end{frame}
+
+\begin{frame}[plain]{$P_{ii}=1 \rightarrow$ Overfitting}
+
+\includegraphics[scale=0.4]{aux/overfitting}
+\end{frame}
+\begin{frame}[plain]
+\centering
+\includegraphics[scale=0.25]{classes/aux/rachel}
+\end{frame}
+
+
+
+\begin{frame}{Projection Matrices are awesome Pt.2}
+
+\begin{itemize}
+\item Useful properties of projection matrices:{\small{}\medskip{}
+}
+
+\begin{itemize}
+\item Symmetric: $P_{X}=P_{X}^{\prime}$, $M_{X}=M_{X}^{\prime}${\small{}\medskip{}
+}{\small\par}
+\item Idempotent: $P_{X}P_{X}=P_{X}$, $M_{X}M_{X}=M_{X}${\small{}\medskip{}
+}{\small\par}
+\item Zero product: $P_{X}M_{X}=0${\small{}\medskip{}
+}{\small\par}
+\item $P_{X}X=X$, and $M_{X}X=0$ ($M_{X}$ ``annihilates'' $X$)
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Frisch-Waugh-Lovell Theorem}
+
+\begin{itemize}
+\item {\small{}Consider the regression model:}{\small\par}
+\end{itemize}
+\begin{center}
+{\small{}$y=X_{1}\beta_{1}+X_{2}\beta_{2}+u$}{\small\par}
+\par\end{center}
+\begin{itemize}
+\item {\small{}We can write $y=X_{1}\hat{\beta}_{1}+X_{2}\hat{\beta}_{2}+\hat{u}$,
+where $\hat{\beta}_{1}$ and $\hat{\beta}_{2}$ are OLS estimates
+and $\hat{u}$ is the residual\medskip{}
+}{\small\par}
+\item {\small{}Instead of running this regression, let's first take residuals
+from regressions of $y$ and $X_{2}$ on $X_{1}$: }{\small\par}
+\end{itemize}
+\begin{center}
+{\small{}$\tilde{y}=M_{1}y,\tilde{X}_{2}=M_{1}X_{2}$}{\small\par}
+\par\end{center}
+\begin{itemize}
+\item {\small{}Then regress $\tilde{y}$ on $\tilde{X}_{2}$:}{\small\par}
+\end{itemize}
+\begin{center}
+{\small{}$\tilde{y}=\tilde{X}_{2}\gamma_{2}+u_{2}$}{\small\par}
+\par\end{center}
+
+\end{frame}
+
+\begin{frame}{Frisch-Waugh-Lovell Theorem}
+
+\begin{itemize}
+\item OLS estimate of $\gamma_{2}$:
+\end{itemize}
+\begin{center}
+$\hat{\gamma}_{2}=\left(\tilde{X}_{2}^{\prime}\tilde{X}_{2}\right)^{-1}\tilde{X}_{2}^{\prime}\tilde{y}$
+\par\end{center}
+
+\begin{center}
+$=\left(X_{2}^{\prime}M_{1}^{\prime}M_{1}X_{2}\right)^{-1}X_{2}^{\prime}M_{1}^{\prime}M_{1}y$
+\par\end{center}
+
+\begin{center}
+$=\left(X_{2}^{\prime}M_{1}X_{2}\right)^{-1}X_{2}^{\prime}M_{1}\left(X_{1}\hat{\beta}_{1}+X_{2}\hat{\beta}_{2}+\hat{u}\right)$
+\par\end{center}
+
+\begin{center}
+$=\left(X_{2}^{\prime}M_{1}X_{2}\right)^{-1}\left(X_{2}^{\prime}M_{1}X_{1}\hat{\beta}_{1}+X_{2}^{\prime}M_{1}X_{2}\hat{\beta}_{2}+X_{2}^{\prime}M_{1}\hat{u}\right)$
+\par\end{center}
+
+\end{frame}
+
+\begin{frame}{Frisch-Waugh-Lovell Theorem}
+
+\begin{center}
+{\small{}$\hat{\gamma}_{2}=\left(X_{2}^{\prime}M_{1}X_{2}\right)^{-1}\left(X_{2}^{\prime}M_{1}X_{1}\hat{\beta}_{1}+X_{2}^{\prime}M_{1}X_{2}\hat{\beta}_{2}+X_{2}^{\prime}M_{1}\hat{u}\right)$}{\small\par}
+\par\end{center}
+\begin{itemize}
+\item {\small{}The first term in parentheses is zero\medskip{}
+}{\small\par}
+\item {\small{}$M_{1}\hat{u}=\hat{u}$ and $X_{2}^{\prime}\hat{u}=0$ so
+the third term is also zero. Then}{\small\par}
+\end{itemize}
+\begin{center}
+{\small{}$\hat{\gamma}_{2}=\left(X_{2}^{\prime}M_{1}X_{2}\right)^{-1}X_{2}^{\prime}M_{1}X_{2}\hat{\beta}_{2}$ }{\small\par}
+\par\end{center}
+
+\begin{center}
+{\small{}$=\hat{\beta}_{2}$.}{\small\par}
+\par\end{center}
+\begin{itemize}
+\item {\small{}The ``long regression'' coefficient on $X_{2}$, $\hat{\beta}_{2}$,
+is therefore the same as the ``residual regression'' coefficient,
+$\hat{\gamma}_{2}$. This is the first part of the FWL theorem.}{\small\par}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Frisch-Waugh-Lovell Theorem}
+
+\begin{itemize}
+\item {\small{}The second part of the FWL theorem is obtained by multiplying
+both sides of our expression for $y$ by $M_{1}$:}{\small\par}
+\end{itemize}
+\begin{center}
+{\small{}$M_{1}y=M_{1}X_{1}\hat{\beta}_{1}+M_{1}X_{2}\hat{\beta}_{2}+M_{1}\hat{u}$}{\small\par}
+\par\end{center}
+
+\begin{center}
+{\small{}$\implies\tilde{y}=\tilde{X}_{2}\hat{\beta}_{2}+M_{1}\hat{u}$}{\small\par}
+\par\end{center}
+\begin{itemize}
+\item {\small{}Since $\hat{\beta}_{2}$ is the coefficient from the residual
+regression, $M_{1}\hat{u}$ is the residual from this regression.
+Since $M_{1}\hat{u}=\hat{u},$ the residual regression generates the
+same residuals as the long regression. This is the second part of
+the FWL theorem. \medskip{}
+}{\small\par}
+\item {\small{}This result means that standard errors obtained from the
+residual regression will also match the long regression (with an appropriate
+degrees of freedom correction)}{\small\par}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Frisch-Waugh-Lovell Theorem: Summary}
+
+\begin{itemize}
+\item {\small{}Together, the two parts of the FWL theorem say that if we're
+interested in a subset of the coefficients from a multivariate regression,
+we can first ``partial out'' the other variables from both sides,
+then work with the residuals.\medskip{}
+}{\small\par}
+\item {\small{}This procedure will generate both the same coefficients and
+the same residuals we'd get from the long regression.\medskip{}
+}{\small\par}
+\item {\small{}Other notes:\medskip{}
+}
+
+\begin{itemize}
+\item {\small{}We can also obtain the same coefficients by first partialling
+out some variables from the right-hand side but not the left. This
+will not produce the same residuals, however.\medskip{}
+}{\small\par}
+\item {\small{}In general, we will NOT obtain the same coefficients by partialling
+out variables from the left but not the right. }{\small\par}
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Analysis of Variance}
+
+\begin{itemize}
+\item {\small{}Now that we understand the mechanics of regression, let's
+consider a few ways it's used in practice\medskip{}
+}{\small\par}
+\item {\small{}One traditional use, proposed by R.A. Fisher, is ``Analysis
+of Variance'' (ANOVA)\medskip{}
+}{\small\par}
+\item {\small{}ANOVA simply asks whether the mean of some variable differs
+across observed groups}{\small\par}
+\end{itemize}
+{\small{}\medskip{}
+}{\small\par}
+\begin{itemize}
+\item Name derives from fact that in linear model can partition variance
+of response into components due to ``fixed'' predictors $X'\beta$
+and error.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Analysis of Variance}
+
+\begin{itemize}
+\item {\small{}Suppose we have data on wages $w_{i}$ for a sample of individuals
+\medskip{}
+}{\small\par}
+\item {\small{}We also have data on race ($black_{i}\in\{0,1\}$) and gender
+($female_{i}\in\{0,1\}$)\medskip{}
+}{\small\par}
+\item {\small{}Suppose we run the regression}{\small\par}
+\end{itemize}
+\begin{center}
+{\small{}$w_{i}=\alpha_{0}+\alpha_{1}black_{i}+\alpha_{2}female_{i}+\alpha_{3}black_{i}\cdot female_{i}+u_{i}$}{\small\par}
+\par\end{center}
+\begin{itemize}
+\item {\small{}How should we interpret the coefficients $(\alpha_{0},\alpha_{1},\alpha_{2},\alpha_{3})$?}{\small\par}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Analysis of Variance}
+
+\begin{center}
+{\small{}$w_{i}=\alpha_{0}+\alpha_{1}black_{i}+\alpha_{2}female_{i}+\alpha_{3}black_{i}\cdot female_{i}+u_{i}$}{\small\par}
+\par\end{center}
+\begin{itemize}
+\item {\small{}This is a }\textbf{\small{}saturated}{\small{} model: The
+number of coefficients equals the number of possible values of the
+right-hand-side variables\medskip{}
+}{\small\par}
+\item {\small{}In a saturated model the CEF is necessarily linear\medskip{}
+}{\small\par}
+\item {\small{}As we've learned, regression perfectly fits the CEF when
+the CEF is linear}{\small\par}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Analysis of Variance}
+
+\begin{center}
+{\footnotesize{}$w_{i}=\alpha_{0}+\alpha_{1}black_{i}+\alpha_{2}female_{i}+\alpha_{3}black_{i}\cdot female_{i}+u_{i}$}{\footnotesize\par}
+\par\end{center}
+\begin{itemize}
+\item {\footnotesize{}Then}{\footnotesize\par}
+\end{itemize}
+\begin{center}
+{\footnotesize{}$\alpha_{0}=E\left[w_{i}|black_{i}=0,female_{i}=0\right]$}{\footnotesize\par}
+\par\end{center}
+
+\begin{center}
+{\footnotesize{}$\alpha_{1}=E\left[w_{i}|black_{i}=1,female_{i}=0\right]-E\left[w_{i}|black_{i}=0,female_{i}=0\right]$}{\footnotesize\par}
+\par\end{center}
+
+\begin{center}
+{\footnotesize{}$\alpha_{2}=E\left[w_{i}|black_{i}=0,female_{i}=1\right]-E\left[w_{i}|black_{i}=0,female_{i}=0\right]$}{\footnotesize\par}
+\par\end{center}
+
+\begin{center}
+{\footnotesize{}$\alpha_{3}=\left(E\left[w_{i}|black_{i}=1,female_{i}=1\right]-E\left[w_{i}|black_{i}=1,female_{i}=0\right]\right)$}{\footnotesize\par}
+\par\end{center}
+
+\begin{center}
+{\footnotesize{}$-\left(E\left[w_{i}|black_{i}=0,female_{i}=1\right]-E\left[w_{i}|black_{i}=0,female_{i}=0\right]\right)$}{\footnotesize\par}
+\par\end{center}
+\begin{itemize}
+\item {\footnotesize{}Any question about differences in means across groups
+can be answered with these parameters}{\footnotesize\par}
+\end{itemize}
+\end{frame}
+
+%%
+\begin{frame}{Getting Practical}
+\begin{itemize}
+\item We are interested in studying the relationship between $Y$ and $X$. $X$ is (basically) continuous, thus it is hard to estimate CEF.
+\medskip
+\item Example: $Y_{c}$ share of uninsured people living in area $c$. $X_{c}$ is average income in area $c$.
+\medskip
+\item Can run a regression but we are worried that the relationship might not be linear (why?).
+\medskip
+\item What would you do?
+\end{itemize}
+\end{frame}
+\begin{frame}[plain]
+\centering
+\includegraphics[scale=0.25]{classes/aux/scat1.jpg}
+\end{frame}
+\begin{frame}[plain]
+\centering
+\includegraphics[scale=0.25]{classes/aux/scat2.jpg}
+\end{frame}
+\begin{frame}[plain]
+\centering
+\includegraphics[scale=0.25]{classes/aux/scat3.jpg}
+\end{frame}
+\begin{frame}[plain]
+\centering
+\includegraphics[scale=0.25]{classes/aux/scat4.jpg}
+\end{frame}
+\begin{frame}[plain]
+\centering
+\includegraphics[scale=0.25]{classes/aux/scat5.jpg}
+\end{frame}
+\begin{frame}[plain]
+\centering
+\includegraphics[scale=0.25]{classes/aux/scat6.jpg}
+\end{frame}
+\begin{frame}
+\frametitle{What if we want to plot this relationship after having controlled for some variables?}
+\pause
+\centering
+\includegraphics[scale=0.25]{classes/aux/cattaneo_max.jpg}
+\end{frame}
+%%
+\begin{frame}
+\frametitle{Getting Practical}
+\begin{itemize}
+    \item Lots of textbooks (1st grad econometrics) might have told you that running a regression is fine only if the outcome is ``continuous" (e.g. log wage). 
+    \pause
+    \item This recommendation is misguided and you shall not follow it.
+    \medskip
+    \item If the interest lies in assessing the (average) causal impact of some treatment $D$ on outcome $Y$, running a regression of $Y$ on $D$ will return the ATE when there is random assignment of D, \underline{regardless of whether Y is continuous, discrete, binary}.
+    \medskip
+    \item The same does not hold if running a probit regression on $Y$ on $D$ (and you have random assignment of $D$)!.
+    
+\end{itemize}
+\end{frame}
+\begin{frame}
+\frametitle{Getting Practical}
+\begin{itemize}
+    \item Often you encounter an outcome variable where for lots of observations are such that $Y_{i}=0$.
+    \pause
+    \item Provided that $Y_{i}>0$, $Y_{i}$ then looks like a continuous variable.
+    \begin{enumerate}
+        \item Provide me an example of such variable.
+        \medskip
+        \item A lot of people in these situations run a regression of $log(Y_{i})$ on $D_{i}$. Is that regression identifying the causal effect of $D_{i}$ on $Y_{i}$?
+        \medskip
+        \item Other people instead run a regression of $log(1+Y_{i})$ on $D_{i}$? What do you think is the rationale behind that?
+    \end{enumerate}
+\end{itemize}
+\end{frame}
+%%%%
+\begin{frame}[plain]
+\centering
+\includegraphics[scale=0.25]{classes/aux/zeros.jpg}
+\end{frame}
+
+\begin{frame}{Connecting Regression with Treatment Effects}
+
+\begin{itemize}
+\item {\small{}Suppose we run randomized experiments at several sites\medskip{}
+}{\small\par}
+\item {\small{}Treatment $T_{i}\in\{0,1\}$ is randomly assigned within
+a site, but the probability of assignment differs across sites\medskip{}
+}{\small\par}
+\item {\small{}We therefore only want to compare treatment and control groups
+}\emph{\small{}within}{\small{} sites\medskip{}
+}{\small\par}
+\item {\small{}Let $X_{i}\in\{1...K\}$ denote site, and let $D_{i}=\left(1\left\{ X_{i}=1\right\} ,...,1\left\{ X_{i}=K\right\} \right)^{\prime}$
+denote a vector of site indicators}{\small\par}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Stratified Experiments}
+
+\begin{itemize}
+\item We run the OLS regression:
+\end{itemize}
+\begin{center}
+$Y_{i}=D_{i}^{\prime}\Pi+\delta T_{i}+u_{i}$
+\par\end{center}
+\begin{itemize}
+\item This model includes a dummy for every site, but only a main effect
+of the treatment{\small{}\medskip{} $\rightarrow$ Is this regression saturated?
+}{\small\par}
+\item What does $\delta$ identify in terms of potential outcomes $(Y_{i1},Y_{i0})?$ 
+\medskip
+\pause
+\item Recall that we can always write
+\begin{equation}
+    Y_{i}=D_{i}Y_{i1}+(1-D_{i})Y_{i0}
+\end{equation}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Stratified Experiments}
+
+\begin{center}
+{\small{}$Y_{i}=D_{i}^{\prime}\Pi+\delta T_{i}+u_{i}$}{\small\par}
+\par\end{center}
+\begin{itemize}
+\item {\small{}Let's use our knowledge of the FWL theorem to derive an expression
+for $\delta$:}{\small\par}
+\end{itemize}
+\begin{center}
+{\small{}$\delta=E\left[\tilde{T}_{i}^{2}\right]^{-1}E\left[\tilde{T}_{i}\tilde{Y}_{i}\right]$}{\small\par}
+\par\end{center}
+\begin{itemize}
+\item {\small{}$\tilde{T}_{i}$ and $\tilde{Y}_{i}$ are residuals from
+regressions on $D_{i}$\medskip{}
+}{\small\par}
+\item {\small{}We can rewrite $\delta$ as follows... why?}{\small\par}
+\end{itemize}
+\begin{center}
+{\small{}$\delta=\dfrac{E\left[\left(Y_{i}-E\left[Y_{i}|X_{i}\right]\right)\left(T_{i}-E\left[T_{i}|X_{i}\right]\right)\right]}{E\left[\left(T_{i}-E\left[T_{i}|X_{i}\right]\right)^{2}\right]}$}{\small\par}
+\par\end{center}
+
+\end{frame}
+
+\begin{frame}{Stratified Experiments}
+
+\begin{center}
+{\small{}$\delta=\dfrac{E\left[Y_{i}\left(T_{i}-E\left[T_{i}|X_{i}\right]\right)\right]}{E\left[\left(T_{i}-E\left[T_{i}|X_{i}\right]\right)^{2}\right]}-\dfrac{E\left[E\left[Y_{i}|X_{i}\right]\left(T_{i}-E\left[T_{i}|X_{i}\right]\right)\right]}{E\left[\left(T_{i}-E\left[T_{i}|X_{i}\right]\right)^{2}\right]}$}{\small\par}
+\par\end{center}
+\begin{itemize}
+\item {\small{}The second term is zero (why?)\medskip{}
+}{\small\par}
+\item {\small{}By iterated expectations the first term can be written}{\small\par}
+\end{itemize}
+\begin{center}
+{\small{}$\delta=\dfrac{E\left[E\left[Y_{i}|X_{i},T_{i}\right]\left(T_{i}-E\left[T_{i}|X_{i}\right]\right)\right]}{E\left[\left(T_{i}-E\left[T_{i}|X_{i}\right]\right)^{2}\right]}$}{\small\par}
+\par\end{center}
+
+\end{frame}
+
+\begin{frame}{Stratified Experiments}
+
+\begin{itemize}
+\item {\small{}It's useful to rewrite}{\small\par}
+\end{itemize}
+\begin{center}
+{\small{}$E\left[Y_{i}|X_{i},T_{i}\right]=E\left[Y_{i}|X_{i},T_{i}=0\right]+\Delta(X_{i})T_{i}$,}{\small\par}
+\par\end{center}
+
+\begin{center}
+{\small{}$\Delta(X_{i})=E\left[Y_{i}|X_{i},T_{i}=1\right]-E\left[Y_{i}|X_{i},T_{i}=0\right]$}{\small\par}
+\par\end{center}
+
+\begin{itemize}
+\item {\small{}Here $\Delta(X_{i})$ is a site-specific treatment/control
+contrast.}
+\medskip
+\item We can then write (why?):
+\begin{equation}
+    E\left[Y_{i}|X_{i},T_{i}=0\right]=\E[Y_{i0}\vert X_{i}]
+\end{equation}
+\begin{equation}
+    \Delta(X_{i})=\E[Y_{i1}-Y_{i0}\vert X_{i}]
+\end{equation}
+\end{itemize}
+\end{frame}
+\begin{frame}
+\begin{itemize}
+\item Putting pieces together now...
+\medskip
+\begin{center}
+{\small{}$\delta=\dfrac{E\left[\left(E\left[Y_{i}|X_{i},T_{i}=0\right]+\Delta(X_{i})T_{i}\right)\left(T_{i}-E\left[T_{i}|X_{i}\right]\right)\right]}{E\left[\left(T_{i}-E\left[T_{i}|X_{i}\right]\right)^{2}\right]}$}{\small\par}
+\par\end{center}
+
+\begin{center}
+{\small{}$=\dfrac{E\left[\Delta(X_{i})T_{i}\left(T_{i}-E\left[T_{i}|X_{i}\right]\right)\right]}{E\left[\left(T_{i}-E\left[T_{i}|X_{i}\right]\right)^{2}\right]}$}{\small\par}
+\par\end{center}
+\begin{center}
+{\small{}$=\dfrac{E\left[E[Y_{i1}-Y_{i0}\vert X_{i}]T_{i}\left(T_{i}-E\left[T_{i}|X_{i}\right])\right]}{E\left[\left(T_{i}-E\left[T_{i}|X_{i}\right]\right)^{2}\right]}$}{\small\par}
+\par\end{center}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Stratified Experiments}
+
+\begin{itemize}
+\item {\footnotesize{}By invoking iterated expectations one more time we
+obtain}{\footnotesize\par}
+\end{itemize}
+\begin{center}
+{\footnotesize{}$\delta=\dfrac{E\left[E[Y_{i1}-Y_{i0}\vert X_{i}]E\left[T_{i}\left(T_{i}-E\left[T_{i}|X_{i}\right]\right)|X_{i}\right]\right]}{E\left[E\left[\left(T_{i}-E\left[T_{i}|X_{i}\right]\right)^{2}|X_{i}\right]\right]}$}{\footnotesize\par}
+\par\end{center}
+\pause
+\begin{center}
+{\footnotesize{}$=\dfrac{E\left[E[Y_{i1}-Y_{i0}\vert X_{i}]\sigma_{T}^{2}(X_{i})\right]}{E\left[\sigma_{T}^{2}(X_{i})\right]}$}{\footnotesize\par}
+\par\end{center}
+
+\begin{center}
+{\footnotesize{}$=E\left[E[Y_{i1}-Y_{i0}\vert X_{i}]w(X_{i})\right]$}{\footnotesize\par}
+\par\end{center}
+\begin{itemize}
+\item {\footnotesize{}Here $w(X_{i})=\sigma_{T}^{2}(X_{i})/E\left[\sigma_{T}^{2}(X_{i})\right]$}{\footnotesize\par}
+\item {\footnotesize{}Since treatment is binary $\sigma_{T}^{2}(X_{i})=Pr\left[T_{i}=1|X_{i}\right]\left(1-Pr\left[T_{i}=1|X_{i}\right]\right)$}{\footnotesize\par}
+\item {\footnotesize{}OLS with controls for site indicators therefore identifies
+a variance-of-treatment-weighted average of site-specific treatment/control
+comparisons}{\footnotesize\par}
+\item {\footnotesize{}Works even in the contest of misspecification of the CEF!}{\footnotesize\par}
+\item {\footnotesize{}Useful statistical object even when $T_{i}$ is not randomly assigned within groups}
+\end{itemize}
+\end{frame}
+%%
+\begin{frame}{Going one step beyond}
+\begin{itemize}
+    \item New scenario: \underline{two} treatments are now being randomized within the site.
+    \medskip
+    \item Run the following regression
+    \begin{equation}
+    Y_{i}=D_{i}\Pi + T_{i,1}\delta_{1} + T_{i,2}\delta_{2} + u_{i} 
+\end{equation}
+\item Randomization implies $\rightarrow$ $(Y_{i0},Y_{i1})\perp (T_{i,1},T_{i,2})\vert D_{i}$
+\medskip
+\item What is $(\delta_{1},\delta_{2})$ identifying?
+\end{itemize}
+\end{frame}
+%%
+\begin{frame}
+\includegraphics[scale=0.4]{aux/hull}
+\end{frame}
+%%
+\begin{frame}[shrink=10]
+\frametitle{Where is the failure?}
+\begin{center}
+{\small{}$\delta_{1}=E\left[\tilde{T}_{i}^{2}\right]^{-1}E\left[\tilde{T}_{i}\tilde{Y}_{i}\right]$}{\small\par}
+\par\end{center}
+\begin{itemize}
+\item where now {\small{}$\tilde{T}_{i}$ are residuals from
+regressions of $T_{i}$ on $D_{i}$ and $T_{i,2}$}. Similarly for $\tilde{Y}_{i}$.
+\medskip
+\item Observed outcome now can be written as 
+\begin{equation}
+    Y_{i}=Y_{i0}+\underbrace{(Y_{i1}-Y_{i0})}_{\tau_{i1}}T_{i,1}+\underbrace{(Y_{i2}-Y_{i0})}_{\tau_{i2}}T_{i,2}
+\end{equation}
+\medskip
+\item Same tricks as before and we arrive at
+\medskip
+\begin{center}
+{\small{}$\delta_{1}=\dfrac{E\left[Y_{i}\left(T_{i1}-E^{*}\left[T_{i1}|X_{i},T_{i2}\right]\right)\right]}{E\left[\left(T_{i1}-E^{*}\left[T_{i1}|X_{i}, T_{i2}\right]\right)^{2}\right]}{\small\par}}
+\par\end{center}
+\begin{center}
+{\small{}$=\dfrac{E\left[Y_{i0}\left(T_{i1}-E^{*}\left[T_{i1}|X_{i},T_{i2}\right]\right)\right]}{E\left[\left(T_{i1}-E^{*}\left[T_{i1}|X_{i}, T_{i2}\right]\right)^{2}\right]}{\small\par}+\dfrac{E\left[\tau_{i1}T_{i,1}\left(T_{i}-E^{*}\left[T_{1i}|X_{i},T_{i2}\right]\right)\right]}{E\left[\left(T_{i1}-E^{*}\left[T_{i1}|X_{i}, T_{i2}\right]\right)^{2}\right]}{\small\par}+\dfrac{E\left[\tau_{i2}T_{i2}\left(T_{i1}-E^{*}\left[T_{i1}|X_{i},T_{i2}\right]\right)\right]}{E\left[\left(T_{i1}-E^{*}\left[T_{i1}|X_{i}, T_{i2}\right]\right)^{2}\right]}{\small\par}}
+\par\end{center}
+\item First term $\rightarrow$
+\medskip 
+\item Second term $\rightarrow$ 
+\medskip
+\item Third term $\rightarrow$
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\centering
+\includegraphics[scale=0.3]{aux/hull2}
+\end{frame}
+\end{document}
