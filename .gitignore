@@ -1,5 +1,8 @@
-# --- macOS / LaTeX build artifacts ---
+# --- macOS / Dropbox / LaTeX build artifacts ---
 .DS_Store
+Icon?
+.dropbox
+.dropbox.attr
 *.aux
 *.log
 *.nav
