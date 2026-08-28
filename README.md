@@ -1,5 +1,7 @@
 # ECON 628: Applied Econometrics
 
+![](syllabus_header.png)
+
 ## Logistics
 
 | | |
