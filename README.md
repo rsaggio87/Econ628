@@ -40,11 +40,11 @@ Also, as discussed below, lots of questions in the problem sets will require you
 ## Cold Calling
 Many of the problem set questions in 628 can simply be outsourced to Claude Code, Codex, or whatever comes next, and a student who does so can still walk away with a top mark. Our view on this is simple. Your dissertation will almost certainly contain a great deal of empirical work, and commanding these tools is a prerequisite for being a successful economist. Working through these problem sets yourself is therefore an essential part of your training — if you blindly hand them to an AI, you are doing your future self a disservice. We would much rather trust you on this and enforce no rules at all, but experience tells us that some of you will let Claude do all your problem sets.
 
-To discourage this, we are introducing **cold calling** this year. In the first class after a problem set is due, we will have Claude randomly call one or two students to come to the board and work through a question from the last problem set. This is designed to mimic what your career will actually demand of you. You can have Claude write up the empirical strategy for one of your projects — but can you explain why that strategy makes sense? why other alternatives were rejected? can you defend your choices on your feet in a seminar? Think of cold calling as our attempt to make sure the incentive compatability constraint binds. 
+To discourage this, we are introducing **cold calling** this year. In the first class after a problem set is due, we will have Claude randomly call one or two students to come to the board and work through a question from the last problem set. This is designed to mimic what your career will actually demand of you. You can have Claude write up the empirical strategy of your paper (or problem set) — but can you explain why that strategy makes sense? why other alternatives were rejected? can you defend your choices on your feet in a seminar? Think of cold calling as our attempt to make sure the incentive compatability constraint binds. 
 
 ## Attendance
 
-Attendance is mandatory for ALL classes. If you have to miss a class, you need to email either Sam or Raffa beforehand telling us why.
+Attendance is mandatory for ALL classes. If you have to miss a class, you need to email either Sam or Raffa beforehand telling us why. This is especially the case for classes where students will solve problem sets questions in class.
 
 
 ## Prerequisites
