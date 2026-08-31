@@ -38,7 +38,8 @@ As older cohorts might have warned you, this course is fairly intensive in terms
 Also, as discussed below, lots of questions in the problem sets will require you to think "outside the box" and quite possibly use concepts that are not explicitly covered in class and that you might have learned in previous metrics courses — and if you have not learned it, then you'll have to learn it, because that's exactly what doing research is ultimately about.
 
 ## Cold Calling
-Many of the problem set questions in 628 can simply be outsourced to Claude Code, Codex, or whatever comes next, and a student who does so can still walk away with a top mark. Our view on this is simple. Your dissertation will almost certainly contain a great deal of empirical work, and commanding these tools is a prerequisite for being a successful economist. Working through these problem sets yourself is therefore an essential part of your training — if you blindly hand them to an AI, you are doing your future self a disservice. We would much rather trust you on this and enforce no rules at all, but experience tells us that some of you will let Claude do all your problem sets.
+
+As of today, many of the problem set questions in 628 can simply be outsourced to Claude Code, Codex, or whatever comes next, and a student who does so can still walk away with a top mark. Our view on this is simple. Your dissertation will almost certainly contain a great deal of empirical work, and commanding these tools is a prerequisite for being a successful economist. Working through these problem sets yourself is therefore an essential part of your training — if you blindly hand them to an AI (or just copy solutions from previous years), you are doing your future self a disservice. We would much rather trust you on this and enforce no rules at all, but experience tells us that some of you will just let Claude do all their problem sets.
 
 To discourage this, we are introducing **cold calling** this year. In the first class after a problem set is due, we will have Claude randomly call one or two students to come to the board and work through a question from the last problem set. This is designed to mimic what your career will actually demand of you. You can have Claude write up the empirical strategy of your paper (or problem set) — but can you explain why that strategy makes sense? why other alternatives were rejected? can you defend your choices on your feet in a seminar? Think of cold calling as our attempt to make sure the incentive compatability constraint binds. 
 
@@ -69,11 +70,11 @@ These books are fairly expensive. MHE is substantially less expensive than the o
 
 ## Assignments and Grading
 
-Four problem sets over the Fall term, each graded equally. **Maximum team size = 2.**
+Four problem sets over the Fall term, each graded equally. PSs are already posted online. **Maximum team size = 2.**
 
 ## Software
 
-You are allowed to use any software (Stata, R, MATLAB, Python, whatever) that fits you and the problem set better. Answers to problem sets must be typed up in LaTeX. You can work in pairs. **The use of generative AI to explicitly solve the problem set questions is prohibited.**
+You are allowed to use any software (Stata, R, MATLAB, Python, whatever) that fits you and the problem set better. Answers to problem sets must be typed up in LaTeX. You can work in pairs. **The use of generative AI to explicitly solve the problem set questions is prohibited.** You can use AI to improve the readability of your answers and fix any latex bugs you might have. 
 
 ## Readings
 
@@ -107,8 +108,8 @@ The [reading list](https://docs.google.com/document/d/1uiA55ukPEdkpN5MZnPv1U9w6Y
 | 16 | Nov 16 | Mon | Instrumental Variables | Sam | Heckit / control function / discrete choice | **PS3 due** |
 | 17 | Nov 18 | Wed | Instrumental Variables | Sam | Heckit / control function / discrete choice + Lee bounds | |
 | 18 | Nov 23 | Mon | Regression Discontinuity | Raffa | Identification; sharp / fuzzy RD; estimation; inference | |
-| 19 | Nov 25 | Wed | Panel Data | Raffa | Linear fixed effects model; fixed vs. random effects |  |
-| 20 | Nov 30 | Mon | Panel Data | Raffa | Linear fixed effects model; fixed vs. random effects | |
+| 19 | Nov 25 | Wed | Panel Data | Raffa | Panel Data |  |
+| 20 | Nov 30 | Mon | Panel Data | Raffa | Panel Data | |
 | 21 | Dec 2 | Wed | Difference-in-Differences | Raffa | 2×2 diff-in-diff; parallel trends assumption | |
 | 22 | Dec 7 | Mon | Difference-in-Differences | Raffa | Staggered design; event studies |**PS4 due**|
 | 23 | Dec 9 | Wed | Difference-in-Differences | Raffa | Staggered design; event studies |  |
