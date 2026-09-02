@@ -177,6 +177,29 @@ i) Now repeat the steps of part f but applied to this regression with two (inste
 j) Estimate one of the three approaches introduced by Goldsmith-Pinkham, Hull, and Kolesar in their AER paper to control for contamination bias. Report a table with the results from the regression in part g, part i and part j and comment on the results.
 
 
+
+\item \textbf{Attrition}
+
+a) Suppose you want to study the effects of a binary treatment $D_{i}$ (job-training) onto an outcome $W_{i}$ (log wages). You've somehow convinced a government agency to randomize $D_{i}$ within a well-defined population. Excited for this once in a life-time opportunity, you collected data on $(W_{i},D_{i},E_{i})$ where $E_{i}$ is a dummy equal to 1 if observation $i$ is employed.
+
+However, you quickly realized that you face an attrition problem: you only observe wages for those individuals that result employed at the moment of data collection. You have therefore a missing data problem for $W_{i}$: you only observe $W_{i}$ if $E_{i}=1$.
+
+You have that $(W_{i1},W_{i0},E_{i1},E_{i0})\perp D_{i}$ where as usual $W_{iD}$ denotes potential wages for observation $i$ under the counterfactual $D\in\{0,1\}$. Similarly for $E_{iD}$.
+
+Describe in words the following four groups: $E_{i1}=E_{i0}=1$; $E_{i1}>E_{i0}$; $E_{i1}<E_{i0}$; $E_{i1}=E_{i0}=0$.
+
+b) You decided to impose the following two assumptions: $W_{i1}-W_{i0}=\beta$ and $E_{i1}\geq E_{i0}$. Comment on these two assumptions given the empirical settings just described.
+
+c) You decided to estimate a regression of $W_{i}$ onto a constant and $D_{i}$, among those observations that have $E_{i}=1$. Is that regression identifying $\beta$? Write your steps carefully and give some economic intuition for your results.
+
+d) Suppose that $\dfrac{\Pr(E_{i1}>E_{i0})}{\Pr(E_{i}=1\vert D_{i}=1)}=0.10$. Interpret this quantity. Now assume $\beta=0.05$. Is the regression coefficient estimated in part (c) going to be greater or smaller than $0.05$? Explain your reasoning and the economic meaning of any assumptions that you need to impose in order to answer this question.
+
+e) Suppose I tell you that the highest value of $W_{i1}$ for individuals with $(E_{i1}>E_{i0})$ is smaller than the lowest value of $W_{i1}$ for individuals with $(E_{i1}=E_{i0}=1)$. Under this assumption and given that $\dfrac{\Pr(E_{i1}>E_{i0})}{\Pr(E_{i}=1\vert D_{i}=1)}=0.10$, explain how one can identify $\beta$ from the data.
+
+f) Define $Y_{i}=\exp(W_{i})$ if $E_{i}=1$ and $Y_{i}=0$ otherwise. What is $Y_{i}$ measuring? What is an (unconditional) regression of $Y_{i}$ on $D_{i}$ identifying? How would you interpret the resulting economic magnitude that you obtain from this regression? In particular, how would you determine whether the effect that you obtain from this regression is ``economically'' large vs. small?
+
+g) Suppose you find a very large effect of $D_{i}$ on $Y_{i}$. Your advisor then asks you whether this large effect is due to the intervention pushing people from non-employment into employment or because the intervention is able to raise log wages among people who would be employed regardless of whether they receive the job training. How would you answer this question?
+
 \end{enumerate}
 
 \end{document}
