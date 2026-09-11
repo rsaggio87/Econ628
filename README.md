@@ -10,7 +10,7 @@
 | **Term** | Term 1, 2026–2027 |
 | **Days** | Mondays and Wednesdays |
 | **Time** | 2:00–3:30 pm |
-| **Location** | **Buch B316** |
+| **Location** | **Iona 001** |
 | **First class** | Wednesday, September 9, 2026 |
 | **Last class** | Wednesday, December 9, 2026 |
 | **Office hours (Raffa)** | [Sign-up sheet](https://docs.google.com/spreadsheets/d/1Dy5X2-y1rHHJBudKsgVyccgiDZfDtujryRy1iLWprUY/edit?gid=2013906753#gid=2013906753). Email me if you cannot find a spot. |
