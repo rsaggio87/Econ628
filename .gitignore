@@ -1,0 +1,15 @@
+# LaTeX build artifacts (compiled PDFs remain tracked).
+*.aux
+*.fdb_latexmk
+*.fls
+*.log
+*.nav
+*.out
+*.snm
+*.synctex.gz
+*.toc
+*.vrb
+*.latexmkrc
+
+# Local watcher state.
+/build/
