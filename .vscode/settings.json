@@ -1,0 +1,19 @@
+{
+  // LaTeX Workshop must not build this project.
+  //
+  // The `latexmk -pdf -pvc` watcher (configured in ../.latexmkrc) is the single
+  // builder. Running both at once is what corrupted the .aux file, producing
+  // "Runaway argument? {n" / "File ended while scanning use of \@writefile":
+  // LaTeX Workshop's default outDir is %DIR%, i.e. the repo root, which Dropbox
+  // syncs and rewrites mid-compile. Its default autoBuild.run is "onFileChange",
+  // which also fires on changes "modified by other applications" -- including
+  // Dropbox sync events.
+  "latex-workshop.latex.autoBuild.run": "never",
+
+  // Defensive only. If a build is ever triggered by hand (Ctrl+Alt+B), keep its
+  // intermediates out of the Dropbox-synced repo, and in a different directory
+  // from the watcher's so the two can never collide. Note that an in-editor
+  // build therefore will NOT refresh the PDF next to the slides; the watcher
+  // does that.
+  "latex-workshop.latex.outDir": "/Users/Sam/.cache/latexmk/Econ628-vscode"
+}

@@ -9,7 +9,6 @@
 *.synctex.gz
 *.toc
 *.vrb
-*.latexmkrc
 
 # Local watcher state.
 /build/
