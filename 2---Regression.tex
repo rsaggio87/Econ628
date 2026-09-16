@@ -296,14 +296,13 @@ of $Y_{i}$.
 \begin{itemize}
 \item Law of total variance
 \be
-\nn
 \Var(Y_{i}) = \underbrace{\Var[\E[Y_{i}\vert X_{i}]]}_{\text{Variability in explained components}} + \underbrace{\E[\Var[Y_{i}\vert X_{i}]]}_{\text{Variability in Unexplained Components}}
 \ee
 \item Important to study inequality (wage inequality, health inequality, etc...).
 \medskip
 \item Well defined statistical decomposition. 
 \pause
-\bigkskip
+\bigskip
 \bigskip
 \item Ok, great but who tells me $\mu(X_{i})$? 
 \end{itemize}
@@ -589,7 +588,7 @@ P_{ii} = \dfrac{\partial \hat{y}_{i}}{\partial y_{i}}
 \end{frame}
 \begin{frame}[plain]
 \centering
-\includegraphics[scale=0.25]{classes/aux/rachel}
+\includegraphics[height=0.85\textheight,keepaspectratio]{aux/meager_2023}
 \end{frame}
 
 
@@ -843,33 +842,51 @@ can be answered with these parameters}{\footnotesize\par}
 \end{frame}
 \begin{frame}[plain]
 \centering
-\includegraphics[scale=0.25]{classes/aux/scat1.jpg}
+\includegraphics[height=0.75\textheight,keepaspectratio]{aux/ccff_fig1a}
 \end{frame}
 \begin{frame}[plain]
 \centering
-\includegraphics[scale=0.25]{classes/aux/scat2.jpg}
+\includegraphics[height=0.75\textheight,keepaspectratio]{aux/ccff_fig1b}
 \end{frame}
 \begin{frame}[plain]
 \centering
-\includegraphics[scale=0.25]{classes/aux/scat3.jpg}
+\includegraphics[height=0.75\textheight,keepaspectratio]{aux/ccff_fig1c}
 \end{frame}
 \begin{frame}[plain]
 \centering
-\includegraphics[scale=0.25]{classes/aux/scat4.jpg}
+\includegraphics[height=0.75\textheight,keepaspectratio]{aux/ccff_fig1d}
 \end{frame}
-\begin{frame}[plain]
+\begin{frame}{Covariate adjustment: do not residualize $X$}
+\begin{itemize}
+\item Standard practice: regress $Y$ and $X$ on $W$, then binscatter the two residuals. The justification given is FWL.
+\medskip
+\pause
+\item But FWL is a statement about coefficients in a linear model. Here we want the shape of $\mu(X)$.
+\medskip
+\item Residualizing is valid only if $\mu(\cdot)$ is linear, which is exactly what we wanted the plot to tell us.
+\medskip
+\pause
+\item Two things break: the horizontal axis is no longer $X$, and a nonlinear $\mu(\cdot)$ can be drawn as a straight line.
+\medskip
+\pause
+\item Fix: keep the bins in $X$ and let $W$ enter the same regression
+\[
+Y_{i}=\sum_{j=1}^{J}\beta_{j}1\{X_{i}\in\mathcal{I}_{j}\}+W_{i}^{\prime}\gamma+e_{i}
+\]
+and plot $\hat{\beta}_{j}$. Partial $W$ out of the bin dummies, not out of $X$.
+\end{itemize}
+\end{frame}
+%%
+\begin{frame}{The same data, three ways}
 \centering
-\includegraphics[scale=0.25]{classes/aux/scat5.jpg}
+\includegraphics[width=\textwidth,keepaspectratio]{aux/ccff_fig2}
 \end{frame}
-\begin{frame}[plain]
-\centering
-\includegraphics[scale=0.25]{classes/aux/scat6.jpg}
-\end{frame}
+%%
 \begin{frame}
 \frametitle{What if we want to plot this relationship after having controlled for some variables?}
 \pause
 \centering
-\includegraphics[scale=0.25]{classes/aux/cattaneo_max.jpg}
+\includegraphics[height=0.7\textheight,keepaspectratio]{aux/binscatter_aer}
 \end{frame}
 %%
 \begin{frame}
@@ -903,7 +920,7 @@ can be answered with these parameters}{\footnotesize\par}
 %%%%
 \begin{frame}[plain]
 \centering
-\includegraphics[scale=0.25]{classes/aux/zeros.jpg}
+\includegraphics[height=0.85\textheight,keepaspectratio]{aux/chen_roth_qje}
 \end{frame}
 
 \begin{frame}{Connecting Regression with Treatment Effects}
