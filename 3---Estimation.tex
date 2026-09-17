@@ -1,0 +1,1280 @@
+\documentclass[notes=show]{beamer}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\AtBeginSubsection[
+  {\frame<beamer>{\frametitle{Outline}   
+    \tableofcontents[currentsection,currentsubsection]}}%
+]%
+{
+  \frame<beamer>{ 
+    \frametitle{Outline}   
+    \tableofcontents[currentsection,currentsubsection]}
+}
+\usepackage{ulem}
+\usepackage{pdflscape}
+\setbeamertemplate{caption}{\insertcaption}
+\usepackage{color,xcolor,ucs}
+\usepackage{beamerthemesplit}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{adjustbox}
+\usepackage{pdfpages} 
+\definecolor{mintgreen}{rgb}{0.6, 1.0, 0.6}
+\makeatletter
+\@addtoreset{subfigure}{framenumber}% subfigure counter resets every frame
+\makeatother
+\newcommand*{\Scale}[2][4]{\scalebox{#1}{$#2$}}%
+\newcommand*{\Resize}[2]{\resizebox{#1}{!}{$#2$}}%
+\usepackage{amsfonts}
+\usepackage{booktabs}
+\usepackage{color,soul}
+\usepackage{pdfpages}
+\setboolean{@twoside}{false}
+\usepackage{amsmath}
+\usepackage{pdflscape} 
+\usepackage{eurosym}
+\usepackage{amstext} % for \text
+\DeclareRobustCommand{\officialeuro}{%
+  \ifmmode\expandafter\text\fi
+  {\fontencoding{U}\fontfamily{eurosym}\selectfont e}}
+\usepackage[caption = false]{subfig}
+\usepackage{appendixnumberbeamer} 
+\usepackage{graphicx}
+\usepackage{mathpazo}
+\usepackage{hyperref}
+\usepackage{multimedia}
+\usepackage{graphicx}
+\usepackage{multirow}
+\usepackage{subfig}
+\usepackage{verbatim}
+\usepackage{booktabs, multicol, multirow}
+\setcounter{MaxMatrixCols}{10}
+\input{Macros.tex}
+\AtBeginSection[]
+{
+  \begin{frame}[noframenumbering]
+    \frametitle{Outline for section \thesection}
+    \tableofcontents[currentsection]
+  \end{frame}
+}
+
+
+\usepackage{xcolor,soul}
+\renewcommand<>{\hl}[1]{\only#2{\beameroriginal{\hl}}{#1}}
+
+% https://tex.stackexchange.com/questions/41683/why-is-it-that-coloring-in-soul-in-beamer-is-not-visible
+\makeatletter
+\newcommand\SoulColor{%
+  \let\set@color\beamerorig@set@color
+  \let\reset@color\beamerorig@reset@color}
+\makeatother
+\SoulColor
+\AtBeginSection{\frame{\sectionpage}}
+
+\newsavebox\mybox
+\newenvironment{aquote}[1]
+  {\savebox\mybox{#1}\begin{quote}\openautoquote\hspace*{-.7ex}}
+  {\unskip\closeautoquote\vspace*{1mm}\signed{\usebox\mybox}\end{quote}}
+
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{Assumption}[theorem]{Assumption}
+\newenvironment{stepenumerate}{\begin{enumerate}[<+->]}{\end{enumerate}}
+\newenvironment{stepitemize}{\begin{itemize}[<+->]}{\end{itemize} }
+\newenvironment{stepenumeratewithalert}{\begin{enumerate}[<+-| alert@+>]}{\end{enumerate}}
+\newenvironment{stepitemizewithalert}{\begin{itemize}[<+-| alert@+>]}{\end{itemize} }
+\usetheme{Madrid}
+\makeatletter
+\setbeamertemplate{footline}
+{
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}%
+    \usebeamerfont{author in head/foot}\insertshortauthor~~\beamer@ifempty{\insertshortinstitute}{}{(\insertshortinstitute)}
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+    \usebeamerfont{title in head/foot}\insertshorttitle
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,right]{date in head/foot}%
+    \usebeamerfont{date in head/foot}\insertshortdate{}\hspace*{2em}
+%    \insertframenumber{} / \inserttotalframenumber\hspace*{2ex} % DELETED
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+\makeatother
+\usepackage{pdfpages}
+\begin{document}
+	\title[]{\large Estimation Principles
+	\vspace{0.5cm}
+	}
+	\author[Raffaele Saggio - Econ 628]{Raffaele Saggio}
+	\institute[]{UBC}
+	\date{\today \\
+}
+	\maketitle
+
+
+\begin{frame}[plain]{A Map of the World}
+
+\includegraphics[scale=0.4]{aux/NM_fig1}
+\end{frame}
+
+\begin{frame}{How to estimate stuff?}
+
+\begin{itemize}
+\item Common framework to analyzing many problems in econometrics summarized
+in Newey and McFadden (1994)
+\item Define quantity of interest $\theta_{0}$ as maximizer of population
+criterion fn $Q_{0}\left(\theta\right)$
+\item Define estimator as maximizer of sample criterion fn $\hat{Q}_{N}\left(\theta\right)$
+
+\begin{itemize}
+\item ``Extremum'' estimator (Amemiya, 1973)
+\item $\theta$ of fixed dimension! 
+
+\begin{itemize}
+\item Need different tools when $\dim\left(\theta\right)$ grows with $N$
+\end{itemize}
+\end{itemize}
+\end{itemize}
+
+\pause{\bigskip{}
+}
+\begin{itemize}
+\item Basic results that hold subject to ``usual'' regularity conditions:
+
+\begin{itemize}
+\item Consistency: $\hat{\theta}\overset{p}{\rightarrow}\theta_{0}$
+\item Normality: $\sqrt{N}\left(\hat{\theta}-\theta_{0}\right)\overset{d}{\rightarrow}N\left(0,\boldsymbol{H}^{-1}\boldsymbol{V}\boldsymbol{H}^{-1}\right)$
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[plain]{Preliminaries}
+
+The data are an $iid$ sample $\left\{ \boldsymbol{Z}_{i}\right\} _{i=1}^{N}$
+from some d.f. $F_{Z}\left(.\right)$
+
+\bigskip{}
+
+Parameter of interest is:
+\[
+\theta_{0}=\underset{\theta\in\Theta}{\arg\max}\mbox{ }Q_{0}\left(\theta\right)
+\]
+
+where $Q_{0}\left(\theta\right)$ is some \emph{population} criterion
+function.
+
+\bigskip{}
+
+Assume $\theta_{0}$ is a singleton (point-identification)
+\end{frame}
+
+\begin{frame}[plain]{Guess your estimator!}
+{\small{}}
+
+Example I?: 
+\[
+Q_{0}\left(\theta\right)=E\left[\left(Y_{i}-X_{i}'\theta\right)^{2}\right]
+\]
+
+
+\pause{{\small{}\medskip{}
+}}
+
+Example II?: 
+\[
+Q_{0}\left(\theta\right)=E\left[Y_{i}\ln\Phi\left(X_{i}'\theta\right)+\left(1-Y_{i}\right)\ln\left(1-\Phi\left(X_{i}'\theta\right)\right)\right]
+\]
+
+
+\pause{{\small{}\medskip{}
+}}
+
+Example III?
+\[
+Q_{0}\left(\theta\right)=E\left[\left(Y_{i}-X_{i}'\theta\right)Z_{i}\right]'E\left[Z_{i}Z_{i}'\right]^{-1}E\left[\left(Y_{i}-X_{i}'\theta\right)Z_{i}\right]
+\]
+
+\end{frame}
+
+\begin{frame}[plain]{Estimator}
+
+{\small{}Estimate $\theta$ by max'ing sample criterion fn:
+\[
+\widehat{\theta}=\underset{\theta\in\Theta}{\arg\max}\ \widehat{Q}_{N}\left(\theta\right)
+\]
+}{\small\par}
+
+\pause{}
+
+{\small{}Example I:
+\[
+\hat{Q}_{N}\left(\theta\right)=\frac{1}{N}\sum_{i=1}^{N}\left(Y_{i}-X_{i}'\theta\right)^{2}
+\]
+}{\small\par}
+
+{\small{}Example II:
+\[
+\hat{Q}_{N}\left(\theta\right)=\frac{1}{N}\sum_{i=1}^{N}Y_{i}\ln\Phi\left(X_{i}'\theta\right)+\left(1-Y_{i}\right)\ln\left(1-\Phi\left(X_{i}'\theta\right)\right)
+\]
+}{\small\par}
+
+{\small{}Example III:
+\[
+\hat{Q}_{N}\left(\theta\right)=\left[\frac{1}{N}\sum_{i=1}^{N}\left(Y_{i}-X_{i}'\theta\right)Z_{i}\right]'\left[\frac{1}{N}\sum_{i=1}^{N}Z_{i}Z_{i}'\right]^{-1}\left[\frac{1}{N}\sum_{i=1}^{N}\left(Y_{i}-X_{i}'\theta\right)Z_{i}\right]
+\]
+}{\small\par}
+\end{frame}
+
+\begin{frame}[plain]{Consistency}
+
+When does $\hat{\theta}\overset{p}{\rightarrow}\theta_{0}$?{\small{}\bigskip{}
+}{\small\par}
+
+Intuition: 
+\begin{itemize}
+\item Need for $\theta_{0}$ to be ``well separated''
+\item Need $\hat{Q}_{N}\left(\theta\right)$ ``close'' to $Q_{0}\left(\theta\right)$
+for maximizer to be close{\small{}\bigskip{}
+}{\small\par}
+\end{itemize}
+Standard \emph{sufficient} conditions:
+\begin{itemize}
+\item $Q_{0}\left(.\right)$ continuous
+\item $\Theta$ compact
+\item $\underset{\theta\in\Theta}{\sup}\left\vert \widehat{Q}_{N}\left(\theta\right)-Q_{0}\left(\theta\right)\right\vert \overset{p}{\longrightarrow}0$
+(uniform convergence)
+\end{itemize}
+\end{frame}
+
+\begin{frame}[plain]{Uniform Convergence}
+
+Pointwise convergence u{\small{}sually easy to establish via LLN:
+\[
+\left\vert \widehat{Q}_{N}\left(\theta\right)-Q_{0}\left(\theta\right)\right\vert \overset{p}{\rightarrow}0\mbox{ \ensuremath{\forall}\ensuremath{\ensuremath{\theta\in\Theta}}}
+\]
+}{\small\par}
+
+{\small{}Uniform convergence is stronger, need to trap ``worst-case''
+deviation of fn from limit:
+\[
+\underset{\theta\in\Theta}{\sup}\left\vert \widehat{Q}_{N}\left(\theta\right)-Q_{0}\left(\theta\right)\right\vert \overset{p}{\longrightarrow}0
+\]
+}
+
+\begin{center}
+{\small{}\includegraphics[scale=0.5]{aux/convergence}}{\small\par}
+\par\end{center}
+
+{\small{}On finite grid, pointwise $\rightarrow$ uniform convergence.
+What can go wrong w/ continuous $\Theta$?}{\small\par}  \hyperlink{tent_slides}{\beamerbutton{Folding tent example}} 
+\end{frame}
+
+\begin{frame}[plain]{Consistency}
+
+\begin{theorem}
+If the following conditions hold:{\small{}\medskip{}
+}{\small\par}
+
+i) $\Theta$ is compact
+
+{\small{}\medskip{}
+}{\small\par}
+
+ii) $Q_{0}\left(\theta\right)$ is uniquely maximized at $\theta_{0}$
+
+{\small{}\medskip{}
+}{\small\par}
+
+iii) $Q_{0}\left(\theta\right)$ is continuous 
+
+{\small{}\medskip{}
+}{\small\par}
+
+iv) $\widehat{Q}_{N}\left(\theta\right)$ converges uniformly to $Q_{0}\left(\theta\right)$
+
+{\small{}\medskip{}
+}{\small\par}
+
+Then, 
+\[
+\widehat{\theta}\overset{p}{\longrightarrow}\theta_{0}
+\]
+\end{theorem}
+\hyperlink{proof_consistency}{\beamerbutton{Proof}} 
+\end{frame}
+
+\begin{frame}[plain]{Asymptotic Distribution }
+
+\begin{theorem}
+If $\hat{\theta}\overset{p}{\rightarrow}\theta_{0}$ and the following
+conditions hold: {\small{}\medskip{}
+}{\small\par}
+
+i) $\theta_{0}$ is in the interior of $\Theta$
+
+{\small{}\medskip{}
+}{\small\par}
+
+ii) $\widehat{Q}_{N}\left(\theta\right)$ is twice differentiable
+in a neighborhood $\mathcal{N}$ of $\theta_{0}$
+
+{\small{}\medskip{}
+}{\small\par}
+
+iii) $\sqrt{N}\nabla_{\theta}\widehat{Q}_{N}\left(\theta_{0}\right)\overset{d}{\rightarrow}N\left(0,\boldsymbol{V}\right)$
+{\small{}\medskip{}
+}{\small\par}
+
+iv) there is an $\boldsymbol{H}\left(\theta\right)$ that is continuous
+at $\theta_{0}$ such that $\sup_{\theta}\left\Vert \nabla_{\theta\theta}\widehat{Q}_{N}\left(\theta\right)-\boldsymbol{H}\left(\theta\right)\right\Vert \overset{p}{\longrightarrow}0$
+
+{\small{}\medskip{}
+}{\small\par}
+
+v) $\boldsymbol{H}\equiv\boldsymbol{H}\left(\theta_{0}\right)$ is
+nonsingular
+
+{\small{}\medskip{}
+}{\small\par}
+
+Then, 
+\[
+\sqrt{N}\left(\hat{\theta}-\theta_{0}\right)\overset{d}{\rightarrow}N\left(0,\boldsymbol{H}^{-1}\boldsymbol{V}\boldsymbol{H}^{-1}\right)
+\]
+\end{theorem}
+\hyperlink{proof_ad}{\beamerbutton{Sketch of Proof}} 
+\end{frame}
+\begin{frame}[plain]{Special Cases}
+
+\includegraphics[scale=0.4]{aux/NM_fig1}
+\end{frame}
+
+
+\begin{frame}[plain]{Classical Minimum Distance (CMD)}
+You have a model that says that certain observed moments in the data (collected all in a given vector $\boldsymbol{\pi}$)  obeys a certain structure $\boldsymbol{g}(\theta_{0})$.
+\begin{equation}
+\boldsymbol{\pi}-\boldsymbol{g}(\theta_{0})=0
+\end{equation}
+\pause
+Objective fn (minimize instead of max):
+\[
+\widehat{Q}_{N}\left(\theta\right)=\left[\widehat{\boldsymbol{\pi}}-\boldsymbol{g}\left(\theta\right)\right]^{\prime}\widehat{\boldsymbol{W}}\left[\widehat{\boldsymbol{\pi}}-\boldsymbol{g}\left(\theta\right)\right]
+\]
+
+\begin{itemize}
+\item $\widehat{\boldsymbol{\pi}}\overset{p}{\rightarrow}\boldsymbol{\pi}$
+is a vector of reduced form sample moments
+\item $\boldsymbol{g}\left(\theta\right)$ is a structural function
+\item $\widehat{\boldsymbol{W}}\overset{p}{\rightarrow}\boldsymbol{W}$
+is a symmetric weighting matrix
+\end{itemize}
+
+\pause{\medskip{}
+}
+
+
+\pause{\medskip{}
+}
+
+Optimal weighting matrix: $\boldsymbol{W}=Var\left(\hat{\boldsymbol{\pi}}\right)^{-1}$
+(OMD)
+\end{frame}
+
+\begin{frame}[plain]{Derivation of asymptotic variance}
+
+{\small{}FOC:
+\[
+\bigtriangledown_{\theta}\boldsymbol{g}\left(\widehat{\theta}\right)^{\prime}\widehat{\boldsymbol{W}}\left[\widehat{\boldsymbol{\pi}}-\boldsymbol{g}\left(\widehat{\theta}\right)\right]=0
+\]
+}{\small\par}
+
+\pause{\medskip{}
+{\small{}Mean value expansion:
+\[
+\boldsymbol{g}\left(\widehat{\theta}\right)=\boldsymbol{g}\left(\theta_{0}\right)+\boldsymbol{G}\left(\overline{\theta}\right)\left(\widehat{\theta}-\theta_{0}\right)
+\]
+where $\boldsymbol{G}\left(\theta\right)=\bigtriangledown_{\theta}\boldsymbol{g}\left(\theta\right)$.
+Substitute in to get:
+\[
+\boldsymbol{G}\left(\widehat{\theta}\right)^{\prime}\widehat{\boldsymbol{W}}\left[\widehat{\boldsymbol{\pi}}-\boldsymbol{g}\left(\theta_{0}\right)-\boldsymbol{G}\left(\overline{\theta}\right)\left(\widehat{\theta}-\theta_{0}\right)\right]=0
+\]
+}}
+
+\pause{\medskip{}
+{\small{}Rearranging, normalizing, and taking limits yields:
+\[
+\boldsymbol{G}\left(\theta_{0}\right)^{\prime}\boldsymbol{W}\sqrt{N}\left[\widehat{\boldsymbol{\pi}}-\boldsymbol{g}\left(\theta_{0}\right)\right]=\boldsymbol{G}\left(\theta_{0}\right)^{\prime}\boldsymbol{WG}\left(\theta_{0}\right)\sqrt{N}\left(\widehat{\theta}-\theta_{0}\right)+o_{p}\left(1\right)
+\]
+}}
+
+\end{frame}
+
+\begin{frame}[plain]{Standard Errors}
+
+{\small{}Solve for $\sqrt{N}\left(\widehat{\theta}-\theta_{0}\right)$
+to get:
+\[
+\sqrt{N}\left(\widehat{\theta}-\theta_{0}\right)=\left[\boldsymbol{G}\left(\theta_{0}\right)^{\prime}\boldsymbol{WG}\left(\theta_{0}\right)\right]^{-1}\boldsymbol{G}\left(\theta_{0}\right)^{\prime}\boldsymbol{W}\sqrt{N}\left[\widehat{\boldsymbol{\pi}}-\boldsymbol{g}\left(\theta_{0}\right)\right]+o_{p}\left(1\right)
+\]
+}{\small\par}
+
+{\small{}By assumption:
+\[
+\sqrt{N}\left[\widehat{\boldsymbol{\pi}}-\boldsymbol{g}\left(\theta_{0}\right)\right]\overset{d}{\rightarrow}N\left(0,\boldsymbol{V_{\pi}}\right)
+\]
+}{\small\par}
+
+\pause{\medskip{}
+}
+
+{\small{}\textbf{{\small{}Slutzky}}: $\sqrt{N}\left(\widehat{\theta}-\theta_{0}\right)$
+is (asymptotically) a linear combination of normals w/ variance taking
+usual sandwich form:
+\[
+\left[\underset{\boldsymbol{H}}{\underbrace{\boldsymbol{G}\left(\theta_{0}\right)^{\prime}\boldsymbol{WG}\left(\theta_{0}\right)}}\right]^{-1}\underset{\boldsymbol{V}}{\underbrace{\boldsymbol{G}\left(\theta_{0}\right)^{\prime}\boldsymbol{WV_{\pi}WG}\left(\theta_{0}\right)}}\left[\underset{\boldsymbol{H}}{\underbrace{\boldsymbol{G}\left(\theta_{0}\right)^{\prime}\boldsymbol{WG}\left(\theta_{0}\right)}}\right]^{-1}
+\]
+}{\small\par}
+
+\pause{\medskip{}
+}
+
+{\small{}\textbf{{\small{}Standard errors}}: replace unknown quantities
+with sample analogues (i.e. $\boldsymbol{G}\left(\widehat{\theta}\right)$
+for $\boldsymbol{G}\left(\theta_{0}\right)$, $\boldsymbol{\hat{V}_{\pi}}$
+for $\boldsymbol{V_{\pi}}$ )}{\small\par}
+\end{frame}
+
+\begin{frame}[plain]{Optimal Weighting}
+
+{\small{}With optimal weights $\boldsymbol{W}=\boldsymbol{V_{\pi}}^{-1}$,
+asymptotic variance reduces to:
+\[
+\left[\boldsymbol{G}\left(\theta_{0}\right)^{\prime}\boldsymbol{V_{\pi}}^{-1}\boldsymbol{G}\left(\theta_{0}\right)\right]^{-1}
+\]
+}{\small\par}
+
+\pause{\medskip{}
+}
+
+{\small{}\textbf{{\small{}Specification testing}}: optimal weighting
+yields null distribution for minimized value of criterion function
+\[
+\hat{Q}_{N}^{OMD}\left(\hat{\theta}\right)\sim\chi^{2}\left(J-K\right)
+\]
+}{\small\par}
+
+{\small{}Answers question: does my model explain the data up to sampling
+error? (i.e. could \emph{{\small{}population}} $R^{2}=1$?)}{\small\par}
+\end{frame}
+\begin{frame}[plain]{Minimum Distance is the Purest Form of Econometrics}
+\begin{itemize}
+    \item We are now going to analyze the paper by Card and Lemieux (2001, QJE) to better understand, via a real research question, how MD works in practice.
+\end{itemize}
+\end{frame}
+\begin{frame}
+\frametitle{Card and Lemieux 2001}
+\begin{itemize}
+\item Fact: Inequality increased a lot in the US: gap in wages for men b/w college and HS diploma was about 25 percent in the mid-1970s and grew to 40 percent in 1998. 
+\bigskip
+\pause
+\item  By the time CL wrote their paper the standard theory to explain this fact is SBTC: arrival of computers benefits mostly highly skilled workers.
+\bigskip
+\pause
+\item CL argue instead that a key part of the story is the decline in the supply of college-educated workers in most recent cohorts.
+\end{itemize}
+\end{frame}
+%%
+\begin{frame}
+\frametitle{Starting observation}
+\begin{figure}[htb]
+\centering
+\includegraphics[width=0.45\textwidth]{aux/cl_base}
+\end{figure}
+\end{frame}
+%%
+\begin{frame}
+\frametitle{Starting observation}
+\begin{figure}[htb]
+\centering
+\includegraphics[width=1\textwidth]{aux/CL_important}
+\end{figure}
+\end{frame}
+
+\begin{frame}[shrink=5]
+\frametitle{Nested CES}
+\begin{itemize}
+\item Aggregate production function
+\be
+y_{t} = \left(\theta_{ht}H_{t}^{\rho}+\theta_{ct}C_{t}^{\rho}\right)^{\frac{1}{\rho}}
+\ee
+where $(H_{t},C_{t})$ are high school and college equivalent labor aggregates of age groups $j$:
+\be
+H_{t} = \left[\sum_{j}\left(\alpha_{j}H_{jt}^{\eta}\right)\right]^{\frac{1}{\eta}}
+\ee
+\be
+C_{t} = \left[\sum_{j}\left(\beta_{j}C_{jt}^{\eta}\right)\right]^{\frac{1}{\eta}}
+\ee
+\item The relevant elasticities are 
+\be
+\sigma_{A}=(1-\eta)^{-1} \qquad \sigma_{E}=(1-\rho)^{-1}
+\ee
+\item If wages are set according to marginal product of labor, then
+\be
+\log \dfrac{w_{jt}^{c}}{w_{jt}^{h}} = \log\dfrac{\theta_{ct}}{\theta_{ht}} +   \log\dfrac{\beta_{j}}{\alpha_{j}} + (\rho-\eta)\log \dfrac{C_{t}}{H_{t}} + (\eta-1)\log\dfrac{C_{jt}}{H_{jt}}
+\ee
+\end{itemize} 
+\end{frame}
+%%
+\begin{frame}[shrink=5]
+\frametitle{Interpretation}
+\begin{itemize}
+\item It is useful to rearrange the last expression as
+\be
+\log \dfrac{w_{jt}^{c}}{w_{jt}^{h}} =  \log\dfrac{\theta_{ct}}{\theta_{ht}} +   \log\dfrac{\beta_{j}}{\alpha_{j}} -\dfrac{1}{\sigma_{E}}\log \dfrac{C_{t}}{H_{t}} -\dfrac{1}{\sigma_{A}}\left[\log\dfrac{C_{jt}}{H_{jt}}-\log \dfrac{C_{t}}{H_{t}}\right]
+\ee
+\medskip
+\item How to model relative supplies?
+\begin{itemize}
+\item Relative supply of college grads for people aged $j$ largely determined by the college enrollment decision that these individuals made when they were 20
+\be
+\log\dfrac{C_{jt}}{H_{jt}}=\underbrace{\lambda_{t-j}}_{\text{Cohort Effect}}+\underbrace{\phi_{j}}_{\text{Age}}
+\ee
+age effect is constant over-time!
+\end{itemize}
+\medskip
+\item So we get that 
+\be
+\label{CL2001_FINAL}
+\underbrace{\log \dfrac{w_{jt}^{c}}{w_{jt}^{h}}}_{r_{jt}} =  \underbrace{\log\dfrac{\theta_{ct}}{\theta_{ht}}}_{\text{Year Effects}} +   \underbrace{\log\dfrac{\beta_{j}}{\alpha_{j}} -\dfrac{1}{\sigma_{A}}\phi_{j}}_{\text{Age}}-\underbrace{(\dfrac{1}{\sigma_{E}}-\dfrac{1}{\sigma_{A}})\log \dfrac{C_{t}}{H_{t}}}_{\text{Year Effects}}-\underbrace{\dfrac{1}{\sigma_{A}}\lambda_{t-j}}_{\text{Cohort}}
+\ee
+\end{itemize} 
+\end{frame}
+
+%%
+\begin{frame}
+\frametitle{Decomposing the returns}
+\begin{itemize}
+\item CL model implies the following \textit{reduced form} when considering gap in wages between across age groups and time interval
+\be
+r_{jt} = b_{j} + C_{t-j} + d_{t} 
+\ee
+\item This is precisely a Minimum Distance framework... 
+\medskip
+\item Data: Wage premiums for men between 1970 to 1997 for age groups 26 to 60 years old.
+\begin{enumerate}
+    \item What is the vector of moments, $\pi$?
+    \item What is the vector of (reduced form) parameters: $\theta$?
+    \item How many moments do you have?
+    \item How many (reduced-form) parameters do we have?
+    \item What would be the optimal weighting matrix here?
+    \item What would you do to test the model validity?
+\end{enumerate}
+\end{itemize}
+\end{frame}
+%%
+\begin{frame}
+\frametitle{Do we pass the test?}
+\begin{figure}[htb]
+\centering
+\includegraphics[width=0.8\textwidth]{aux/cl2}
+\end{figure}
+\end{frame}
+
+
+\begin{frame}[plain]{Practical Problems w/ OMD}
+
+Optimal weighting behaves poorly when $\boldsymbol{W}$ is large relative
+to sample size (Altonji and Segal, 1996)
+\begin{itemize}
+\item Variant of ``Kakwani bias'' in FGLS
+\item Problem emerges from correlation between weights and moments
+
+
+\pause{\bigskip{}
+}
+
+\end{itemize}
+Potential solutions:
+\begin{itemize}
+\item Use inefficient (but tractable) $\boldsymbol{W}$: equal (or diagonal)
+weight matrix (e.g., Abowd and Card, 1992)
+\item Jackknife / split sample estimation of $\boldsymbol{W}$ (Kezdi, Solon,
+and Hahn, 2002)
+\item Parameterize $\boldsymbol{W}=\boldsymbol{W}\left(\delta\right)$ and
+estimate $\delta$ along with $\theta$ via ``CUGMM'' (Hansen, Heaton,
+and Yaron, 1996; Hausman et al, 2011)
+\item Generalized Empirical Likelihood (Newey and Smith, 2004)
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}[plain]{Spec test without optimal weighting}
+\begin{itemize}
+\item Is it possible to test our model if we don't have (want) to use optimal weighting matrix? 
+\bigskip
+\item Newey (1985): yes! Consider estimation of $\theta$ that is based upon 
+\be
+[\hat{\pi}-g(\theta)]^{'}\mathbf{A}[\hat{\pi}-g(\theta)]
+\ee
+where $\mathbf{A}$ is a possibly stochastic matrix.
+\item Newey showed that
+\be
+N[\hat{\pi}-g(\theta)]'\mathbf{R}^{-}[\hat{\pi}-g(\theta)]\sim \chi^{2}_{J-K}
+\ee
+where $\mathbf{R}^{-}$ is the generalized inverse of the matrix $\mathbf{R}=\mathbf{M}\mathbf{V}_{\pi}\mathbf{M}'$ with 
+\be
+\mathbf{M}=\mathbf{I}-\mathbf{G}(\hat{\theta})(\mathbf{G}(\hat{\theta})'\mathbf{A}\mathbf{G}(\hat{\theta}))^{-1}\mathbf{G}(\hat{\theta})'\mathbf{A}
+\ee
+\item Need generalized inverse because $\mathbf{R}$ does not have full rank (presence of $\mathbf{M}$).
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}[plain]{On the frontier}
+\begin{itemize}
+\item Important assumption is ``correct" specification.
+\bigskip
+\be
+\sqrt{N}(\hat{\pi}-g(\theta_{0}))\sim^{a} \mathcal{N}(0,\mathbf{V}_{\pi})
+\ee
+\pause
+\item What happens under misspecification? 
+\bigskip
+\item Chamberlain (1994): be careful with weights! Randomness of weights increases noise in resulting estimator.
+\bigskip
+\item Active frontier in econometrics today: what if my model is wrong? Can my standard errors account for that?
+\begin{itemize}
+\medskip
+\item Armstrong and Kolesar (2018); Bonhomme and Weidner (2019); Armstrong-Kline-Sun (2023). 
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[plain]{GMM}
+
+Criterion function (min once again):
+\[
+\widehat{Q}_{GMM}\left(\theta\right)=\widehat{\boldsymbol{g}}\left(\theta\right)^{\prime}\widehat{\boldsymbol{W}}\widehat{\boldsymbol{g}}\left(\theta\right)
+\]
+
+\bigskip{}
+
+\begin{itemize}
+\item $\widehat{\boldsymbol{g}}\left(\theta\right)=\frac{1}{N}\sum\limits _{i}\boldsymbol{f}\left(\boldsymbol{Z}_{i},\theta\right)$
+is a $J\times1$ vector of moment conditions
+\item CMD nested by separable case where $\boldsymbol{f}\left(\boldsymbol{Z}_{i},\theta\right)=\boldsymbol{\pi}\left(\boldsymbol{Z}_{i}\right)-g\left(\theta\right)$
+\item MM nested by just-id case where $J=dim\left(\theta\right)$
+\end{itemize}
+\end{frame}
+
+\begin{frame}[plain]{Identification}
+
+Population moment restrictions:
+\[
+E\left[\boldsymbol{f}\left(\boldsymbol{Z}_{i},\theta\right)\right]=0\ \text{iff\ }\theta=\theta_{0}
+\]
+
+\bigskip{}
+
+\textbf{Examples}:
+
+\begin{itemize}
+\item Instrumental variables (orthogonality condition):
+\[
+E\left[\left(Y_{i}-X_{i}'\beta\right)Z_{i}\right]=0
+\]
+\end{itemize}
+
+\begin{itemize}
+\item Rational expectations restrictions (e.g., Hall, 1978) (real interest rate = 0)
+\end{itemize}
+\[
+u'(C_{t}) = \beta\E[u'(C_{t+1})\vert \Omega_{t}]
+\]
+\bigskip{}
+
+\end{frame}
+
+
+\begin{frame}[plain]{Derivation of Asymptotic Variance}
+
+FOC:
+\[
+\widehat{\boldsymbol{G}}\left(\widehat{\theta}\right)^{\prime}\widehat{\boldsymbol{W}}\widehat{\boldsymbol{g}}\left(\widehat{\theta}\right)=0
+\]
+
+Mean value expansion:
+\[
+\widehat{\boldsymbol{g}}\left(\widehat{\theta}\right)=\widehat{\boldsymbol{g}}\left(\theta_{0}\right)+\widehat{\boldsymbol{G}}\left(\overline{\theta}\right)\left(\widehat{\theta}-\theta_{0}\right)
+\]
+Substitute in to get:
+\[
+\widehat{\boldsymbol{G}}\left(\widehat{\theta}\right)^{\prime}\widehat{\boldsymbol{W}}\widehat{\boldsymbol{g}}\left(\theta_{0}\right)+\widehat{\boldsymbol{G}}\left(\widehat{\theta}\right)^{\prime}\widehat{\boldsymbol{W}}\widehat{\boldsymbol{G}}\left(\overline{\theta}\right)\left(\widehat{\theta}-\theta_{0}\right)=0
+\]
+Therefore
+\[
+\sqrt{N}\left(\widehat{\theta}-\theta_{0}\right)=\left(\boldsymbol{G}\left(\theta_{0}\right)^{\prime}\boldsymbol{WG}\left(\theta_{0}\right)\right)^{-1}\boldsymbol{G}\left(\theta_{0}\right)^{\prime}\boldsymbol{W}\sqrt{N}\widehat{\boldsymbol{g}}\left(\theta_{0}\right)+o_{p}\left(1\right)
+\]
+
+\end{frame}
+
+\begin{frame}[plain]{Derivation of Asymptotic Variance}
+
+By assumption:
+
+\[
+E\left[\sqrt{N}\widehat{\boldsymbol{g}}\left(\theta_{0}\right)\right]=0
+\]
+
+Hence, for $\boldsymbol{V_{f}=}E\left[\boldsymbol{f}\left(\boldsymbol{Z}_{i},\theta_{0}\right)\boldsymbol{f}\left(\boldsymbol{Z}_{i},\theta_{0}\right)^{\prime}\right]$,
+we have
+
+\[
+AVAR\left(\boldsymbol{G}\left(\theta_{0}\right)^{\prime}\boldsymbol{W}\sqrt{N}\widehat{\boldsymbol{g}}\left(\theta_{0}\right)\right)=\boldsymbol{G}\left(\theta_{0}\right)^{\prime}\boldsymbol{WV_{f}WG}\left(\theta_{0}\right)
+\]
+
+Consequently $AVAR\left(\sqrt{N}\left(\widehat{\theta}-\theta_{0}\right)\right)$
+is:
+\[
+\left(\underset{\boldsymbol{H}}{\underbrace{\boldsymbol{G}\left(\theta_{0}\right)^{\prime}\boldsymbol{WG}\left(\theta_{0}\right)}}\right)^{-1}\underset{\boldsymbol{V}}{\underbrace{\boldsymbol{G}\left(\theta_{0}\right)^{\prime}\boldsymbol{WV_{f}WG}\left(\theta_{0}\right)}}\left(\underset{\boldsymbol{H}}{\underbrace{\boldsymbol{G}\left(\theta_{0}\right)^{\prime}\boldsymbol{WG}\left(\theta_{0}\right)}}\right)^{-1}
+\]
+
+Plugin sample analogues to get standard errors
+\end{frame}
+
+\begin{frame}[plain]{Optimal Weighting}
+
+When $\boldsymbol{W}=\boldsymbol{V_{f}}^{-1}$ (optimal weighting)
+AVAR simplifies to:
+\[
+\left(\boldsymbol{G}\left(\theta_{0}\right)^{\prime}\boldsymbol{V_{f}}^{-1}\boldsymbol{G}\left(\theta_{0}\right)\right)^{-1}
+\]
+
+\bigskip{}
+
+2-step estimation approach (ala 3SLS): 
+\begin{enumerate}
+\item get inefficient starting estimates $\hat{\theta}^{\left(1\right)}$
+from choosing $\hat{\boldsymbol{W}}=\boldsymbol{I}$. 
+\item minimize $Q_{GMM}\left(\theta\right)$ using $\hat{\boldsymbol{W}}=\boldsymbol{W}\left(\hat{\theta}^{\left(1\right)}\right)$
+\end{enumerate}
+Keep going?: further steps provide no (first order) asymptotic advantage
+but often perform better in finite samples
+\end{frame}
+
+\begin{frame}[plain]{CUGMM (Hansen, Heaton, and Yaron, 1996)}
+
+As w/ OMD, problems emerge when weight matrix has too many unknown
+parameters
+
+\bigskip{}
+
+One solution: ``continuously update'' weight matrix $\boldsymbol{W}\left(\theta\right)$
+and minimize 
+\[
+\widehat{Q}_{CUGMM}\left(\theta\right)=\widehat{\boldsymbol{g}}\left(\theta\right)^{\prime}\widehat{\boldsymbol{W}}\left(\theta\right)\widehat{\boldsymbol{g}}\left(\theta\right)
+\]
+
+\bigskip{}
+
+Better asymptotic performance than GMM but can be difficult to find
+minimum.
+\end{frame}
+
+\begin{comment}
+\begin{frame}[plain]{Empirical Likelihood}
+
+GMM a bit like a quadratic approx to a log likelihood
+
+EL: maximize non-parametric likelihood fn subject to moment restrictions
+\begin{eqnarray*}
+ & \underset{\left\{ \pi_{i}\right\} ,\theta}{\max}\mbox{ }\prod_{i=1}^{N}\pi_{i}\\
+\ensuremath{s.t.} & \mbox{ \ensuremath{\sum_{i=1}^{N}\pi_{i}\boldsymbol{f}\left(\boldsymbol{Z}_{i},\theta\right)}}=0\\
+ & \ensuremath{\sum_{i=1}^{N}\pi_{i}}=1
+\end{eqnarray*}
+
+Difficult optimization problem:
+\begin{itemize}
+\item w/o constraints $\hat{\pi}_{i}=\frac{1}{N}$ (returns the EDF)
+\item w/ constraints $\left\{ \hat{\pi}_{i}\right\} $ give efficient estimates
+of joint distribution of data and $\hat{\theta}$ higher order unbiased
+(Newey and Smith, 2004)
+\item Generally difficult to compute (extension to CUGMM).
+\end{itemize}
+\end{frame}
+\end{comment}
+\begin{frame}[plain]{Maximum Likelihood}
+You are willing to specify the \textit{entire} conditional distribution of the outcome given covariates.
+\pause
+Objective fn:
+\[
+\widehat{Q}_{ML}\left(\theta\right)=\frac{1}{N}\sum\limits _{i}l\left(\boldsymbol{Z}_{i},\theta\right)
+\]
+
+FOC:
+\[
+\frac{1}{N}\sum\limits _{i}\boldsymbol{s}\left(\boldsymbol{Z}_{i},\widehat{\theta}\right)=0
+\]
+
+\begin{itemize}
+\item ML: if model is correct $\rightarrow$ $E[\boldsymbol{s}\left(\boldsymbol{Z}_{i},{\theta}_{0}\right)]=0$
+\item No weighting problems!
+\item Likelihood chooses the right moments for you! (embedded in the score function)
+
+\begin{itemize}
+\item ``Efficient Method of Moments'' on FOCs (Gallant and Tauchen, 1996)
+\end{itemize}
+\item ML is prone to misspecification. Even getting a minor feature of the entire distribution wrong can make the ML estimator inconsistent.
+\medskip
+\item Can you think of a relevant counter-example? 
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}[plain]{Asymptotic variance}
+
+``Influence function'' representation -- 1st order effect of adding
+an obs on estimator:
+\[
+\sqrt{N}\left(\widehat{\theta}-\theta_{0}\right)=\widehat{\boldsymbol{H}}\left(\theta_{0}\right)^{-1}\frac{1}{\sqrt{N}}\sum\limits _{i}\boldsymbol{s}\left(\boldsymbol{Z}_{i},\theta_{0}\right)+o_{p}\left(1\right)
+\]
+
+Variance of IF gives asymptotic variance:
+\[
+\boldsymbol{H}\left(\theta_{0}\right)^{-1}\boldsymbol{V}\boldsymbol{H}\left(\theta_{0}\right)^{-1}
+\]
+where $\boldsymbol{V=E}\left[\boldsymbol{s}\left(\boldsymbol{Z}_{i},\theta_{0}\right)\boldsymbol{s}\left(\boldsymbol{Z}_{i},\theta_{0}\right)^{\prime}\right]$
+
+\pause{\medskip{}
+}
+
+Information matrix equality:
+\[
+\boldsymbol{V=H}\left(\theta_{0}\right)
+\]
+
+When this holds, asymptotic variance reduces to Cramer-Rao lower bound
+$\boldsymbol{H}\left(\theta_{0}\right)^{-1}$.
+\medskip
+\begin{itemize}
+\item Nothing beats the CRLB $\rightarrow$ nothing beats a properly specified likelihood model.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[plain]{Simulation Estimators}
+
+Often difficult to write down the likelihood
+\begin{itemize}
+\item Particularly difficult for multinomial choice problems where regions
+of integration can quickly become intractable
+\item Or for parametric models with lots of unobserved heterogeneity
+\end{itemize}
+
+\pause{\medskip{}
+}
+
+Simulation methods
+\begin{itemize}
+\item Can use computer to compute likelihood via simulation (MSL)
+\item With continuous variables often easier to simulate moment conditions
+(MSM)
+\item Great (free) introduction by \href{http://eml.berkeley.edu/books/choice2.html}{Train (2009)} or Chapter 12 of Cameron and Trivedi. 
+\end{itemize}
+
+\pause{\medskip{}
+}
+
+\textbf{Warning}: can easily waste a lot of time on this stuff
+\begin{itemize}
+\item Tendency to use these methods when you don't fully understand the
+model / identification
+\item Important to ``warm up'' by estimating simpler models that you understand!
+\end{itemize}
+\end{frame}
+
+\begin{frame}[plain]{Maximum Simulated Likelihood}
+
+\[
+\hat{\theta}_{MSL}\equiv\underset{\theta}{\arg\max}\frac{1}{N}\sum\limits _{i=1}^{N}\ln\hat{L}_{M}\left(\boldsymbol{Z}_{i},\theta\right)
+\]
+
+\begin{itemize}
+\item $\hat{L}_{M}\left(\boldsymbol{Z}_{i},\theta\right)=\hat{L}\left(\boldsymbol{Z}_{i},\theta,u_{i1},u_{i2},...,u_{iM}\right)$
+is simulated likelihood
+\item Fully parametric: drawing $\left\{ u_{im}\right\} _{m=1}^{M}$ from
+\emph{known} distribution 
+\item Hold $\left\{ \boldsymbol{u}_{i}\right\} _{i=1}^{N}$ fixed when searching
+over $\theta$ to avoid ``chatter''
+\item Need large $M$ to ensure consistency: $\underset{M\rightarrow\infty}{\lim}P\left(\left|\hat{L}_{M}\left(\boldsymbol{Z}_{i},\theta\right)-L\left(\boldsymbol{Z}_{i},\theta\right)\right|>\varepsilon\right)=0$
+\end{itemize}
+\end{frame}
+
+\begin{frame}[plain]{Example (Probit)}
+
+Probit likelihood:
+\[
+L\left(Y_{i},X_{i},\beta\right)=\Phi\left(X_{i}'\beta\right)^{Y_{i}}\left[1-\Phi\left(X_{i}'\beta\right)\right]^{1-Y_{i}}
+\]
+
+Simulated analogue: {\small{}
+\begin{eqnarray*}
+\hat{L}_{M}\left(Y_{i},X_{i},\beta\right) & = & \left(\frac{1}{M}\sum_{m=1}^{M}1\left[X_{i}'\beta-u_{im}>0\right]\right)^{Y_{i}}\\
+ &  & \times\left(\frac{1}{M}\sum_{m=1}^{M}1\left[X_{i}'\beta-u_{im}<0\right]\right)^{1-Y_{i}}
+\end{eqnarray*}
+}where $\left\{ u_{im}\overset{iid}{\sim}N\left(0,1\right)\right\} _{i=1,m=1}^{N,M}$
+\begin{itemize}
+\item Unbiased simulator: $E\left[\hat{L}_{M}\left(Y_{i},X_{i},\beta\right)\right]=L\left(Y_{i},X_{i},\beta\right)$
+\item But $\hat{L}_{M}\left(Y_{i},X_{i},\beta\right)$ nondifferentiable
+for finite $M$ (step function)
+\end{itemize}
+\end{frame}
+
+\begin{frame}[plain]{Example (Random Coefficient Logit)}
+
+Suppose
+\[
+Y_{i}=1\left[b_{i}X_{i}+\varepsilon_{i}>0\right]
+\]
+where $\varepsilon_{i}\sim Logistic(0,1)$ and $b_{i}\sim N\left(\mu,\sigma^{2}\right)$
+
+\bigskip{}
+
+\begin{itemize}
+\item Could simulate likelihood by taking draws from $\left(\varepsilon_{i},b_{i}\right)$. 
+\item Better to integrate out $\varepsilon_{i}$ analytically to obtain
+smooth objective fn:
+\begin{eqnarray*}
+\hat{L}_{M}\left(Y_{i},X_{i},\mu,\sigma\right) & \equiv & \left(\frac{1}{M}\sum_{m=1}^{M}\Lambda\left(\left(\mu+\sigma u_{im}\right)X_{i}\right)\right)^{Y_{i}}\\
+ &  & \times\left(1-\frac{1}{M}\sum_{m=1}^{M}\Lambda\left(\left(\mu+\sigma u_{im}\right)X_{i}\right)\right)^{1-Y_{i}}
+\end{eqnarray*}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[plain]{Asymptotics}
+
+Pakes and Pollard (1989): general asymptotic framework for simulation
+estimators (``stochastic equicontinuity'')
+
+\bigskip{}
+
+Gourieroux and Monfort (1991): if $M,N\rightarrow\infty$ and $\sqrt{N}/M\rightarrow0$,
+then $\widehat{\theta}_{MSL}\overset{p}{\rightarrow}\theta_{0}$ and
+\[
+\sqrt{N}\left(\widehat{\theta}_{MSL}-\theta_{0}\right)\overset{d}{\rightarrow}N\left(0,\boldsymbol{H}\left(\theta_{0}\right)^{-1}\boldsymbol{V}\boldsymbol{H}\left(\theta_{0}\right)^{-1}\right)
+\]
+
+
+\pause{\bigskip{}
+}
+
+Practical advice: start with $M=100$ to get initial estimates then
+check stability as $M$ increases
+
+\pause{\bigskip{}
+}
+
+Std errors: plug in simulation estimators of $\boldsymbol{H}\left(\hat{\theta}_{MSL}\right),\boldsymbol{V}\left(\hat{\theta}_{MSL}\right)$ 
+\end{frame}
+
+\begin{frame}[plain]{Method of Simulated Moments}
+
+\[
+\widehat{\theta}_{MSM}\equiv\underset{\theta}{\arg\min}\mbox{ }\widehat{\boldsymbol{g}}_{M}\left(\theta\right)^{\prime}\widehat{\boldsymbol{W}}\widehat{\boldsymbol{g}}_{M}\left(\theta\right)
+\]
+
+\begin{itemize}
+\item $\widehat{\boldsymbol{g}}_{M}\left(\theta\right)=\frac{1}{N}\sum\limits _{i}\widehat{\boldsymbol{f}}_{M}\left(\boldsymbol{Z}_{i},\theta\right)$
+is simulated moment condition
+\item \textrm{McFadden (1989): for \emph{\textrm{fixed}} $M$, as $N\rightarrow\infty$,
+$\widehat{\theta}_{MSM}\overset{p}{\rightarrow}\theta_{0}$ and $AVAR\left(\sqrt{N}\left(\widehat{\theta}_{MSM}-\theta_{0}\right)\right)=$
+\[
+\left(\boldsymbol{G}\left(\theta_{0}\right)^{\prime}\boldsymbol{WG}\left(\theta_{0}\right)\right)^{-1}\boldsymbol{G}\left(\theta_{0}\right)^{\prime}\boldsymbol{W}\boldsymbol{V}_{\boldsymbol{f},M}\boldsymbol{WG\left(\theta_{0}\right)}\left(\boldsymbol{G}\left(\theta_{0}\right)^{\prime}\boldsymbol{WG}\left(\theta_{0}\right)\right)^{-1}
+\]
+}
+\end{itemize}
+\end{frame}
+
+%%
+\begin{frame}
+
+\frametitle{Example}
+\begin{itemize}
+    \item Let's see one of these simulated tools in action using a concrete example: Duflo-Hanna-Ryan (2013,AER).
+    \medskip
+    \item Teacher absenteeism is a serious problem in many developing countries.
+    \medskip
+    \item In DHR setting: 40\% absent rate
+    \medskip
+    \item DHR provided tamper-proof cameras to 60 randomly selected schools and instructed a student in the class to take pictures beginning and the end of the day with students. 
+    \medskip
+    \item Teacher in treated schools also received a different compensation package
+    \begin{equation}
+        Y_{im} = 500 + 50\times\mathbf{1}\{X_{im} > 10\}\times (X_{im}-10)
+    \end{equation}
+    \item Control group: Flat 1000 Rs per month.
+\end{itemize}
+\end{frame}
+%%
+\begin{frame}
+\includegraphics[scale=0.5]{aux/DHR5.jpg}
+\end{frame}
+%%
+\begin{frame}
+\includegraphics[scale=0.7]{aux/DHR1.jpg}
+\end{frame}
+%%
+\begin{frame}
+\includegraphics[scale=0.5]{aux/DHR2.jpg}
+\end{frame}
+%%%%%%
+\begin{frame}
+
+\frametitle{Going Beyond the RCT}
+\begin{itemize}
+    \item DHR want to understand the mechanism underlying their effects and whether a more effective incentive scheme could be found.
+    \medskip
+    \item Hard to answer these questions with reduced form evidence $\rightarrow$ need a structural model!
+    \medskip
+    \item Key incentive structure of the intervention:
+    \begin{itemize}
+        \item If a teacher has already attended 10 days with a month, she has a strong incentive to continue attending the remaining days until the end of the month (``teacher is in the money").
+        \item If a teacher has attended so few days that she cannot reach ten, she has very little incentives to attend (``teacher is out of money") 
+        \item Everything resets at the beginning of the month, teachers who were in the money are not longer so and at the beginning of the month there is only a dynamic incentive to attend because that might lead teachers to be in the money.
+    \end{itemize}
+\end{itemize}
+\end{frame}
+%%%
+\begin{frame}
+\includegraphics[scale=0.5]{aux/DHR3.jpg}
+\end{frame}
+%%%
+\begin{frame}[shrink=30]
+\frametitle{Dynamic Labor Supply model}
+\begin{itemize}
+    \item  Let $m$ be the month and $t$ the day within the month, where $t = \{1, ..., T_{m}\}$.
+    \medskip
+    \item Let  $U_{tm}$ be the flow utility of a teacher on day $t$ of month $m$. This utility function is assumed to be separable in consumption and leisure and  takes the following form
+\be
+U_{tm}=\beta C_{tm}(\pi)+\mu_{tm}L_{tm}
+\ee 
+ \medskip
+\item where  $C_{tm}(\pi)$ is consumption in day $t$ month $m$ which is a function of total monthly income $\pi$. $\beta$ converts consumption measured in Rupees into utility. $L_{tm}$ is a binary variable which is one if the teacher does not go to work on day $t$ and $\mu_{tm}$ measures the value of leisure which takes the following structure
+\be
+\mu_{tm}=\mu+\epsilon_{tm}
+\ee
+where $\mu\sim\mathcal{N}(\mu_{1};\sigma_{1})$ and $\epsilon_{tm}$ is iid standard normal. 
+ \medskip
+\item Utility is linear in consumption and consumption and leisure are separable, there is not going to be a dependency in behavior across months.
+ \medskip
+\item DHR assume no discounting within months and since utility is linear in consumption, in this model teacher consumes all her income on the last day of the month, when she is paid.
+ \medskip
+\item Incentive to work
+\be
+\pi(d_{T_{m}})=500+50\max(0,d_{T_{m}}-10)
+\ee
+where $d_{T_{m}}$ represents how many days of work an agent has accumulated in a given month. In the control group, $\pi_{m}$ is fixed at $1000$ regardless of the accumulated days of work. 
+\end{itemize}
+\end{frame}
+%%%
+\begin{frame}[shrink=40]
+\frametitle{Dynamic Labor Supply model}
+\begin{itemize}
+    \item  The dynamic problem for a teacher in a particular month $m$ can be written as follows, for $t<T_{m}$
+\be
+\label{bellman}
+V_{m}(t,d_{t-1};\mu_{tm})=\max\left\{\mu_{tm}+E[V_{m}(t+1,d_{t-1};\mu_{t+1m})],E[V_{m}(t+1,d_{t-1}+1;\mu_{t+1m})]\right\}
+\ee
+$d_{t-1}$ denotes how many days of work a particular teacher has accumulated when entering period $t$. 
+\item From (\ref{bellman}), we can see that  teachers trade off immediate gratification from leisure against the possibility of higher wages at the end of the month. When $t=T_{m}$,
+\be
+\label{bellman2}
+V_{m}(T_{m},d_{T_{m}-1};\mu_{T_{m}})=\max\left\{\mu_{T_{m}}+\beta\pi(d_{T_{m}-1}),\beta\pi(d_{T_{m}-1}+1)\right\}
+\ee
+note that given the assumptions of the model, choices are independent across months.
+\item DHR assumes that $\mu$ is drawn \textit{independently} from a standard normal distribution with mean $\mu_{1}$ and variance $\sigma_{1}$. The distribution $\mu$  is drawn anew each month. Under this assumption, 
+\be
+\nn
+\Pr(work_{T_{m}}=1\vert D_{T_{m}-1}=d_{T_{m}-1};\mu_{1},\sigma_{1})=\int\Phi(\beta\{\pi(d_{T_{m}-1}+1)-\pi(d_{T_{m}-1})\}-(\mu_{1}+\sigma_{1}u_{s}))\phi\left(\dfrac{u_{s}-\mu_{1}}{\sigma_1}\right)du_{s} 
+\ee
+\item This is SML! DHR uses this model to fit the model on the treatment group. It then verifies whether the model is correct by checking the predictions of the model when setting pay equal to 1000 Rps (regardless of days worked) and benchmark the results with what is observed in the control group. 
+\medskip
+\item After choosing the model with the best fit, DHR play around with different incentives structure
+\end{itemize}
+\end{frame}
+\begin{frame}
+\includegraphics[scale=0.3]{aux/DHR4.jpg}
+\end{frame}
+%%%%%%%%
+\begin{frame}
+\begin{center}
+\LARGE{Appendix}
+\end{center}
+\end{frame}
+
+
+\begin{frame}[plain]{Proof}
+\label{proof_consistency}
+{\footnotesize{}For any $\varepsilon$ we have with probability approaching
+1: }{\footnotesize\par}
+\begin{description}
+\item [{{\footnotesize{}a)}}] {\footnotesize{}$\widehat{Q}_{N}\left(\widehat{\theta}\right)>\widehat{Q}_{N}\left(\theta_{0}\right)-\varepsilon$
+(by virtue of maximizer)}{\footnotesize\par}
+\item [{{\footnotesize{}b)}}] {\footnotesize{}$Q_{0}\left(\widehat{\theta}\right)>\widehat{Q}_{N}\left(\widehat{\theta}\right)-\varepsilon$
+(by uniform convergence) }{\footnotesize\par}
+\item [{{\footnotesize{}c)}}] {\footnotesize{}$\widehat{Q}_{N}\left(\theta_{0}\right)>Q_{0}\left(\theta_{0}\right)-\varepsilon$
+(by uniform convergence)}{\footnotesize\par}
+\end{description}
+{\footnotesize{}Therefore: 
+\[
+Q_{0}\left(\widehat{\theta}\right)\overset{b)}{>}\widehat{Q}_{N}\left(\widehat{\theta}\right)-\varepsilon\overset{a)}{>}\widehat{Q}_{N}\left(\theta_{0}\right)-2\varepsilon\overset{c)}{>}Q_{0}\left(\theta_{0}\right)-3\varepsilon.
+\]
+}{\footnotesize\par}
+
+\pause{{\small{}\medskip{}
+}}
+
+{\footnotesize{}Let $\mathcal{N}$ be an open neighborhood of $\theta_{0}$
+and $\mathcal{N}^{c}$ its complement. }{\footnotesize\par}
+
+{\footnotesize{}Note that $\underset{\theta\in\Theta\cap\mathcal{N}^{c}}{\sup}Q_{0}\left(\theta\right)=Q_{0}\left(\theta^{\ast}\right)<Q_{0}\left(\theta_{0}\right)$. }{\footnotesize\par}
+\begin{itemize}
+\item {\footnotesize{}Choose $3\varepsilon=Q_{0}\left(\theta_{0}\right)-\underset{\theta\in\Theta\cap\mathcal{N}^{c}}{\sup}Q_{0}\left(\theta\right)$. }{\footnotesize\par}
+\item {\footnotesize{}It follows that $Q_{0}\left(\widehat{\theta}\right)>\underset{\theta\in\Theta\cap\mathcal{N}^{c}}{\sup}Q_{0}\left(\theta\right)$
+w.p.a.1. }{\footnotesize\par}
+\end{itemize}
+{\footnotesize{}Hence $\widehat{\theta}\in\mathcal{N}\mbox{ \ensuremath{\qedsymbol}}$}{\footnotesize\par}
+\end{frame}
+
+
+\begin{frame}[plain]{Proof Sketch}
+\label{proof_ad}
+
+{\small{}Start w/ FOC:
+\[
+\nabla_{\theta}\widehat{Q}_{N}\left(\widehat{\theta}\right)=0
+\]
+}{\small\par}
+\begin{itemize}
+\item {\small{}Mean value expansion:
+\[
+\nabla_{\theta}\widehat{Q}_{N}\left(\widehat{\theta}\right)=\nabla_{\theta}\widehat{Q}_{N}\left(\theta_{0}\right)+\widehat{\boldsymbol{H}}\left(\overline{\theta}\right)\left(\widehat{\theta}-\theta_{0}\right)
+\]
+where $\overline{\theta}\in\left[\widehat{\theta},\theta_{0}\right]$
+and $\widehat{\boldsymbol{H}}\left(\theta\right)\equiv\bigtriangledown_{\theta\theta}\widehat{Q}_{N}\left(\theta\right)$. }{\small\par}
+\item {\small{}Rearranging we get:
+\[
+\sqrt{N}\left(\widehat{\theta}-\theta_{0}\right)=-\widehat{\boldsymbol{H}}\left(\overline{\theta}\right)^{-1}\left(\sqrt{N}\nabla_{\theta}\widehat{Q}_{N}\left(\theta_{0}\right)\right)
+\]
+}{\small\par}
+\end{itemize}
+
+\pause{{\small{}\medskip{}
+}}
+\begin{itemize}
+\item {\small{}Want to show:
+\[
+\sqrt{N}\left(\widehat{\theta}-\theta_{0}\right)=-\boldsymbol{H}\left(\theta_{0}\right)^{-1}\left(\sqrt{N}\nabla_{\theta}\widehat{Q}_{N}\left(\theta_{0}\right)\right)+o_{p}\left(1\right)
+\]
+}{\small\par}
+\end{itemize}
+
+\pause{}
+\begin{itemize}
+\item {\small{}Need $\left\Vert \widehat{\boldsymbol{H}}\left(\overline{\theta}\right)-\boldsymbol{H}\left(\theta_{0}\right)\right\Vert \overset{p}{\rightarrow}0$}{\small\par}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[plain]{Proof Sketch}
+
+Triangle inequality: 
+\begin{eqnarray*}
+\left\Vert \widehat{\boldsymbol{H}}\left(\overline{\theta}\right)-\boldsymbol{H}\left(\theta_{0}\right)\right\Vert  & \leq & \underset{\mbox{Noise in Hessian}}{\underbrace{\left\Vert \widehat{\boldsymbol{H}}\left(\overline{\theta}\right)-\boldsymbol{H}\left(\overline{\theta}\right)\right\Vert }}+\underset{\mbox{Noise in parameter}}{\underbrace{\left\Vert \boldsymbol{H}\left(\overline{\theta}\right)-\boldsymbol{H}\left(\theta_{0}\right)\right\Vert }}\\
+ & \leq & \sup_{\theta\in\Theta}\left\Vert \widehat{\boldsymbol{H}}\left(\theta\right)-\boldsymbol{H}\left(\theta\right)\right\Vert +\left\Vert \boldsymbol{H}\left(\overline{\theta}\right)-\boldsymbol{H}\left(\theta_{0}\right)\right\Vert 
+\end{eqnarray*}
+
+
+\pause{}
+\begin{itemize}
+\item By assumption $\sup_{\theta\in\Theta}\left\Vert \widehat{\boldsymbol{H}}\left(\theta\right)-\boldsymbol{H}\left(\theta\right)\right\Vert \overset{p}{\rightarrow}0$
+(kills 1st term)
+\item Because $\hat{\theta}\overset{p}{\rightarrow}\theta_{0}$, it must
+also be that $\overline{\theta}\overset{p}{\rightarrow}\theta_{0}$
+(squeeze theorem). 
+\item Since $\boldsymbol{H}\left(.\right)$ is continuous, it follows from
+the continuous mapping theorem that $\left\Vert \boldsymbol{H}\left(\overline{\theta}\right)-\boldsymbol{H}\left(\theta_{0}\right)\right\Vert \overset{p}{\rightarrow}0$
+(kills 2nd term)
+\item Therefore $\widehat{\boldsymbol{H}}\left(\overline{\theta}\right)\overset{p}{\rightarrow}\boldsymbol{H}\left(\theta_{0}\right)$ 
+\end{itemize}
+\end{frame}
+
+\begin{frame}[plain]{Proof Sketch}
+
+Recall
+
+\[
+\sqrt{N}\left(\widehat{\theta}-\theta_{0}\right)=-\widehat{\boldsymbol{H}}\left(\overline{\theta}\right)^{-1}\left(\sqrt{N}\nabla_{\theta}\widehat{Q}_{N}\left(\theta_{0}\right)\right)
+\]
+
+
+\pause{\medskip{}
+}
+\begin{itemize}
+\item We established $\widehat{\boldsymbol{H}}\left(\overline{\theta}\right)\overset{p}{\rightarrow}\boldsymbol{H}\left(\theta_{0}\right)$\medskip{}
+\item By continuous mapping theorem, $\widehat{\boldsymbol{H}}\left(\overline{\theta}\right)^{-1}\overset{p}{\rightarrow}\boldsymbol{H}\left(\theta_{0}\right)^{-1}$
+\medskip{}
+\item And by assumption: $\sqrt{N}\nabla_{\theta}\widehat{Q}_{N}\left(\theta_{0}\right)\overset{d}{\rightarrow}N\left(0,\boldsymbol{V}\right)$
+\medskip{}
+\item Therefore, by Slutsky, $\sqrt{N}\left(\hat{\theta}-\theta_{0}\right)\overset{d}{\rightarrow}N\left(0,\boldsymbol{H}\left(\theta_{0}\right)^{-1}\boldsymbol{V}\boldsymbol{H}\left(\theta_{0}\right)^{-1}\right)\mbox{ \ensuremath{\qedsymbol}}$
+\end{itemize}
+\end{frame}
+\begin{frame}[plain]{Example: ``folding tent''}
+\label{tent_slides}
+\[
+Q_{N}\left(\theta\right)=\begin{cases}
+\max\left\{ 4N\theta-2,0\right\}  & \mbox{if \ensuremath{\theta\leq\frac{3}{4N}}}\\
+\max\left\{ -4N\theta+4,0\right\}  & \mbox{if \ensuremath{\theta>\frac{3}{4N}}}
+\end{cases}
+\]
+
+
+\pause{{\small{}\medskip{}
+}}
+
+
+\end{frame}
+
+\begin{frame}[plain]{Example: ``folding tent''}
+
+\[
+Q_{N}\left(\theta\right)=\begin{cases}
+\max\left\{ 4N\theta-2,0\right\}  & \mbox{if \ensuremath{\theta\leq\frac{3}{4N}}}\\
+\max\left\{ -4N\theta+4,0\right\}  & \mbox{if \ensuremath{\theta>\frac{3}{4N}}}
+\end{cases}
+\]
+
+\begin{itemize}
+\item $\Theta=\left[0,1\right]$ is compact
+\end{itemize}
+
+\pause{{\small{}\medskip{}
+}}
+\begin{itemize}
+\item $Q_{N}\left(.\right)$ is continuous
+\end{itemize}
+
+\pause{{\small{}\medskip{}
+}}
+\begin{itemize}
+\item $\underset{N\rightarrow\infty}{\lim}Q_{N}\left(\theta\right)=0\mbox{ \ensuremath{\forall\theta\in\left[0,1\right]}}$
+(pointwise convergence)
+\end{itemize}
+
+\pause{{\small{}\medskip{}
+}}
+\begin{itemize}
+\item But $\underset{\theta\in\Theta}{\max}\left|Q_{N}\left(\theta\right)-0\right|=1\mbox{ \ensuremath{\forall N\in\mathbb{N}}}$!
+\end{itemize}
+\end{frame}
+
+
+\end{document}
