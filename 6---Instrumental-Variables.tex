@@ -290,17 +290,20 @@ Their IV strategy is motivated by the interaction between compulsory schooling a
 \item Birth date cutoff for starting age: kids usually start school in the fall of the calendar year they turn six
 \end{itemize}
 ~\\
-This generates differences in mean educational attainment by date of birth
+This generates differences in mean educational attainment by date of birth:
+\pause
+
+~\\
+\includegraphics[width=1\textwidth]{assets/6/qob_chart.pdf}
 \end{frame}
-\setbeamercolor{background canvas}{bg=} \includepdf{assets/6/qob_chart.pdf}
 \begin{frame}{Angrist and Krueger (1991)}
-The combination of dropout and age-at-entry rules means compulsory schooling requirements are higher for those born late in the year
+Dropout + age-at-entry rules $\rightarrow$ less compulsory schooling if born early in the year
 \begin{itemize}
-\item This suggests an IV strategy using date of birth as an instrument for schooling
+\item Suggests date of birth as an instrument for schooling
 \item AK use a ``quarter of birth'' instrument, an indicator for being born early in the year (January--March)
 \end{itemize}
 ~\\
-What are the first stage and exclusion restriction assumptions in this example?
+What are the first stage and exclusion restriction assumptions here?
 \end{frame}
 \setbeamercolor{background canvas}{bg=} \includepdf{assets/6/angrist_kruger_1991_f1.pdf}
 
@@ -310,28 +313,29 @@ Recall the IV coefficient:
 \[
 \rho_{IV}=\frac{Cov(Y_{i},Z_{i})/Var(Z_{i})}{Cov(S_{i},Z_{i})/Var(Z_{i})}
 \]
-When $Z_{i}$ is binary, the first stage and reduced form coefficients become differences in means:
+When $Z_{i}$ is binary, the FS and RF become differences in means:
 \[
 \rho_{IV}=\frac{E\left[Y_{i}|Z_{i}=1\right]-E\left[Y_{i}|Z_{i}=0\right]}{E\left[S_{i}|Z_{i}=1\right]-E\left[S_{i}|Z_{i}=0\right]}
 \]
 \begin{itemize}
-\item This is the population analogue of the Wald (1940) estimator, the ratio of the mean difference in the outcome to the mean difference in the endogenous regressor
+\item This is the population analogue of the Wald estimator
 \end{itemize}
 \end{frame}
 \setbeamercolor{background canvas}{bg=} \includepdf{assets/6/angrist_krueger_1991_t3.pdf}
 
 \begin{frame}{IV with covariates}
-When doing IV it's often necessary to control for additional observed variables
+When doing IV it's often necessary to control for additional variables
 \begin{itemize}
-\item Example: QOB is correlated with age, which likely also affects earnings
-\item This suggests a violation of the exclusion restriction, so we may want to control for smooth functions of age
+\item E.g. QOB is correlated with age, which likely also affects earnings
+\item This suggests a violation of exclusion, so we may want to control for smooth functions of age
 \end{itemize}
 ~\\
 The long regression of interest now includes the control vector $X_{i}$:
 \[
-Y_{i}=\alpha+\rho S_{i}+X_{i}^{\prime}\gamma+\gamma A_{i}+v_{i}
+Y_{i}=\alpha+\rho S_{i}+X_{i}^{\prime}\gamma+v_{i}
 \]
 \begin{itemize}
+  \item $X_i$ includes an age polynomial (plus possibly other variables)
 \item Control variables that are neither instruments nor instrumented are ``exogenous covariates''
 \end{itemize}
 \end{frame}
@@ -362,9 +366,9 @@ As before we can solve for $\rho$ as $\delta/\pi$; applying the Frisch-Waugh-Lov
 \end{frame}
 \subsection{2SLS and Multiple Instruments}
 \begin{frame}{Multiple instruments}
-Now suppose we have multiple instruments, $Z_{i1},\ldots,Z_{iJ}$, collected in the $J\times1$ vector $Z_{i}$
+Suppose we have instruments $Z_{i1},\ldots,Z_{iJ}$, collected in the $J\times1$ vector $Z_{i}$
 \begin{itemize}
-\item Example: dummies for each quarter of birth, rather than just the first quarter
+\item E.g. dummies for each quarter of birth, rather than just the first one
 \end{itemize}
 ~\\
 It's no longer clear how to solve for the long regression coefficient $\rho$: we could use any one of the $J$ instruments, or any linear combination of them
@@ -394,7 +398,7 @@ Y_{i} & =\alpha+\rho\left[\kappa+Z_{i}^{\prime}\pi+X_{i}^{\prime}\phi+\eta_{i}\r
  & =\alpha+\rho\hat{S}_{i}+X_{i}^{\prime}\gamma+\nu_{i}
 \end{align*}
 \begin{itemize}
-\item Here $\hat{S}_{i}=\kappa+Z_{i}^{\prime}\pi+X_{i}^{\prime}\phi$ is the predicted value of $S_{i}$ from the first stage
+\item $\hat{S}_{i}=\kappa+Z_{i}^{\prime}\pi+X_{i}^{\prime}\phi$ is the predicted value of $S_{i}$ from the first stage
 \item The new residual is $\nu_{i}=\rho\eta_{i}+\varepsilon_{i}=\rho(S_{i}-\hat{S}_{i})+\varepsilon_{i}$
 \end{itemize}
 \end{frame}
@@ -403,7 +407,10 @@ Y_{i} & =\alpha+\rho\left[\kappa+Z_{i}^{\prime}\pi+X_{i}^{\prime}\phi+\eta_{i}\r
 \[
 Y_{i}=\alpha+\rho\hat{S}_{i}+X_{i}^{\prime}\gamma+\nu_{i}
 \]
-$\hat{S}_{i}$ and $X_{i}$ are uncorrelated with $\nu_{i}$ (why?), so OLS recovers the parameters of this equation
+$\hat{S}_{i}$ and $X_{i}$ are uncorrelated with $\nu_{i}$ (why?)
+\begin{itemize}
+  \item $\rightarrow$ OLS recovers the parameters of this equation
+\end{itemize}
 
 ~\\
 This is the two-stage least squares (2SLS) estimator:
@@ -414,36 +421,25 @@ This is the two-stage least squares (2SLS) estimator:
 ~\\
 2SLS provides one method for combining instruments. Do you think it is the most efficient?
 \end{frame}
-
+ 
 \subsection{IV as GMM}
-\begin{frame}{IV estimation}
-Suppose we have $N$ observations on $(Y_{i},S_{i},Z_{i},X_{i})$, where
-\begin{itemize}
-\item $S_{i}$ is a $K\times1$ vector of endogenous variables (there now may be more than one)
-\item $Z_{i}$ is a $J\times1$ vector of instruments
-\item $X_{i}$ is an $L\times1$ vector of exogenous controls
-\end{itemize}
-~\\
-Let $\mathbf{X}_{i}=\left(1,X_{i}^{\prime},S_{i}^{\prime}\right)^{\prime}$ and $\mathbf{Z}_{i}=(1,X_{i}^{\prime},Z_{i}^{\prime})^{\prime}$
-\end{frame}
-
 \begin{frame}{IV as GMM}
-Let's augment our structural equation:
+With $N$ observations on $(Y_{i},S_{i},Z_{i},X_{i})$, write the structural equation as
 \[
 Y_{i}=\alpha+S_{i}^{\prime}\rho+X_{i}^{\prime}\gamma+\varepsilon_{i}
 \]
 \begin{itemize}
-\item $S_{i}$ is a $K\times1$ vector of endogenous variables (there now may be more than one)
+\item $S_{i}$ is a $K\times1$ vector of endogenous variables
 \item $Z_{i}$ is a $J\times1$ vector of instruments ($J\geq K$)
 \item $X_{i}$ is an $L\times1$ vector of exogenous controls
-\item Let $\mathbf{X}_{i}=\left(1,X_{i}^{\prime},S_{i}^{\prime}\right)^{\prime}$ and $\mathbf{Z}_{i}=(1,X_{i}^{\prime},Z_{i}^{\prime})^{\prime}$
+\item $\mathbf{Z}_{i}=(1,X_{i}^{\prime},Z_{i}^{\prime})^{\prime}$ collects instruments and controls
 \end{itemize}
 \pause
 ~\\
-We know (from either economic theory or institutional knowledge of $Z_{i}$ and $S_{i}$) that
-\be
-\E[\mathbf{Z}_{i}'\varepsilon_{i}]=\E[\mathbf{Z}_{i}'(y_{i}-\alpha-S_{i}^{\prime}\rho-X_{i}^{\prime}\gamma)]=\E[m_{i}(\theta)]=0
-\ee
+We know (from economic theory or institutional knowledge) that
+\[
+\E[\mathbf{Z}_{i}\varepsilon_{i}]=\E[\mathbf{Z}_{i}(y_{i}-\alpha-S_{i}^{\prime}\rho-X_{i}^{\prime}\gamma)]=\E[m_{i}(\theta)]=0
+\]
 where $\theta=(\rho;\gamma)$
 
 ~\\
@@ -451,11 +447,16 @@ What do we call this? How many equations? How many unknowns?
 \end{frame}
 %%
 \begin{frame}{Casting everything as GMM}
-Recall the previous class on GMM (see the Estimation slide deck). GMM minimizes the following criterion function:
+Recall our class on GMM (Estimation slide deck)
+\begin{itemize}
+  \item GMM minimizes the following criterion function:
+\end{itemize}
+\vspace{3mm}
 \be
 \label{GMM_criterion}
 Q_{GMM}(\theta)=\E[m_{i}(\theta)'\mathbf{W} m_{i}(\theta)]
 \ee
+\vspace{-20pt} 
 \begin{itemize}
 \item What happens to $\mathbf{W}$ when $J=K$?
 \pause
@@ -463,16 +464,17 @@ Q_{GMM}(\theta)=\E[m_{i}(\theta)'\mathbf{W} m_{i}(\theta)]
 \item How do we choose $\mathbf{W}$ when $J>K$?
 \pause
 \medskip
-\item Turns out that 2SLS minimizes \eqref{GMM_criterion} by setting $\mathbf{W}=E[\mathbf{Z}_{i}\mathbf{Z}_{i}']^{-1}$ $\rightarrow$ When is 2SLS efficient? {\tiny{See Section 4.2.1 of MHE for the full proof.}}
-\pause
-\medskip
-\item What is the optimal $\mathbf{W}$ in a general setup?
-\pause
-\medskip
 \item Efficient GMM: $\mathbf{W}^{*}=\boldsymbol{\Omega}^{-1}$, where $\boldsymbol{\Omega}=\E[m_{i}(\theta)m_{i}(\theta)']=\E[\varepsilon_{i}^{2}\mathbf{Z}_{i}\mathbf{Z}_{i}']$
+\vspace{-6pt} 
 \begin{itemize}
-\item Under homoskedasticity, $\E[\varepsilon_{i}^{2}|\mathbf{Z}_{i}]=\sigma^{2}$, so $\boldsymbol{\Omega}^{-1}=\sigma^{-2}\E[\mathbf{Z}_{i}\mathbf{Z}_{i}']^{-1}\propto$ the 2SLS weight $\rightarrow$ 2SLS is efficient
+\item Under homoskedasticity, $\E[\varepsilon_{i}^{2}|\mathbf{Z}_{i}]=\sigma^{2}$, so $\boldsymbol{\Omega}^{-1}=\sigma^{-2}\E[\mathbf{Z}_{i}\mathbf{Z}_{i}']^{-1}$
 \item With heteroskedasticity, $\boldsymbol{\Omega}$ must be estimated: $\hat{\boldsymbol{\Omega}}=\frac{1}{N}\sum_{i}\hat{\varepsilon}_{i}^{2}\mathbf{Z}_{i}\mathbf{Z}_{i}'$ using 2SLS residuals (two-step GMM)
+\end{itemize}
+\pause
+\item Turns out that 2SLS minimizes \eqref{GMM_criterion} by setting $\mathbf{W}=E[\mathbf{Z}_{i}\mathbf{Z}_{i}']^{-1}$
+\begin{itemize}
+\item  (See MHE 4.2.1 for the proof)
+\item  What does this mean for efficiency of 2SLS?
 \end{itemize}
 \end{itemize}
 \end{frame}
@@ -480,36 +482,35 @@ Q_{GMM}(\theta)=\E[m_{i}(\theta)'\mathbf{W} m_{i}(\theta)]
 %%
 \subsection{Overidentification Tests}
 \begin{frame}{Over-id test}
-The GMM formulation is also useful for thinking about how to test the validity of the ``model''
+The GMM formulation is also useful for testing the validity of the model
 \begin{itemize}
 \item When there are more instruments than endogenous variables ($J>K$), there are multiple ways to solve for the structural parameters
 \end{itemize}
 ~\\
-An over-id specification test (introduced in the Estimation slide deck) tells us how close to being satisfied the moment conditions are
+An over-id test (see Estimation slides) tells us how close the moment conditions are to being satisfied
 \begin{itemize}
 \item In the IV setup, an overid test checks whether all the IV moment restrictions are close enough to being satisfied
-\end{itemize}
+\end{itemize}`'
 \end{frame}
 %%
 \begin{frame}{Overid tests in the IV world}
 Let $\hat{\theta}$ be the minimizer of the sample GMM criterion function:
-\be
-\label{GMM_sample_criterion}
+\[
 \hat{\theta}=\argmin_{c}\hat{Q}_{GMM}(c)=N\hat{m}_{i}(c)'\mathbf{W} \hat{m}_{i}(c)
-\ee
-where $\hat{m}_{i}(\theta)=\dfrac{1}{N}\mathbf{Z}_{i}'(y_{i}-\alpha-S_{i}^{\prime}\rho-X_{i}^{\prime}\gamma)$ (evaluated at the ``truth'' $\theta$)
+\]
+where $\hat{m}_{i}(\theta)=\dfrac{1}{N}\mathbf{Z}_{i}(y_{i}-\alpha-S_{i}^{\prime}\rho-X_{i}^{\prime}\gamma)$ (evaluated at the ``truth'' $\theta$)
 \pause
 
 ~\\
 If $\mathbf{W}=\E[\sqrt{N}\hat{m}_{i}(\theta)\sqrt{N}\hat{m}_{i}(\theta)']^{-1}$, then as $N\rightarrow\infty$
-\be
+\[
 \hat{Q}_{GMM}(\hat{\theta})\sim\chi^{2}_{J-K}
-\ee
-(sometimes this is also called the J-test in the IV setup)
+\]
 \pause
 \begin{itemize}
 \item If $\hat{Q}_{GMM}(\hat{\theta})$ is large relative to the critical value of $\chi^{2}_{J-K}$, the model is rejected
 \item Rejection means that one of the $J$ instruments is false: there is one instrument for which $\E[Z_{i}\varepsilon_{i}]$ is actually not zero
+\item Sometimes this is also called the J-test in the IV setup
 \end{itemize}
 \end{frame}
 %%
@@ -521,68 +522,21 @@ Two instruments give us two potential (simple) IV estimates of $\rho$
 \begin{itemize}
 \item First estimate of $\rho$ obtained by solving the moment condition
 \end{itemize}
-\be
+\[
 \E[Z_{i1}(y_{i}-S_{i}\rho_{1})]=0
-\ee
+\]
 \begin{itemize}
 \item And the second is obtained by fitting
 \end{itemize}
-\be
+\[
 \E[Z_{i2}(y_{i}-S_{i}\rho_{2})]=0
-\ee
+\]
 \pause
 ~\\
 Over-id tests whether a model that imposes $\rho_{2}=\rho_{1}$ can fit the data
-
-~\\
-What is the key underlying assumption that we need to make this test truly useful?
-\end{frame}
-\subsection{Imperfect Compliance}
-\begin{frame}{Which research questions can be answered causally?}
-Go back to our discussion in the first class: economists are often interested in the causal effect of choices made by agents (e.g. attending a private university, smoking, a pre-cancer screening test)
 \begin{itemize}
-\item The gold standard in research is the RCT, but sometimes you can't randomize individuals into treatment (IRB won't allow it, for very good reasons)
-\item Strategy is then to randomize $Z_{i}$, where $Z_{i}$ is some incentive to take up a given treatment of interest, $D_{i}$
-\item Even with imperfect compliance, $\Pr(D_{i}=1\vert Z_{i}=1)\neq1$, one can use IV techniques to estimate a causal effect
+  \item What is the key underlying assumption that makes this test useful?
 \end{itemize}
-~\\
-A simple but powerful idea that still needs to make its way into all fields
-\end{frame}
-\begin{frame}{IV makes its way in clinical trials}
-Research question: do pre-cancer screenings improve health?
-
-~\\
-Doctors and patients can't be forced to test, so researchers have tried to answer this by randomizing the opportunity to screen
-\begin{itemize}
-\item Studies in this area thus report intention-to-treat (or intention-to-screen) effects: $\E[Y_{i}\vert Z_{i}=1]-\E[Y_{i}\vert Z_{i}=0]$
-\item There seems to be a lot of heterogeneity in the ITTs estimated across a whole variety of studies
-\end{itemize}
-~\\
-Winawer (2023) asks whether these intention-to-treat observations are applicable to other clinical environments
-\end{frame}
-\begin{frame}[plain]
-
-\begin{center}
-\includegraphics[scale=0.4]{assets/6/angrist_hull_IV_1}
-\par\end{center}
-
-
-\end{frame}
-\begin{frame}[plain]
-
-\begin{center}
-\includegraphics[scale=0.4]{assets/6/angrist_hull_IV_0}
-\par\end{center}
-
-
-\end{frame}
-\begin{frame}[plain]
-
-\begin{center}
-\includegraphics[scale=0.3]{assets/6/angrist_hull_IV_2}
-\par\end{center}
-
-
 \end{frame}
 
 \subsection{2SLS Mistakes}
@@ -1356,38 +1310,6 @@ This last result shows that the full marginal distributions of $Y_{i}(1)$ and $Y
 
 
 
-\begin{frame}{Back to overid tests}
-Informed by our discussion of heterogeneous effects, let's return to overid tests
-
-~\\
-As discussed earlier, overid tests reject when different instruments yield different parameter estimates
-\begin{itemize}
-\item In a constant effects model, this implies that at least one must be invalid
-\item In a heterogeneous effect model, they may identify different LATEs
-\end{itemize}
-~\\
-Can we distinguish between invalid instruments and treatment effect heterogeneity?
-\end{frame}
-
-\begin{frame}{Back to overid tests}
-To fix ideas, return to a model with binary treatment $T_{i}$, binary instrument $Z_{i}$, and covariates $X_{i}$. Saturated 2SLS model:
-\begin{align*}
-Y_{i} & =X_{i}^{\prime}\alpha+\rho T_{i}+\varepsilon_{i}\\
-T_{i} & =X_{i}^{\prime}\lambda+Z_{i}\cdot X_{i}^{\prime}\pi+\eta_{i}
-\end{align*}
-The overid test for this model checks whether Wald estimates are the same for each value of $X_{i}$
-
-~\\
-Covariate-specific reduced forms and first stages:
-\begin{align*}
-\delta(x) & =E\left[Y_{i}|Z_{i}=1,X_{i}=x\right]-E\left[Y_{i}|Z_{i}=0,X_{i}=x\right]\\
-\pi(x) & =E\left[T_{i}|Z_{i}=1,X_{i}=x\right]-E\left[T_{i}|Z_{i}=0,X_{i}=x\right]
-\end{align*}
-~\\
-Suppose the overid test rejects, and consider two possible plots of $\hat{\delta}(x)$ against $\hat{\pi}(x)$
-\end{frame}
-\setbeamercolor{background canvas}{bg=} \includepdf{assets/6/overid_combined.pdf}
-
 \begin{frame}{Testing exclusion}
 We can actually say something about exclusion even with only one instrument and no covariates
 
@@ -1524,6 +1446,75 @@ Requires assuming extensive margin compliers only (EMCO) (Rose and Shem-Tov, 202
 \item Some testable implications
 \item Remember: exclusion is instrument and treatment specific
 \end{itemize}
+\end{frame}
+
+\begin{frame}{Back to overid tests}
+Informed by our discussion of heterogeneous effects, let's return to overid tests
+
+~\\
+As discussed earlier, overid tests reject when different instruments yield different parameter estimates
+\begin{itemize}
+\item In a constant effects model, this implies that at least one must be invalid
+\item In a heterogeneous effect model, they may identify different LATEs
+\end{itemize}
+~\\
+Can we distinguish between invalid instruments and treatment effect heterogeneity?
+\end{frame}
+
+\begin{frame}{Back to overid tests}
+To fix ideas, return to a model with binary treatment $T_{i}$, binary instrument $Z_{i}$, and covariates $X_{i}$. Saturated 2SLS model:
+\begin{align*}
+Y_{i} & =X_{i}^{\prime}\alpha+\rho T_{i}+\varepsilon_{i}\\
+T_{i} & =X_{i}^{\prime}\lambda+Z_{i}\cdot X_{i}^{\prime}\pi+\eta_{i}
+\end{align*}
+The overid test for this model checks whether Wald estimates are the same for each value of $X_{i}$
+
+~\\
+Covariate-specific reduced forms and first stages:
+\begin{align*}
+\delta(x) & =E\left[Y_{i}|Z_{i}=1,X_{i}=x\right]-E\left[Y_{i}|Z_{i}=0,X_{i}=x\right]\\
+\pi(x) & =E\left[T_{i}|Z_{i}=1,X_{i}=x\right]-E\left[T_{i}|Z_{i}=0,X_{i}=x\right]
+\end{align*}
+~\\
+Suppose the overid test rejects, and consider two possible plots of $\hat{\delta}(x)$ against $\hat{\pi}(x)$
+\end{frame}
+\setbeamercolor{background canvas}{bg=} \includepdf{assets/6/overid_combined.pdf}
+
+\begin{frame}{IV makes its way in clinical trials}
+Research question: do pre-cancer screenings improve health?
+
+~\\
+Doctors and patients can't be forced to test, so researchers have tried to answer this by randomizing the opportunity to screen
+\begin{itemize}
+\item Studies in this area thus report intention-to-treat (or intention-to-screen) effects: $\E[Y_{i}\vert Z_{i}=1]-\E[Y_{i}\vert Z_{i}=0]$
+\item There seems to be a lot of heterogeneity in the ITTs estimated across a whole variety of studies
+\end{itemize}
+~\\
+Angrist and Hull (2023) ask whether these intention-to-treat observations are applicable to other clinical environments
+\end{frame}
+\begin{frame}[plain]
+
+\begin{center}
+\includegraphics[scale=0.4]{assets/6/angrist_hull_IV_1}
+\par\end{center}
+
+
+\end{frame}
+\begin{frame}[plain]
+
+\begin{center}
+\includegraphics[scale=0.4]{assets/6/angrist_hull_IV_0}
+\par\end{center}
+
+
+\end{frame}
+\begin{frame}[plain]
+
+\begin{center}
+\includegraphics[scale=0.3]{assets/6/angrist_hull_IV_2}
+\par\end{center}
+
+
 \end{frame}
 
 \begin{frame}{Final thoughts}
