@@ -48,7 +48,7 @@
 \usepackage{verbatim}
 \usepackage{booktabs, multicol, multirow}
 \setcounter{MaxMatrixCols}{10}
-\input{assets/Macros.tex}
+\input{Macros.tex}
 \AtBeginSection[]
 {
   \begin{frame}[noframenumbering]
@@ -101,6 +101,10 @@
 }
 \makeatother
 \usepackage{pdfpages}
+% Compatibility with the caption package shipped in TeX Live 2018.
+\makeatletter
+\providecommand\@@magyar@captionfix{}
+\makeatother
 \begin{document}
 	\title[]{\large Regression \vspace{0.5cm}
 	}
@@ -159,7 +163,9 @@ so }{\small\par}
 population moments with sample moments, so $\hat{\beta}=\left(\frac{1}{N}\sum_{i}X_{i}X_{i}^{\prime}\right)^{-1}\left(\frac{1}{N}\sum_{i}X_{i}Y_{i}\right)$. }{\small\par}
 \end{itemize}
 \pause
+\begin{itemize}
 \item Pop quiz: what do we mean by ``linear structural equation relating [...]"?
+\end{itemize}
 \end{frame}
 
 \begin{frame}{Linear model}
@@ -296,14 +302,13 @@ of $Y_{i}$.
 \begin{itemize}
 \item Law of total variance
 \be
-\nn
 \Var(Y_{i}) = \underbrace{\Var[\E[Y_{i}\vert X_{i}]]}_{\text{Variability in explained components}} + \underbrace{\E[\Var[Y_{i}\vert X_{i}]]}_{\text{Variability in Unexplained Components}}
 \ee
 \item Important to study inequality (wage inequality, health inequality, etc...).
 \medskip
 \item Well defined statistical decomposition. 
 \pause
-\bigkskip
+\bigskip
 \bigskip
 \item Ok, great but who tells me $\mu(X_{i})$? 
 \end{itemize}
@@ -336,7 +341,7 @@ on $X_{i}$ is $X_{i}^{\prime}\beta$, where}{\small\par}
 }{\small\par}
 \item {\small{}The OLS projection $X_{i}^{\prime}\beta$ is the MMSE}\textbf{\small{}
 linear}{\small{} predictor of $Y_{i}$.}{\small\par}
-\item We define $\E^{*}[Y \vert X]=X_{i}'\beta$.
+\item We define $L[Y \vert X]=X_{i}'\beta$.
 \end{itemize}
 \end{frame}
 
@@ -589,7 +594,7 @@ P_{ii} = \dfrac{\partial \hat{y}_{i}}{\partial y_{i}}
 \end{frame}
 \begin{frame}[plain]
 \centering
-\includegraphics[scale=0.25]{classes/aux/rachel}
+\includegraphics[height=0.85\textheight,keepaspectratio]{aux/meager_2023}
 \end{frame}
 
 
@@ -834,7 +839,7 @@ can be answered with these parameters}{\footnotesize\par}
 \begin{itemize}
 \item We are interested in studying the relationship between $Y$ and $X$. $X$ is (basically) continuous, thus it is hard to estimate CEF.
 \medskip
-\item Example: $Y_{c}$ share of uninsured people living in area $c$. $X_{c}$ is average income in area $c$.
+\item Example: $Y_{st}$ log number of patents in state $s$ and year $t$. $X_{st}$ is the log 90th percentile marginal net of tax rate (Akcigit et al., 2022).
 \medskip
 \item Can run a regression but we are worried that the relationship might not be linear (why?).
 \medskip
@@ -843,33 +848,51 @@ can be answered with these parameters}{\footnotesize\par}
 \end{frame}
 \begin{frame}[plain]
 \centering
-\includegraphics[scale=0.25]{classes/aux/scat1.jpg}
+\includegraphics[height=0.75\textheight,keepaspectratio]{aux/ccff_fig1a}
 \end{frame}
 \begin{frame}[plain]
 \centering
-\includegraphics[scale=0.25]{classes/aux/scat2.jpg}
+\includegraphics[height=0.75\textheight,keepaspectratio]{aux/ccff_fig1b}
 \end{frame}
 \begin{frame}[plain]
 \centering
-\includegraphics[scale=0.25]{classes/aux/scat3.jpg}
+\includegraphics[height=0.75\textheight,keepaspectratio]{aux/ccff_fig1c}
 \end{frame}
 \begin{frame}[plain]
 \centering
-\includegraphics[scale=0.25]{classes/aux/scat4.jpg}
+\includegraphics[height=0.75\textheight,keepaspectratio]{aux/ccff_fig1d}
 \end{frame}
-\begin{frame}[plain]
+\begin{frame}{Covariate adjustment: do not residualize $X$}
+\begin{itemize}
+\item Standard practice: regress $Y$ and $X$ on $W$, then binscatter the two residuals. The justification given is FWL.
+\medskip
+\pause
+\item But FWL is a statement about coefficients in a linear model. Here we want the shape of $\mu(X)$.
+\medskip
+\item Residualizing is valid only if $\mu(\cdot)$ is linear, which is exactly what we wanted the plot to tell us.
+\medskip
+\pause
+\item Two things break: the horizontal axis is no longer $X$, and a nonlinear $\mu(\cdot)$ can be drawn as a straight line.
+\medskip
+\pause
+\item Fix: keep the bins in $X$ and let $W$ enter the same regression
+\[
+Y_{i}=\sum_{j=1}^{J}\beta_{j}1\{X_{i}\in\mathcal{I}_{j}\}+W_{i}^{\prime}\gamma+e_{i}
+\]
+and plot $\hat{\beta}_{j}$. Partial $W$ out of the bin dummies, not out of $X$.
+\end{itemize}
+\end{frame}
+%%
+\begin{frame}{The same data, three ways}
 \centering
-\includegraphics[scale=0.25]{classes/aux/scat5.jpg}
+\includegraphics[width=\textwidth,keepaspectratio]{aux/ccff_fig2}
 \end{frame}
-\begin{frame}[plain]
-\centering
-\includegraphics[scale=0.25]{classes/aux/scat6.jpg}
-\end{frame}
+%%
 \begin{frame}
 \frametitle{What if we want to plot this relationship after having controlled for some variables?}
 \pause
 \centering
-\includegraphics[scale=0.25]{classes/aux/cattaneo_max.jpg}
+\includegraphics[height=0.7\textheight,keepaspectratio]{aux/binscatter_aer}
 \end{frame}
 %%
 \begin{frame}
@@ -903,7 +926,7 @@ can be answered with these parameters}{\footnotesize\par}
 %%%%
 \begin{frame}[plain]
 \centering
-\includegraphics[scale=0.25]{classes/aux/zeros.jpg}
+\includegraphics[height=0.85\textheight,keepaspectratio]{aux/chen_roth_qje}
 \end{frame}
 
 \begin{frame}{Connecting Regression with Treatment Effects}
@@ -939,7 +962,7 @@ of the treatment{\small{}\medskip{} $\rightarrow$ Is this regression saturated?
 \pause
 \item Recall that we can always write
 \begin{equation}
-    Y_{i}=D_{i}Y_{i1}+(1-D_{i})Y_{i0}
+    Y_{i}=T_{i}Y_{i1}+(1-T_{i})Y_{i0}
 \end{equation}
 \end{itemize}
 \end{frame}
@@ -1022,7 +1045,7 @@ contrast.}
 {\small{}$=\dfrac{E\left[\Delta(X_{i})T_{i}\left(T_{i}-E\left[T_{i}|X_{i}\right]\right)\right]}{E\left[\left(T_{i}-E\left[T_{i}|X_{i}\right]\right)^{2}\right]}$}{\small\par}
 \par\end{center}
 \begin{center}
-{\small{}$=\dfrac{E\left[E[Y_{i1}-Y_{i0}\vert X_{i}]T_{i}\left(T_{i}-E\left[T_{i}|X_{i}\right])\right]}{E\left[\left(T_{i}-E\left[T_{i}|X_{i}\right]\right)^{2}\right]}$}{\small\par}
+{\small{}$=\dfrac{E\left[E[Y_{i1}-Y_{i0}\vert X_{i}]T_{i}\left(T_{i}-E\left[T_{i}|X_{i}\right]\right)\right]}{E\left[\left(T_{i}-E\left[T_{i}|X_{i}\right]\right)^{2}\right]}$}{\small\par}
 \par\end{center}
 \end{itemize}
 \end{frame}
@@ -1056,53 +1079,370 @@ comparisons}{\footnotesize\par}
 \end{frame}
 %%
 \begin{frame}{Going one step beyond}
-\begin{itemize}
-    \item New scenario: \underline{two} treatments are now being randomized within the site.
-    \medskip
-    \item Run the following regression
-    \begin{equation}
-    Y_{i}=D_{i}\Pi + T_{i,1}\delta_{1} + T_{i,2}\delta_{2} + u_{i} 
+New scenario: \underline{two} treatments are now randomized within the site
+
+~\\
+Run the following regression
+\begin{equation}
+    Y_{i}=D_{i}\Pi + \delta_{1}T_{i1} + \delta_{2}T_{i2} + u_{i}
 \end{equation}
-\item Randomization implies $\rightarrow$ $(Y_{i0},Y_{i1})\perp (T_{i,1},T_{i,2})\vert D_{i}$
-\medskip
-\item What is $(\delta_{1},\delta_{2})$ identifying?
+\begin{itemize}
+\item Randomization implies $(Y_{i0},Y_{i1},Y_{i2})\perp (T_{i1},T_{i2})\vert D_{i}$
 \end{itemize}
+
+~\\
+What is $(\delta_{1},\delta_{2})$ identifying?
 \end{frame}
 %%
 \begin{frame}
 \includegraphics[scale=0.4]{aux/hull}
 \end{frame}
 %%
-\begin{frame}[shrink=10]
+\begin{frame}[shrink=18]
 \frametitle{Where is the failure?}
-\begin{center}
-{\small{}$\delta_{1}=E\left[\tilde{T}_{i}^{2}\right]^{-1}E\left[\tilde{T}_{i}\tilde{Y}_{i}\right]$}{\small\par}
-\par\end{center}
+\small
+Apply FWL again, now residualizing $T_{i1}$ on both $D_{i}$ and $T_{i2}$
+\[
+\delta_{1}=E\left[\tilde{T}_{i1}^{2}\right]^{-1}E\left[\tilde{T}_{i1}Y_{i}\right],
+\qquad
+\tilde{T}_{i1}\equiv T_{i1}-L\left[T_{i1}\vert X_{i},T_{i2}\right]
+\]
 \begin{itemize}
-\item where now {\small{}$\tilde{T}_{i}$ are residuals from
-regressions of $T_{i}$ on $D_{i}$ and $T_{i,2}$}. Similarly for $\tilde{Y}_{i}$.
-\medskip
-\item Observed outcome now can be written as 
+\item (No need to residualize $Y_{i}$---why?)
+\end{itemize}
+
+~\\
+The observed outcome can be expressed in terms of 3 POs
 \begin{equation}
-    Y_{i}=Y_{i0}+\underbrace{(Y_{i1}-Y_{i0})}_{\tau_{i1}}T_{i,1}+\underbrace{(Y_{i2}-Y_{i0})}_{\tau_{i2}}T_{i,2}
+    Y_{i}=Y_{i0}+\underbrace{(Y_{i1}-Y_{i0})}_{\tau_{i1}}T_{i1}+\underbrace{(Y_{i2}-Y_{i0})}_{\tau_{i2}}T_{i2}
 \end{equation}
-\medskip
-\item Same tricks as before and we arrive at
-\medskip
-\begin{center}
-{\small{}$\delta_{1}=\dfrac{E\left[Y_{i}\left(T_{i1}-E^{*}\left[T_{i1}|X_{i},T_{i2}\right]\right)\right]}{E\left[\left(T_{i1}-E^{*}\left[T_{i1}|X_{i}, T_{i2}\right]\right)^{2}\right]}{\small\par}}
-\par\end{center}
-\begin{center}
-{\small{}$=\dfrac{E\left[Y_{i0}\left(T_{i1}-E^{*}\left[T_{i1}|X_{i},T_{i2}\right]\right)\right]}{E\left[\left(T_{i1}-E^{*}\left[T_{i1}|X_{i}, T_{i2}\right]\right)^{2}\right]}{\small\par}+\dfrac{E\left[\tau_{i1}T_{i,1}\left(T_{i}-E^{*}\left[T_{1i}|X_{i},T_{i2}\right]\right)\right]}{E\left[\left(T_{i1}-E^{*}\left[T_{i1}|X_{i}, T_{i2}\right]\right)^{2}\right]}{\small\par}+\dfrac{E\left[\tau_{i2}T_{i2}\left(T_{i1}-E^{*}\left[T_{i1}|X_{i},T_{i2}\right]\right)\right]}{E\left[\left(T_{i1}-E^{*}\left[T_{i1}|X_{i}, T_{i2}\right]\right)^{2}\right]}{\small\par}}
-\par\end{center}
-\item First term $\rightarrow$
-\medskip 
-\item Second term $\rightarrow$ 
-\medskip
-\item Third term $\rightarrow$
+
+~\\
+Substituting splits $\delta_{1}$ into three pieces
+\[
+\delta_{1}=\underbrace{\frac{E\left[Y_{i0}\tilde{T}_{i1}\right]}{E\left[\tilde{T}_{i1}^{2}\right]}}_{\text{(I)}}
++\underbrace{\frac{E\left[\tau_{i1}T_{i1}\tilde{T}_{i1}\right]}{E\left[\tilde{T}_{i1}^{2}\right]}}_{\text{(II)}}
++\underbrace{\frac{E\left[\tau_{i2}T_{i2}\tilde{T}_{i1}\right]}{E\left[\tilde{T}_{i1}^{2}\right]}}_{\text{(III)}}
+\]
+\begin{itemize}
+\item III has no counterpart in the one-treatment case: the other arm's effect loading onto this arm
 \end{itemize}
 \end{frame}
+%%
+\begin{frame}[shrink=8]{What we residualize on now}
+\small
+Notation: $p_{k}(X_{i})=\Pr[T_{ik}{=}1\vert X_{i}]$ for $k=0,1,2$
 
+~\\
+With one treatment, saturating $D_{i}$ made the projection the CEF
+\[
+L[T_{i}\vert X_{i}]=\E[T_{i}\vert X_{i}]=p(X_{i})
+\]
+
+~\\
+With two, the regression forces
+\[
+L\left[T_{i1}\vert X_{i},T_{i2}\right]=a(X_{i})+b\,T_{i2}
+\]
+\begin{itemize}
+\item One free intercept $a(x)$ per site, so still saturated in $X_{i}$
+\item Single slope $b$ on $T_{i2}$
+\item The true CEF $\E[T_{i1}\vert X_{i},T_{i2}]$ is not of this form
+\end{itemize}
+
+~\\
+This misspecification is the source of all the issues in this regression!
+\end{frame}
+%%
+\begin{frame}{Solving for $a(\cdot)$}
+\small
+Saturation in $X_{i}$ buys one first-order condition per site
+\[
+E\left[\tilde{T}_{i1}\mathbf{1}[X_{i}{=}x]\right]=0
+\qquad\Longrightarrow\qquad
+E\left[\tilde{T}_{i1}\vert X_{i}\right]=0
+\]
+
+
+~\\
+Apply it to $\tilde{T}_{i1}=T_{i1}-a(X_{i})-b\,T_{i2}$
+\[
+0=p_{1}(X_{i})-a(X_{i})-b\,p_{2}(X_{i})
+\qquad\Longrightarrow\qquad
+a(x)=p_{1}(x)-b\,p_{2}(x)
+\]
+
+~\\
+Substituting back, the residual is a difference of within-site demeaned indicators, $\dot{T}_{ik}\equiv T_{ik}-p_{k}(X_{i})$
+\[
+\tilde{T}_{i1}=\dot{T}_{i1}-b\,\dot{T}_{i2}
+\]
+\end{frame}
+%%
+\begin{frame}{Solving for $b$}
+\small
+One condition is left. Sub in $\tilde{T}_{i1}=\dot{T}_{i1}-b\,\dot{T}_{i2}$ and $T_{i2}=\dot{T}_{i2}+p_{2}(X_{i})$
+\begin{align*}
+0=E\left[\tilde{T}_{i1}T_{i2}\right]
+&=E\left[\left(\dot{T}_{i1}-b\,\dot{T}_{i2}\right)\left(\dot{T}_{i2}+p_{2}(X_{i})\right)\right]\\[2pt]
+&=E\left[\left(\dot{T}_{i1}-b\,\dot{T}_{i2}\right)\dot{T}_{i2}\right]
++E\left[\left(\dot{T}_{i1}-b\,\dot{T}_{i2}\right)p_{2}(X_{i})\right]\\[2pt]
+&=E\left[\dot{T}_{i1}\dot{T}_{i2}\right]-b\,E\left[\dot{T}_{i2}^{2}\right]
+\end{align*}
+so that
+\[
+b=\frac{E\left[\dot{T}_{i1}\dot{T}_{i2}\right]}{E\left[\dot{T}_{i2}^{2}\right]}
+\]
+\end{frame}
+%%
+\begin{frame}{Solving for $b$}
+\small
+The conditional moments follow from $T_{i1}T_{i2}=0$
+\[
+E[\dot{T}_{i1}\dot{T}_{i2}\vert X_{i}]=-p_{1}(X_{i})p_{2}(X_{i}),
+\qquad
+E[\dot{T}_{ik}^{2}\vert X_{i}]=p_{k}(X_{i})\left(1-p_{k}(X_{i})\right)
+\]
+
+~\\
+Writing $\sigma_{2}^{2}(x)=p_{2}(x)(1-p_{2}(x))=\Var[T_{i2}\vert X_{i}{=}x]$
+\[
+b=\frac{-E\left[p_{1}(X_{i})p_{2}(X_{i})\right]}{E\left[\sigma_{2}^{2}(X_{i})\right]}\;<\;0
+\]
+\begin{itemize}
+\item The arms are mechanically negatively correlated within site
+\item Residualizing on $T_{i2}$ does something even under random assignment
+\end{itemize}
+\end{frame}
+%%
+\begin{frame}{The CEF we should have used}
+\small
+Because the arms are mutually exclusive, the true CEF is
+\[
+\E\left[T_{i1}\vert X_{i},T_{i2}\right]=(1-T_{i2})\,\frac{p_{1}(X_{i})}{1-p_{2}(X_{i})}
+\;=\;\underbrace{\frac{p_{1}(X_{i})}{1-p_{2}(X_{i})}}_{a^{*}(X_{i})}\,+\underbrace{\frac{-p_{1}(X_{i})}{1-p_{2}(X_{i})}}_{b(X_{i})}\,T_{i2}
+\]
+\begin{itemize}
+\item $T_{i2}$ is binary, so this is exactly linear in $T_{i2}$, with no approximation
+\end{itemize}
+
+~\\
+Its slope is
+\begin{align*}
+b(x)&=\frac{-p_{1}(x)}{1-p_{2}(x)}=-\Pr[T_{i1}{=}1\vert X_{i}{=}x,T_{i2}{=}0]\;\in[-1,0]\\[2pt]
+&=\frac{-p_{1}(x)p_{2}(x)}{\sigma_{2}^{2}(x)}
+\end{align*}
+\end{frame}
+%%
+\begin{frame}{$b$ versus $b(x)$}
+\small
+Since $b(x)\sigma_{2}^{2}(x)=-p_{1}(x)p_{2}(x)$, the single $b$ we estimate is
+\[
+b=\frac{E\left[b(X_{i})\,\sigma_{2}^{2}(X_{i})\right]}{E\left[\sigma_{2}^{2}(X_{i})\right]}
+\]
+\begin{itemize}
+\item A variance-weighted average of the site-specific slopes
+\item As a convex combination of the $b(x)$, $b\in[-1,0]$ too
+\end{itemize}
+
+~\\
+When will the regression be correctly specified?
+\begin{itemize}
+\item The misspecification in this slope, $b(x)-b$, will cause bias in $\delta_1$
+\end{itemize}
+\end{frame}
+%%
+\begin{frame}{Taking the three terms in turn}
+\small
+Recall the decomposition
+\[
+\delta_{1}=\underbrace{\frac{E\left[Y_{i0}\tilde{T}_{i1}\right]}{E\left[\tilde{T}_{i1}^{2}\right]}}_{\text{(I)}}
++\underbrace{\frac{E\left[\tau_{i1}T_{i1}\tilde{T}_{i1}\right]}{E\left[\tilde{T}_{i1}^{2}\right]}}_{\text{(II)}}
++\underbrace{\frac{E\left[\tau_{i2}T_{i2}\tilde{T}_{i1}\right]}{E\left[\tilde{T}_{i1}^{2}\right]}}_{\text{(III)}}
+\]
+and write $\Delta_{k}(X_{i})=\E\left[\tau_{ik}\vert X_{i}\right]=\E\left[Y_{ik}-Y_{i0}\vert X_{i}\right]$ for the site-level effect of arm $k$
+\begin{itemize}
+\item (I) Selection goes to zero
+\item (II) Own effect is a convex but distorted weighted average of the $\Delta_{1}(x)$
+\item (III) Contamination is arm-2 effects loading onto $\delta_{1}$, with weights that are not sign-restricted (!)
+\end{itemize}
+
+\end{frame}
+%%
+\begin{frame}{Term (I): selection}
+\small
+Our friend, the law of iterated expectations
+\[
+E\left[Y_{i0}\tilde{T}_{i1}\right]=E\Big[\underbrace{\E[Y_{i0}\vert X_{i}]}_{\text{selection on }X}\cdot\underbrace{E[\tilde{T}_{i1}\vert X_{i}]}_{=\,0\text{ by saturation}}\Big]=0
+\]
+
+~\\
+Why is $\tilde{T}_{i1}\perp Y_{i0} | X$ and why does $E[\tilde{T}_{i1}\vert X_{i}]=0$? 
+\begin{itemize}
+  \item Surprising, becuase it is linearly residualized?
+  \item (check the derivation of a(x)!)
+\item The misspecification surfaces in (II) and (III)
+\end{itemize}
+
+\end{frame}
+%%
+\begin{frame}{Term (II): the numerator}
+\small
+Random assignment lets us condition down to the site level
+\[
+E\left[\tau_{i1}T_{i1}\tilde{T}_{i1}\right]=E\left[\Delta_{1}(X_{i})\,\omega(X_{i})\right],
+\qquad
+\omega(X_{i})\equiv E\left[T_{i1}\tilde{T}_{i1}\vert X_{i}\right]
+\]
+
+~\\
+Using $\tilde{T}_{i1}=\dot{T}_{i1}-b\,\dot{T}_{i2}$ and $T_{i1}T_{i2}=0$
+\[
+E[T_{i1}\dot{T}_{i1}\vert X_{i}]=p_{1}(1-p_{1}),
+\qquad
+E[T_{i1}\dot{T}_{i2}\vert X_{i}]=-p_{1}p_{2}
+\]
+so the numerator is
+\[
+E\Big[\Delta_{1}(X_{i})\big(\underbrace{p_{1}(X_{i})\left(1-p_{1}(X_{i})\right)}_{\text{the one-treatment weight}}+\underbrace{b\,p_{1}(X_{i})p_{2}(X_{i})}_{\text{new}}\big)\Big]
+\]
+\begin{itemize}
+\item The new piece includes $b$, so the weight on site $x$ depends on the slopes at every other site
+\end{itemize}
+\end{frame}
+%%
+\begin{frame}{Term (II): the denominator}
+\small
+Write $V_{1}=E[p_{1}(1-p_{1})]$, $V_{2}=E[\sigma_{2}^{2}]=E[p_{2}(1-p_{2})]$ and $C=E[p_{1}p_{2}]$, so that $b=-C/V_{2}$
+\[
+E\left[\tilde{T}_{i1}^{2}\right]=V_{1}+2bC+b^{2}V_{2}
+\]
+
+~\\
+Substitute the definition $b=-C/V_{2}$ into the last term, $b^{2}V_{2}=-bC$
+\[
+E\left[\tilde{T}_{i1}^{2}\right]=V_{1}-\frac{C^{2}}{V_{2}}=V_{1}+bC
+\]
+\[
+=E\left[p_{1}(X_{i})\left(1-p_{1}(X_{i})\right)+b\,p_{1}(X_{i})p_{2}(X_{i})\right]=E\left[\omega(X_{i})\right]
+\]
+\begin{itemize}
+\item Exactly the numerator, with $\Delta_{1}$ stripped out, so the weights self-normalize
+\end{itemize}
+\end{frame}
+%%
+\begin{frame}[shrink=10]{Term (II): a weighted average of causal effects}
+\small
+Term (II) is a weighted average of the site-level effects of arm 1
+\[
+\text{(II)}=E\left[\Delta_{1}(X_{i})\,w(X_{i})\right],
+\qquad
+w(X_{i})=\frac{\omega(X_{i})}{E\left[\omega(X_{i})\right]},
+\qquad
+E\left[w(X_{i})\right]=1
+\]
+
+~\\
+Are the weights positive? Substitute $1-p_{1}=p_{2}+p_{0}$ into $\omega$
+\[
+\omega(x)=p_{1}(x)\left[\,p_{0}(x)+(1+b)\,p_{2}(x)\,\right]\;\geq\;0,
+\qquad\text{since }1+b\in[0,1]
+\]
+\begin{itemize}
+\item So (II) is a convex combination and cannot push $\delta_{1}$ outside the range of the $\Delta_{1}(x)$
+\item Different weights than the single-treatment setting
+\end{itemize}
+
+~\\
+What is the intuition for the weights? 
+\begin{itemize}
+  \item Compare this to the single-treatment setting
+  \item Special case of b=0 is particularly instructive
+\end{itemize} 
+
+\end{frame}
+%%
+\begin{frame}[shrink=18]{Term (III): contamination}
+\small
+The same steps give
+\[
+E\left[\tau_{i2}T_{i2}\tilde{T}_{i1}\right]=E\left[\Delta_{2}(X_{i})\,c(X_{i})\right],
+\qquad
+c(X_{i})\equiv E\left[T_{i2}\tilde{T}_{i1}\vert X_{i}\right]
+\]
+
+~\\
+Now $E[T_{i2}\dot{T}_{i1}\vert X_{i}]=-p_{1}p_{2}$ and $E[T_{i2}\dot{T}_{i2}\vert X_{i}]=\sigma_{2}^{2}$
+\[
+c(X_{i})=-p_{1}(X_{i})p_{2}(X_{i})-b\,\sigma_{2}^{2}(X_{i})
+=\underbrace{\sigma_{2}^{2}(X_{i})}_{\text{assignment variance}}\times\underbrace{\left[\,b(X_{i})-b\,\right]}_{\text{prediction error}}
+\]
+\begin{itemize}
+\item \alert{A variance-weighted prediction error}: how variable arm-2 assignment is at $x$, times how wrong the common slope is at $x$
+\end{itemize}
+
+~\\
+These weights sum to zero
+\[
+E\left[c(X_{i})\right]=E\left[\sigma_{2}^{2}(X_{i})\left(b(X_{i})-b\right)\right]=0
+\]
+The contamination term is a covariance
+\[
+\text{(III)}=\frac{\Cov\left(\Delta_{2}(X_{i}),\,c(X_{i})\right)}{E\left[\tilde{T}_{i1}^{2}\right]}
+\]
+\end{frame}
+%%
+\begin{frame}[shrink=8]{Reading the contamination term}
+\small
+Combining the two expressions
+\[
+\text{(III)}=\frac{E\left[\Delta_{2}(X_{i})\,\sigma_{2}^{2}(X_{i})\left(b(X_{i})-b\right)\right]}{E\left[\tilde{T}_{i1}^{2}\right]}
+\]
+\begin{itemize}
+\item $c(\cdot)$ is a pure function of the design: assignment shares only, no potential outcomes
+\item Arm-2 effects load onto $\delta_{1}$ wherever a site's own slope departs from the average, magnified by how variable arm-2 assignment is there
+\end{itemize}
+
+~\\
+The weights can be positive or negative
+\begin{itemize}
+\item Sites with $b(x)>b$ contribute their $\Delta_{2}(x)$ positively
+\item Sites with $b(x)<b$ contribute negatively
+\item $\delta_{1}$ can be negative even when every $\Delta_{1}(x)$ and $\Delta_{2}(x)$ is positive (why?)
+\end{itemize}
+
+\end{frame}
+%%
+\begin{frame}[shrink=10]{When does none of this matter?}
+\small
+Constant treatment effects
+\begin{itemize}
+\item If $\Delta_{2}(x)=\Delta_{2}$ for all $x$, then (III) $=\Delta_{2}E[c(X_{i})]/E[\tilde{T}_{i1}^{2}]=0$
+\item If also $\Delta_{1}(x)=\Delta_{1}$, then (II) $=\Delta_{1}$ since $E[w]=1$
+\item Heterogeneity is the whole problem
+\end{itemize}
+
+~\\
+Constant $b(\cdot)$, so that $c(x) = 0$
+\begin{itemize}
+\item For $\delta_{1}$ alone this is weaker than equal shares
+\begin{itemize}
+\item E.g. $(p_{1},p_{2})=(0.2,0.5)$ and $(0.3,0.25)$ both give $b(x)=-0.4$
+\end{itemize}
+\item But to make $\delta_{2}$ interpretable, we need $b_{2}(x)=-p_{2}(x)/(1-p_{1}(x))$ constant too
+\item Both constant (and $p_{0}(x)>0$ somewhere) $\rightarrow$ constant $p_{1}(\cdot)$ and $p_{2}(\cdot)$
+\item Then $\omega(x)=\bar{p}_{1}\bar{p}_{0}/(\bar{p}_{1}+\bar{p}_{0})$ is constant, $w\equiv1$, and $\delta_{1}=E\left[\Delta_{1}(X_{i})\right]=\text{ATE}_{1}$
+\end{itemize}
+
+~\\
+What else can we do? 
+\pause
+\begin{itemize}
+  \item Saturate and weight
+  \item I.e., estimate site-specific effects and aggregate with chosen weights 
+\end{itemize}
+\end{frame}
+%%
 \begin{frame}
 \centering
 \includegraphics[scale=0.3]{aux/hull2}
