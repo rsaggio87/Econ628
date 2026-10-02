@@ -27,7 +27,7 @@ Answers must be typed. You can work in teams under the constraint: Max(Team Size
 \begin{enumerate}
 
   \item \textbf{Weighted Least Squares and OverID}
-Download the CPS extract and the build do-file from canvas.
+Download the CPS extract ``cps2000.dta'' and the build do-file ``build.do'' from the \texttt{data} folder on the course website.
 
 a) Regress lnwage on
 dummies for the categories of the variables agecat, educcat, and sex. Use main effects only -- i.e. no interactions. 
@@ -114,8 +114,8 @@ where $\varepsilon_{i}\sim Logistic(0,1)$ and $b_{i}\sim N\left(\mu,\sigma^{2}\r
 a) Write an expression for the simulated log likelihood and its derivatives
 with respect to $\mu$ and $\sigma$.
 
-b) Load the dataset ``logit". The first column of the matrix
-``data'' gives observations on $Y_{i}$ and second on $X_{i}$.
+b) Load the dataset ``logit.csv" from the \texttt{data} folder on the course
+website. The first column gives observations on $Y_{i}$ and the second on $X_{i}$.
 Generate a 2000x1000
 matrix $V$ of draws from a standard  normal distribution. The columns of this matrix index simulation draws while the rows index
 observations.
