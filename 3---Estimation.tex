@@ -1095,11 +1095,16 @@ note that given the assumptions of the model, choices are independent across mon
 \item DHR assumes that $\mu$ is drawn \textit{independently} from a standard normal distribution with mean $\mu_{1}$ and variance $\sigma_{1}$. The distribution $\mu$  is drawn anew each month. Under this assumption, 
 \be
 \nn
-\Pr(work_{T_{m}}=1\vert D_{T_{m}-1}=d_{T_{m}-1};\mu_{1},\sigma_{1})=\int\Phi(\beta\{\pi(d_{T_{m}-1}+1)-\pi(d_{T_{m}-1})\}-(\mu_{1}+\sigma_{1}u_{s}))\phi\left(\dfrac{u_{s}-\mu_{1}}{\sigma_1}\right)du_{s} 
+\Pr(work=1\vert t=T_{m}, D_{T_{m}-1}=d_{T_{m}-1};\mu_{1},\sigma_{1})=\int\Phi(\beta\{\pi(d_{T_{m}-1}+1)-\pi(d_{T_{m}-1})\}-(\mu_{1}+\sigma_{1}\xi_{s}))\phi\left(\dfrac{\xi_{s}-\mu_{1}}{\sigma_1}\right)d\xi_{s} 
 \ee
-\item This is SML! DHR uses this model to fit the model on the treatment group. It then verifies whether the model is correct by checking the predictions of the model when setting pay equal to 1000 Rps (regardless of days worked) and benchmark the results with what is observed in the control group. 
-\medskip
-\item After choosing the model with the best fit, DHR play around with different incentives structure
+\item We can compute that likelihood above using SML! Additional remarks
+\begin{itemize}
+  \item As we have seen with Keane and Wolpin, via backward recursion we can calculate $E[V_{m}(T_{m};d;\mu_{T_{m},m})]$ (this time using properties of the normal not the logit!) and this permits us then to calculate the likelihood of working at $T_{m}-1$ and backwards. In PS-2, you will solve a simplified version of this problem. 
+  \medskip
+  \item DHR fit this model on the sample of teachers in the treatment group. How would you evaluate the fit of the model based on this?
+  \medskip
+  \item Remember the advantage of structural models: we can go beyond what is actually observed in the data! What type of policies we can then estimate here? 
+\end{itemize}
 \end{itemize}
 \end{frame}
 \begin{frame}

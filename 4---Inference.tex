@@ -1,0 +1,1069 @@
+\documentclass[notes=show]{beamer}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\AtBeginSubsection[
+  {\frame<beamer>{\frametitle{Outline}   
+    \tableofcontents[currentsection,currentsubsection]}}%
+]%
+{
+  \frame<beamer>{ 
+    \frametitle{Outline}   
+    \tableofcontents[currentsection,currentsubsection]}
+}
+\usepackage{ulem}
+\usepackage{pdflscape}
+\setbeamertemplate{caption}{\insertcaption}
+\usepackage{color,xcolor,ucs}
+\usepackage{beamerthemesplit}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{adjustbox}
+\usepackage{pdfpages} 
+\definecolor{mintgreen}{rgb}{0.6, 1.0, 0.6}
+\makeatletter
+\@addtoreset{subfigure}{framenumber}% subfigure counter resets every frame
+\makeatother
+\newcommand*{\Scale}[2][4]{\scalebox{#1}{$#2$}}%
+\newcommand*{\Resize}[2]{\resizebox{#1}{!}{$#2$}}%
+\usepackage{amsfonts}
+\usepackage{booktabs}
+\usepackage{color,soul}
+\usepackage{pdfpages}
+\setboolean{@twoside}{false}
+\usepackage{amsmath}
+\usepackage{pdflscape} 
+\usepackage{eurosym}
+\usepackage{amstext} % for \text
+\DeclareRobustCommand{\officialeuro}{%
+  \ifmmode\expandafter\text\fi
+  {\fontencoding{U}\fontfamily{eurosym}\selectfont e}}
+\usepackage[caption = false]{subfig}
+\usepackage{appendixnumberbeamer} 
+\usepackage{graphicx}
+\usepackage{mathpazo}
+\usepackage{hyperref}
+\usepackage{multimedia}
+\usepackage{graphicx}
+\usepackage{multirow}
+\usepackage{subfig}
+\usepackage{verbatim}
+\usepackage{booktabs, multicol, multirow}
+\setcounter{MaxMatrixCols}{10}
+\input{Macros.tex}
+\AtBeginSection[]
+{
+  \begin{frame}[noframenumbering]
+    \frametitle{Outline for section \thesection}
+    \tableofcontents[currentsection]
+  \end{frame}
+}
+
+
+\usepackage{xcolor,soul}
+\renewcommand<>{\hl}[1]{\only#2{\beameroriginal{\hl}}{#1}}
+
+% https://tex.stackexchange.com/questions/41683/why-is-it-that-coloring-in-soul-in-beamer-is-not-visible
+\makeatletter
+\newcommand\SoulColor{%
+  \let\set@color\beamerorig@set@color
+  \let\reset@color\beamerorig@reset@color}
+\makeatother
+\SoulColor
+\AtBeginSection{\frame{\sectionpage}}
+
+\newsavebox\mybox
+\newenvironment{aquote}[1]
+  {\savebox\mybox{#1}\begin{quote}\openautoquote\hspace*{-.7ex}}
+  {\unskip\closeautoquote\vspace*{1mm}\signed{\usebox\mybox}\end{quote}}
+
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{Assumption}[theorem]{Assumption}
+\newenvironment{stepenumerate}{\begin{enumerate}[<+->]}{\end{enumerate}}
+\newenvironment{stepitemize}{\begin{itemize}[<+->]}{\end{itemize} }
+\newenvironment{stepenumeratewithalert}{\begin{enumerate}[<+-| alert@+>]}{\end{enumerate}}
+\newenvironment{stepitemizewithalert}{\begin{itemize}[<+-| alert@+>]}{\end{itemize} }
+\usetheme{Madrid}
+\makeatletter
+\setbeamertemplate{footline}
+{
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}%
+    \usebeamerfont{author in head/foot}\insertshortauthor~~\beamer@ifempty{\insertshortinstitute}{}{(\insertshortinstitute)}
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+    \usebeamerfont{title in head/foot}\insertshorttitle
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,right]{date in head/foot}%
+    \usebeamerfont{date in head/foot}\insertshortdate{}\hspace*{2em}
+%    \insertframenumber{} / \inserttotalframenumber\hspace*{2ex} % DELETED
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+\makeatother
+\usepackage{pdfpages}
+\begin{document}
+	\title[]{\large Inference
+	\vspace{0.5cm}
+	}
+	\author[Raffaele Saggio - Econ 628]{Raffaele Saggio}
+	\institute[]{UBC}
+	\date{\today \\
+}
+	\maketitle
+
+\section{Statistics Boot Camp}
+
+\begin{frame}{Statistical Properties of OLS}
+
+\begin{itemize}
+\item We've talked about the population OLS projection as an approximation
+to the CEF {\small{}\medskip{}
+}{\small\par}
+\item This didn't require any assumptions about the data-generating process{\small{}\medskip{}
+}{\small\par}
+\item Next, we'll talk about the statistical properties of the OLS \textbf{estimator}
+based on a sample of data, and how these depend on the DGP
+\end{itemize}
+\end{frame}
+
+\begin{frame}{The OLS Estimator}
+
+\begin{itemize}
+\item Let's again work with the projection model:
+\[
+Y_{i}=X_{i}^{\prime}\beta+U_{i}\mbox{, \ensuremath{E\left[X_{i}U_{i}\right]=0}}
+\]
+\item We have a sample of $N$ individuals from the population{\small{}\medskip{}
+}{\small\par}
+\item {\small{}The OLS estimator of $\beta$ is}{\small\par}
+\end{itemize}
+\begin{center}
+{\small{}$\hat{\beta}=\left(\tfrac{1}{N}\sum_{i}X_{i}X_{i}^{\prime}\right)^{-1}\left(\tfrac{1}{N}\sum_{i}X_{i}Y_{i}\right)$}{\small\par}
+\par\end{center}
+
+\begin{center}
+$=\left(\tfrac{1}{N}\sum_{i}X_{i}X_{i}^{\prime}\right)^{-1}\left(\tfrac{1}{N}\sum_{i}X_{i}(X_{i}^{\prime}\beta+U_{i})\right)$
+\par\end{center}
+
+\begin{center}
+$=\beta+\left(\tfrac{1}{N}\sum_{i}X_{i}X_{i}^{\prime}\right)^{-1}\left(\tfrac{1}{N}\sum_{i}X_{i}U_{i}\right)$
+\par\end{center}
+
+\end{frame}
+
+\begin{frame}{OLS in Finite Samples}
+
+\begin{itemize}
+\item {\small{}First consider the finite-sample properties of $\hat{\beta}$}{\small\par}
+\item Its expectation is
+\end{itemize}
+\begin{center}
+$E\left[\hat{\beta}\right]=\beta+E\left[\left(\tfrac{1}{N}\sum_{i}X_{i}X_{i}^{\prime}\right)^{-1}\left(\tfrac{1}{N}\sum_{i}X_{i}U_{i}\right)\right]$
+\par\end{center}
+
+\begin{center}
+$\neq\beta+\left(\tfrac{1}{N}\sum_{i}E\left[X_{i}X_{i}^{\prime}\right]\right)^{-1}\left(\tfrac{1}{N}\sum_{i}E\left[X_{i}U_{i}\right]\right)$
+\par\end{center}
+
+\begin{center}
+$=\beta$
+\par\end{center}
+\begin{itemize}
+\item In general $\hat{\beta}$ is a biased estimate of the population projection
+coefficient vector $\beta${\small{}\medskip{}
+}{\small\par}
+\item An exception is when the CEF is linear so $E\left[Y_{i}|X_{i}\right]=X_{i}^{\prime}\beta$
+(just apply the law of iterated expectations)
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Fixed vs. Stochastic Regressors}
+
+\begin{itemize}
+\item {\small{}You may be surprised to learn that OLS is biased in finite
+samples for the population projection\medskip{}
+}{\small\par}
+\item {\small{}The properties of OLS are traditionally derived assuming
+that the regressor matrix $X$ is non-stochastic, i.e., fixed in repeated
+samples\medskip{}
+}{\small\par}
+\item {\small{}Sometimes (e.g. in an experiment) the researcher gets to
+control the distribution of the regressors\medskip{}
+}{\small\par}
+\item {\small{}When $X$ is non-stochastic we have}{\small\par}
+\end{itemize}
+\begin{center}
+{\small{}$E\left[\hat{\beta}\right]=\beta+E\left[\left(\tfrac{1}{N}\sum_{i}X_{i}X_{i}^{\prime}\right)^{-1}\left(\tfrac{1}{N}\sum_{i}X_{i}U_{i}\right)\right]$}{\small\par}
+\par\end{center}
+
+\begin{center}
+{\small{}$=\beta+\left(\tfrac{1}{N}\sum_{i}X_{i}X_{i}^{\prime}\right)^{-1}\left(\tfrac{1}{N}\sum_{i}E\left[X_{i}U_{i}\right]\right)$}{\small\par}
+\par\end{center}
+
+\begin{center}
+{\small{}$=\beta$}{\small\par}
+\par\end{center}
+
+\end{frame}
+
+\begin{frame}{Fixed vs. Stochastic Regressors}
+
+\begin{itemize}
+\item Whether it makes sense to consider the regressors fixed or random
+depends on the context{\small{}\medskip{}
+}{\small\par}
+\item Do we want a best approximation to the CEF using the distribution
+of $X_{i}$ in our sample, or in the population?
+
+\begin{itemize}
+\item {\small{}Note: sometimes your sample is ``the population'' (e.g.
+everyone in Iowa)\medskip{}
+}{\small\par}
+\end{itemize}
+\item For now let's consider the traditional fixed-regressor case
+\end{itemize}
+\end{frame}
+
+\begin{frame}{The Variance of OLS}
+
+\begin{itemize}
+\item {\small{}In matrix form the variance of the OLS estimator is}{\small\par}
+\end{itemize}
+\begin{center}
+{\small{}$E\left[\left(\hat{\beta}-E\left[\hat{\beta}\right]\right)\left(\hat{\beta}-E\left[\hat{\beta}\right]\right)^{\prime}\right]=E\left[\left(\hat{\beta}-\beta\right)\left(\hat{\beta}-\beta\right)^{\prime}\right]$}{\small\par}
+\par\end{center}
+
+\begin{center}
+{\small{}$=E\left[\left(X^{\prime}X\right)^{-1}X^{\prime}UU^{\prime}X\left(X^{\prime}X\right)^{-1}\right]$}{\small\par}
+\par\end{center}
+
+\begin{center}
+{\small{}$=\left(X^{\prime}X\right)^{-1}X^{\prime}E\left[UU^{\prime}\right]X\left(X^{\prime}X\right)^{-1}$}{\small\par}
+\par\end{center}
+
+\begin{center}
+{\small{}$=\left(X^{\prime}X\right)^{-1}X^{\prime}\Omega X\left(X^{\prime}X\right)^{-1}$}{\small\par}
+\par\end{center}
+\begin{itemize}
+\item {\small{}$\Omega$ is the $N\times N$ symmetric covariance matrix
+with $ij$-th element $Cov(U_{i},U_{j})$}{\small\par}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{The Variance of OLS}
+
+\begin{itemize}
+\item {\small{}The ``}meat{\small{}'' in the middle of our sandwich covariance
+matrix can be written}{\small\par}
+\end{itemize}
+\begin{center}
+{\small{}$X^{\prime}\Omega X=\sum_{i}X_{i}X_{i}^{\prime}\sigma_{i}^{2}+2\sum_{i<j}X_{i}X_{j}^{\prime}\sigma_{ij}$}{\small\par}
+\par\end{center}
+\begin{itemize}
+\item {\small{}Here $\sigma_{i}^{2}=Var\left(U_{i}\right)$ and $\sigma_{ij}=Cov\left(U_{i},U_{j}\right)$\medskip{}
+}{\small\par}
+\item {\small{}There are $N(N+1)/2$ unknown terms in this expression\medskip{}
+}{\small\par}
+\item {\small{}Estimating all of these terms is intractable without further
+assumptions}{\small\par}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{The Variance of OLS}
+
+\begin{itemize}
+\item {\small{}Suppose the regression errors are independent and homoskedastic,
+so $Cov\left(U_{i},U_{j}\right)=0$ and $Var\left(U_{i}\right)=\sigma^{2}\ \forall i$.
+Then}{\small\par}
+\end{itemize}
+\begin{center}
+{\small{}$Var\left(\hat{\beta}\right)=\left(X^{\prime}X\right)^{-1}X^{\prime}\left(\sigma^{2}I\right)X\left(X^{\prime}X\right)^{-1}$}{\small\par}
+\par\end{center}
+
+\begin{center}
+{\small{}$=\sigma^{2}\left(X^{\prime}X\right)^{-1}$}{\small\par}
+\par\end{center}
+\begin{itemize}
+\item {\small{}The conventional estimator of $\sigma^{2}$ is}
+
+\begin{center}
+{\small{}$\hat{\sigma}^{2}=\dfrac{1}{N-K}\sum_{i}\hat{U}_{i}^{2}$}{\small\par}
+\par\end{center}
+
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Degrees of Freedom Correction}
+
+\begin{center}
+{\footnotesize{}$\hat{\sigma}^{2}=\dfrac{1}{N-K}\sum_{i}\hat{U}_{i}^{2}$}{\footnotesize\par}
+\par\end{center}
+\begin{itemize}
+\item {\footnotesize{}Why $1/(N-K)$ instead of $1/N$? \medskip{}
+}{\footnotesize\par}
+\item {\footnotesize{}This is a degrees of freedom correction to account
+for finite-sample bias\medskip{}
+}{\footnotesize\par}
+\item {\footnotesize{}$\hat{U}=M_{X}Y$, so}{\footnotesize\par}
+\end{itemize}
+\begin{center}
+{\footnotesize{}$Var\left(\hat{U}\right)=E\left[M_{X}YY^{\prime}M_{X}\right]$}{\footnotesize\par}
+\par\end{center}
+
+\begin{center}
+{\footnotesize{}$=M_{X}E\left[UU^{\prime}\right]M_{X}$}{\footnotesize\par}
+\par\end{center}
+
+\begin{center}
+{\footnotesize{}$=\sigma^{2}M_{X}$.}{\footnotesize\par}
+\par\end{center}
+\begin{itemize}
+\item {\footnotesize{}Then $Var\left(\hat{U}_{i}\right)=\sigma^{2}(1-P_{ii})$,
+where $P_{ii}$ is the $i$'th diagonal entry in $P_{X}$ }{\footnotesize\par}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Degrees of Freedom Correction}
+
+\begin{center}
+{\footnotesize{}$Var\left(\hat{U}_{i}\right)=\sigma^{2}(1-P_{ii})$}{\footnotesize\par}
+\par\end{center}
+\begin{itemize}
+\item {\footnotesize{}It turns out that $\sum_{i}P_{ii}=K$:}{\footnotesize\par}
+\end{itemize}
+\begin{center}
+{\footnotesize{}$\sum_{i}P_{ii}=tr\left(X\left(X^{\prime}X\right)^{-1}X^{\prime}\right)=tr\left(X^{\prime}X\left(X^{\prime}X\right)^{-1}\right)=tr(I)=K$}{\footnotesize\par}
+\par\end{center}
+\begin{itemize}
+\item {\footnotesize{}This means that the expectation of the mean squared
+residual is}{\footnotesize\par}
+\end{itemize}
+\begin{center}
+{\footnotesize{}$E\left[\frac{1}{N}\sum_{i}\hat{U}_{i}^{2}\right]=\frac{1}{N}\sum_{i}E\left[\hat{U}_{i}^{2}\right]=\frac{1}{N}\sum\sigma^{2}(1-P_{ii})=\sigma^{2}\cdot\frac{N-K}{N}$}{\footnotesize\par}
+\par\end{center}
+\begin{itemize}
+\item {\footnotesize{}We therefore need to multiply by $(N/(N-K))$ to get
+an unbiased estimate of $\sigma^{2}$ (just like we divide by $N-1$
+instead of $N$ to get unbiased variance estimates)}{\footnotesize\par}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Finite-sample Inference}
+
+\begin{itemize}
+\item {\small{}We've shown how to get an unbiased estimate of $\hat{\sigma}^{2}$,
+and therefore of $Var\left(\hat{\beta}\right)$, under homoskedasticity\medskip{}
+}{\small\par}
+\item {\small{}But this isn't enough to allow us to test hypotheses or form
+confidence intervals}{\small\par}
+\end{itemize}
+{\small{}\medskip{}
+}{\small\par}
+\begin{itemize}
+\item {\small{}To conduct inference we need to know the distribution of
+$\hat{\beta}$\medskip{}
+}{\small\par}
+\item {\small{}The traditional approach is to assume that the $U_{i}$ are
+$iid$ and normally distributed, which implies that $\hat{\beta}$
+is normal and $(\hat{\beta}_{k}-\beta_{k})/\hat{Var}\left(\hat{\beta}_{k}\right)$
+follows a $t$-distribution with $(N-K)$ degrees of freedom\medskip{}
+}{\small\par}
+\item {\small{}Inference without parametric assumptions (usually) requires
+an asymptotic approximation}{\small\par}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{OLS Asymptotics}
+
+\begin{itemize}
+\item {\small{}Let's again express the OLS estimator as}{\small\par}
+\end{itemize}
+\begin{center}
+{\small{}$\hat{\beta}=\beta+\left(\tfrac{1}{N}\sum_{i}X_{i}X_{i}^{\prime}\right)^{-1}\left(\tfrac{1}{N}\sum_{i}X_{i}U_{i}\right)$}{\small\par}
+\par\end{center}
+\begin{itemize}
+\item {\small{}This can be rewritten}{\small\par}
+\end{itemize}
+\begin{center}
+{\small{}$\sqrt{N}\left(\hat{\beta}-\beta\right)=\left(\frac{1}{N}\sum_{i}X_{i}X_{i}^{\prime}\right)^{-1}\left(\tfrac{1}{\sqrt{N}}\sum_{i}X_{i}U_{i}\right)$}{\small\par}
+\par\end{center}
+\begin{itemize}
+\item {\small{}As $N\rightarrow\infty$ this quantity has the same distribution
+as:}{\small\par}
+\end{itemize}
+\begin{center}
+{\small{}$E\left[X_{i}X_{i}^{\prime}\right]^{-1}\left(\tfrac{1}{\sqrt{N}}\sum_{i}X_{i}U_{i}\right)$}{\small\par}
+\par\end{center}
+\begin{itemize}
+\item Note: all asymptotic variability through the ``score'' $\sum_{i}X_{i}U_{i}$.
+(Why?)
+\end{itemize}
+\end{frame}
+
+\begin{frame}{OLS Asymptotics}
+
+\begin{itemize}
+\item We know $E\left[X_{i}U_{i}\right]=0$, so
+\end{itemize}
+\begin{center}
+$\tfrac{1}{\sqrt{N}}\sum_{i}X_{i}U_{i}\overset{d}{\longrightarrow}N\left(0,E\left[X_{i}X_{i}^{\prime}U_{i}^{2}\right]\right)$
+\par\end{center}
+\begin{itemize}
+\item Therefore
+\[
+\sqrt{N}\left(\hat{\beta}-\beta\right)\overset{d}{\longrightarrow}N\left(0,E\left[X_{i}X_{i}^{\prime}\right]^{-1}E\left[X_{i}X_{i}^{\prime}U_{i}^{2}\right]E\left[X_{i}X_{i}^{\prime}\right]^{-1}\right)
+\]
+\item This is the (first-order) asymptotic distribution of the OLS estimator
+with \emph{iid} sampling.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Heteroskedasticity-robust std errors}
+
+\begin{center}
+{\footnotesize{}$\sqrt{N}\left(\hat{\beta}-\beta\right)\overset{d}{\longrightarrow}N\left(0,E\left[X_{i}X_{i}^{\prime}\right]^{-1}E\left[X_{i}X_{i}^{\prime}U_{i}^{2}\right]E\left[X_{i}X_{i}^{\prime}\right]^{-1}\right)$}{\footnotesize\par}
+\par\end{center}
+\begin{itemize}
+\item {\footnotesize{}Under homoskedasticity $E\left[U_{i}^{2}|X_{i}\right]=\sigma^{2}$
+and variance collapses to $\sigma^{2}E\left[X_{i}X_{i}^{\prime}\right]^{-1}$}{\small{}\medskip{}
+}{\small\par}
+\item {\footnotesize{}Modern approach: avoid imposing assumptions on $E\left[U_{i}^{2}|X_{i}\right]$
+and base inference on}{\footnotesize\par}
+\end{itemize}
+\begin{center}
+{\footnotesize{}$\hat{V}\left(\hat{\beta}\right)=\frac{1}{N}\left(\frac{1}{N}\sum_{i}X_{i}X_{i}^{\prime}\right)^{-1}\tfrac{1}{N}\sum_{i}X_{i}X_{i}^{\prime}\hat{U}_{i}^{2}\left(\frac{1}{N}\sum_{i}X_{i}X_{i}^{\prime}\right)^{-1}$}{\footnotesize\par}
+\par\end{center}
+\begin{itemize}
+\item {\footnotesize{}This is the White (1980) heteroskedasticity-robust
+covariance matrix}{\small{}\medskip{}
+}{\small\par}
+\item {\footnotesize{}We assumed }\emph{\footnotesize{}iid}{\footnotesize{}
+sampling, what if we relax this assumption?}{\footnotesize\par}
+\end{itemize}
+\end{frame}
+\section{Clustering}
+\begin{frame}[plain]{Clustering SEs}
+\begin{itemize}
+\item Traditionally assumed: observations are independent draws from a common distribution.
+\medskip
+\item Often implausible in serious economic research $\rightarrow$ dependent data (time series?!?).
+\medskip
+\item We now review how dependent data can affect inference of OLS (easy to generalize to other estimators, see ps)
+\end{itemize}
+\end{frame}
+%%
+
+\begin{frame}{Grouped Data}
+\begin{itemize}
+\item {\small{}Suppose the data have a group structure, with $J$ groups
+and $M_{j}$ individual observations in ``cluster'' $j$, for a
+total sample of $N=\sum_{j}M_{j}$. \medskip{}
+}{\small\par}
+\item {\small{}Regression model is}{\small\par}
+\begin{center}
+{\small{}$Y_{ij}=X_{ij}^{\prime}\beta+U_{ij}$}{\small\par}
+\par\end{center}
+\medskip
+\item We are worried that $Cov\left(U_{ij},U_{i'j}\right)\neq0$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[shrink=10]
+\frametitle{Clustering}
+\begin{itemize}
+\item {\small{}Recall that the OLS variance matrix is given by }{\small\par}
+\end{itemize}
+\begin{center}
+{\small{}$V=\left(X^{\prime}X\right)^{-1}X^{\prime}\Omega X\left(X^{\prime}X\right)^{-1}$}{\small\par}
+\par\end{center}
+\begin{itemize}
+\item {\small{}With correlation within but not between clusters of $U_{ij}$ implies that the error
+variance matrix is block diagonal:}{\small\par}
+\end{itemize}
+\begin{center}
+{\small{}$\E[{U}{U'}]=\Omega=\left[\begin{array}{cccc}
+\Omega_{1} & 0 & 0 & 0\\
+0 & \Omega_{2} & 0 & 0\\
+0 & 0 & \ddots & 0\\
+0 & 0 & 0 & \Omega_{J}
+\end{array}\right]$}{\small\par}
+\par\end{center}
+\begin{itemize}
+\item {\small{}Here $\Omega_{j}$ is the $M_{j}\times M_{j}$ covariance
+matrix for cluster $j$\medskip{}
+}{\small\par}
+\item {\small{}Can't get accurate estimate of each $\Omega_{j}$. But to
+estimate the variance of OLS we only need the ``meat'' in the covariance
+sandwich:}{\small\par}
+\end{itemize}
+\begin{center}
+{\small{}$X^{\prime}\Omega X=\sum_{j}X_{j}^{\prime}\Omega_{j}X_{j}$}{\small\par}
+\par\end{center}
+\begin{itemize}
+\item Here $X_{j}$ is a $M_{j}\times K$ matrix that stacks the Xs of all the observations belonging to cluster $j$.
+\item {\small{}Obvious solution: treat the cluster level data vectors $(X_{j},Y_{j})$
+as primitives and apply usual White logic that we have covered before }{\small\par}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[shrink=10]
+\frametitle{Clustering}
+\begin{itemize}
+\item {\small{}Consistent estimate of the meat in the sandwich can be obtained by invoking a weak LLN for non-identically distributed data (Theorem 3.7 of White, 2001)}{\small\par}
+\end{itemize}
+\begin{center}
+{\small{}$\frac{1}{N}\sum_{j}X_{j}^{\prime}\hat{U}_{j}\hat{U}_{j}^{\prime}X_{j}\overset{p}{\longrightarrow}{\displaystyle \lim_{J\rightarrow\infty}\frac{1}{N}\sum_{j}E\left[X_{j}^{\prime}\Omega_{j}X_{j}\right]}$}{\small\par}
+\par\end{center}
+\begin{itemize}
+\item Recall that in OLS all randomess comes from the score $X'U=\sum_{j=1}^{J}\sum_{i=1}^{M_{j}}X_{ij}U_{ij}$. 
+\medskip
+\item When normalized by $\frac{1}{N}$ the grand mean  $\frac{1}{N}X'U$ is equivalent to a weighted average of cluster-specific means where the weights crucially depends on $M_{j}$. 
+\end{itemize}
+\pause
+\begin{itemize}
+\item {\small{}This generates the ``cluster-robust'' covariance matrix}{\small\par}
+\end{itemize}
+\begin{center}
+{\small{}$\hat{V}\left(\hat{\beta}\right)=\frac{1}{N}\left(\frac{1}{N}\sum_{j}X_{j}^{\prime}X_{j}\right)^{-1}\left(\frac{1}{N}\sum_{j}X_{j}^{\prime}\hat{U}_{j}\hat{U}_{j}^{\prime}X_{j}\right)\left(\frac{1}{N}\sum_{j}X_{j}^{\prime}X_{j}\right)^{-1}$}{\small\par}
+\par\end{center}
+\begin{itemize}
+\item {\small{}This approach relies on asymptotics in the }\emph{\small{}number
+of groups; }{\small{}will perform poorly with few clusters\medskip{}
+}{\small\par}
+\item {\small{}Angrist and Pischke (2009): magic \# of clusters is 42!\medskip{}
+}{\small\par}
+\end{itemize}
+\end{frame}
+%%
+\begin{frame}[plain]{Comments}
+
+\begin{itemize}
+\item As usual, White SEs are biased in finite sample, this is why Stata implements a degrees of freedom correction to regression residuals 
+\be
+\tilde{{U}}_{j}=\sqrt{\dfrac{J}{J-1}\dfrac{N-1}{N-K}}\hat{{U}}_{j}
+\ee
+and replaces $\hat{{U}}_{j}$ with $\tilde{{U}}_{j}$ when computing  $\hat{V}\left(\hat{\beta}\right)$.
+\pause
+\medskip
+\item Key question: at what level to cluster the standard error?
+\medskip
+\begin{itemize}
+\item Important: being worried about $Cov\left(U_{ij},U_{i'j}\right)\neq0$ does not \textit{necessarily} means that you have to cluster the standard errors. 
+\medskip
+\item What one should be worried about is whether $Cov\left(X_{ij}U_{ij},X_{i'j}U_{i'j}\right)\neq0$.
+
+\end{itemize}
+\pause
+\item Rule of thumb: cluster at the level at which your treatment varies.
+\medskip
+\end{itemize}
+\end{frame}
+%%%
+\begin{frame}
+\frametitle{Example 1: Individual level RCT}
+\begin{itemize} 
+\item Example: you randomize cash transfers to individuals living in different villages in India.
+\medskip
+\item In this application: $i$ indexes individuals, $j$ indexes clusters. 
+\medskip
+\item You want to run the following regression
+\medskip
+\begin{equation}
+    Y_{i} = \alpha + \beta X_{ij} + e_{ij}
+\end{equation}
+\medskip 
+\item Note that here if the treatment variable is randomized at the individual level $ \rightarrow$$\E[X_{ij}X_{i'j}]=0$ (suppose the $X$ variable has been demeaned).
+\item This in turn implies that (by LIE) $\E[X_{ij}U_{ij}X_{i'j}U_{i'j}]=\E[X_{ij}X_{i'j}\E[U_{ij}U_{i'j}\vert X_{ij} X_{i'j}]]=0$ $\rightarrow$ no need to cluster!
+\end{itemize}
+\end{frame}
+\begin{frame}
+\frametitle{Example 2: Clustered RCT}
+\begin{itemize} 
+\item Example: you randomize cash transfers to different villages in India.
+\medskip
+\item You still have data on individuals as well as villages and are interested in running 
+\begin{equation}
+    Y_{i} = \alpha + \beta X_{ij} + e_{ij}
+\end{equation}
+\medskip 
+\item Now $\E[X_{ij}X_{i'j}]\neq0$ (treatment is perfectly correlated within clusters!). 
+\medskip
+\item This in turn implies that $\E[X_{ij}U_{ij}X_{i'j}U_{i'j}]=\E[X_{ij}X_{i'j}\E[U_{ij}U_{i'j}\vert X_{ij} X_{i'j}]]\neq0$ $\rightarrow$ now you have to cluster the SEs (at the village level) 
+\end{itemize}
+\end{frame}
+\begin{frame}
+\frametitle{Example 3: Real Life}
+\begin{itemize} 
+\item Most cases treatment of interest might vary within clusters.
+\medskip
+\item Example: you have data on individuals observed within each state across different years.
+\medskip
+\item Treatment is a policy implemented by a given state in a particular year (and remains active thereafter).
+\medskip
+\item Treatment therefore varies at the state-by-year level. 
+\medskip
+\item However, since treatment is persistent, people often cluster at the level of the State, although such SEs might be too conservative (Bertrand, Duflo and Mullainathan, 2004; Abadie et al., 2023).
+\end{itemize}
+\end{frame}
+
+%%
+\begin{frame}[plain]{Key Reference}
+
+\begin{center}
+\includegraphics[scale=0.2]{aux/abadie_QJE}
+\par\end{center}
+
+\end{frame}
+
+\begin{frame}[plain]{Cluster SEs in Action}
+
+\begin{center}
+\includegraphics[scale=0.2]{aux/abadie22.jpg}
+\par\end{center}
+\end{frame}%%
+
+\begin{frame}{Takeaways from AAIW (2023)}
+\begin{itemize}
+\item Figure it out at what level to cluster requires figuring out (i) the sampling process and (ii) how is treatment assigned. 
+\medskip
+\item Thinking of a framework where $J\rightarrow\infty$ is often not useful $\rightarrow$ AAIW shows that is possible to derive standard errors smaller than those based on asymptotic approximation that refers to infinite super-population.
+\medskip
+\item Correlation in the regression error term within clusters does not automatically mean that one has to cluster (see example \#1).
+\medskip
+\item The idea of  "keep clustering at higher levels if SEs continue to become smaller" is ill-advised. 
+\medskip
+\item Derive two new cluster-robust estimator of SEs that are considerably smaller than White-based cluster-robust SEs.
+\begin{itemize}
+    \item Especially valuable in contexts like Example 3 (``partially" clustered treatment assignment). 
+\end{itemize}
+\end{itemize}
+    
+\end{frame}
+
+\begin{frame}[plain]{The need for clustering...}
+
+\begin{center}
+\includegraphics[scale=0.1]{aux/clustering}
+\par\end{center}
+\end{frame}%%
+
+\section{Bootstrap}
+\begin{frame}[plain]{The Bootstrap}
+
+\begin{center}
+\includegraphics[scale=0.3]{aux/space_jam}
+\par\end{center}
+
+\end{frame}
+
+\begin{frame}[plain]{Preliminaries}
+
+\begin{itemize}
+\item A test statistic can be written: 
+\[
+T_{n}\equiv T_{n}\left(\boldsymbol{z}_{1},\boldsymbol{z}_{2},...,\boldsymbol{z}_{N},F\right)
+\]
+where $F$ is population distribution of data
+\item Example: ``t-stat'' is $T_{n}=\frac{\hat{\theta}-\theta_{0}}{\hat{\sigma}}$
+\end{itemize}
+\medskip{}
+
+\begin{itemize}
+\item Finite sample dist of $T_{n}$ is 
+\[
+G_{n}\left(t,F\right)\equiv P\left(T_{n}\leq t|F\right)
+\]
+\item Problem: don't know $F$! (except under very strong null hypothesis)
+\end{itemize}
+\end{frame}
+
+\begin{frame}[plain]{Two approaches}
+
+Conventional asymptotics:
+\[
+G_{n}\left(t,F\right)\approx\underset{n\rightarrow\infty}{\lim}G_{n}\left(t,F\right)=G\left(t\right)\mbox{ ("asymptotic pivot")}
+\]
+
+\begin{itemize}
+\item Example: ``t-stat'' goes to normal $G\left(t\right)=\Phi\left(t\right)$
+\end{itemize}
+
+\pause{\medskip{}
+}
+
+Bootstrap approximation:
+\[
+G_{n}\left(t,F\right)\approx G_{n}\left(t,F_{n}\right)
+\]
+
+\begin{itemize}
+\item Traditional choice of $F_{n}$ is EDF
+\item Glivenko-Cantelli: EDF converges uniformly to $F$
+\end{itemize}
+\end{frame}
+
+\begin{frame}[plain]{Convergence in action}
+
+\begin{center}
+\includegraphics[scale=0.3]{aux/glivenko}
+\par\end{center}
+
+Source: Hansen online textbook 
+\end{frame}
+
+\begin{frame}[plain]{Computation (Pairs Bootrstrap)}
+
+For small $N$, possible to enumerate $G_{n}\left(t,F_{n}\right)$
+exactly ($2^{N}$ atoms)
+
+Otherwise use sampling w/ replacement to approximate $G_{n}\left(t,F_{n}\right)$
+
+\pause{\medskip{}
+}
+
+Algorithm:
+\begin{enumerate}
+\item Draw a random sample of size $N$ \textit{with replacement} from the
+data. Call this the $b$'th ``bootstrap\textquotedblright{} sample.
+\item Compute the test statistic $T_{n}^{\ast(b)}$ in the bootstrap sample
+(see below for details on this).
+\item Repeat \#1 and \#2 until $b=B$.
+\end{enumerate}
+
+\pause{\medskip{}
+}
+
+Some rules of thumb for $B$ (from my personal experience):
+\begin{itemize}
+\item $B\geq400$ for std error estimation
+\item $B\geq999$ for quantiles
+\end{itemize}
+\medskip
+What if errors are serially correlated within a cluster? \pause Block Bootstrap.
+What if I can't compute my model in a given bootrstrap replica? \pause Residual/Wild Bootstrap.
+\end{frame}
+
+\begin{frame}[plain]{When does the bootstrap work?}
+
+\begin{itemize}
+\item Short answer: when things are ``well behaved''
+\item Problems emerge when limiting distribution is not normal
+\item Example (Andrews, 2000):
+\[
+\theta_{0}=\max\left\{ 0,E\left[X_{i}\right]\right\} 
+\]
+\[
+T_{n}=\sqrt{N}\left(\max\left\{ 0,\overline{X}\right\} -\theta_{0}\right)
+\]
+\item $T_{n}$ is not ``regular'' -- limiting distribution is normal
+when $\theta_{0}>0$ but ``half-normal'' when $\theta_{0}=0$. 
+\item Discontinuity at 0 creates problems for bootstrap
+\item Practical areas where this problem arises: 
+
+\begin{itemize}
+\item Partially identified models (Canay and Shaikh, 2016)
+\item Nearest neighbor matching (Abadie and Imbens, 2008)
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[plain]{A useful guide..}
+
+\begin{theorem}[Fang and Santos, 2015]
+ If $\sqrt{N}\left(\hat{\theta}-\theta_{0}\right)\overset{d}{\rightarrow}N\left(0,\sigma\right)$
+and the bootstrap estimate $\theta^{*}$ obeys $\sqrt{N}\left(\theta^{*}-\hat{\theta}\right)\overset{d}{\rightarrow}N\left(0,\sigma\right)$,
+then the bootstrap is consistent for the limiting distribution of
+$\sqrt{N}\left(f\left(\hat{\theta}\right)-f\left(\theta_{0}\right)\right)$
+\emph{iff} $f\left(.\right)$ is differentiable.
+\end{theorem}
+\medskip{}
+
+\begin{itemize}
+\item ``Delta method'' for the bootstrap
+\item Rules out $\max\left\{ .\right\} /\min\left\{ .\right\} $ transforms
+and ``kinks''
+\item But allows smooth functions of sample moments.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[plain]{When to use the bootstrap}
+
+\begin{itemize}
+\item When computing an analytical standard error is tedious:
+
+\begin{itemize}
+\item Quantile regression (avoid estimation of nuisance density)
+\item Multi-step estimation (just bootstrap the entire procedure)
+\end{itemize}
+\end{itemize}
+\bigskip{}
+
+\begin{itemize}
+\item When tests based on analytical standard error are poorly behaved (though
+other options are typically available):
+
+\begin{itemize}
+\item Few clusters
+\item Delta method for highly nonlinear hypothesis
+\item Weak IV
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[plain]{Bootstrap refinements}
+
+\begin{itemize}
+\item Bootstrapping t-stat often better than comparing t-stat to normal
+crit value (i.e. 1.96)
+\item Provides higher order approximation to $G_{n}\left(t,F\right)$ when
+$T_{n}\left(\theta\right)\equiv\frac{\widehat{\theta}-\theta}{\widehat{\sigma}}$
+is an asymptotic pivot (Hall, 1992)
+
+\begin{itemize}
+\item note: requires consistent std err estimator $\hat{\sigma}$!
+\end{itemize}
+\medskip{}
+
+\item Algorithm:
+\end{itemize}
+\begin{enumerate}
+\item Draw $B$ bootstrap samples
+\item Form BS test statistics $T_{n}^{\ast\left(b\right)}\left(\theta\right)\equiv\frac{\widehat{\theta}^{\ast\left(b\right)}-\theta}{\widehat{\sigma}^{\ast\left(b\right)}}$
+\item Find $1-\alpha$'th quantile of $\left\vert T_{n}^{\ast\left(b\right)}\left(\hat{\theta}\right)\right\vert $
+, call it $c^{*}$
+\item Reject if $\left\vert T_{n}\left(\theta_{0}\right)\right\vert >c^{*}$
+\end{enumerate}
+\end{frame}
+
+\begin{frame}[plain]{Kline and Walters (2016, QJE)}
+
+\includegraphics[scale=0.5]{aux/kline_walters_QJE}
+\begin{itemize}
+\item t-stat for $MVPF=1$ in ``pessimistic'' scenario is $\frac{.5}{.34}=1.47$
+\item Normal p-val for 1-sided test would be $1-\Phi\left(1.47\right)=.07$.
+Refined p-val$\approx0$!
+\end{itemize}
+\end{frame}
+
+\begin{frame}[plain]{A monte carlo study}
+
+\begin{center}
+\includegraphics[scale=0.2]{aux/kline_walters_MC}
+\par\end{center}
+\begin{itemize}
+\item Delta method normal approximation is poor here
+
+\begin{itemize}
+\item Overcoverage: delta method rejected in 0/500 simulations
+\end{itemize}
+\item Bootstrap picks up asymmetry in finite sample dist
+
+\begin{itemize}
+\item Good coverage: 7\% rejections on nominal 5\% test
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[plain]{Residual Bootstraps}
+
+Residual bootstrap for linear model (Freedman, 1981)
+
+Algorithm:
+\begin{enumerate}
+\item Fit linear model $Y_{i}=X_{i}\beta+\varepsilon_{i}$
+\item Resample from residuals $\hat{\varepsilon}_{i}$ to make new dependent
+variable $Y_{i}^{*}=X_{i}\hat{\beta}+\varepsilon_{i}^{*}$
+\item Fit linear model to $Y_{i}^{*}$, get $\beta^{*}$
+\end{enumerate}
+
+\pause{\medskip{}
+}
+\begin{itemize}
+\item Very good asymptotic properties
+
+\begin{itemize}
+\item Can even allow $dim\left(\beta\right)$ to grow w/ $N$ (Bickel and
+Freedman, 1983)
+\item Intuition: resampling from a scalar instead of from $\left(Y_{i},X_{i}\right)$
+\end{itemize}
+\item Do you see a problem with this?
+\end{itemize}
+\end{frame}
+
+\begin{frame}[plain]{Wild Bootstrap (Wu, 1986; Liu, 1988):}
+
+Allow heteroscedasticity while retaining advantage of residual BS
+
+Algorithm:
+\begin{enumerate}
+\item Fit linear model $Y_{i}=X_{i}\beta+\varepsilon_{i}$
+\item Draw iid weights $\left\{ W_{i}^{*}\right\} _{i=1}^{N}$ obeying $E\left[W_{i}^{*}\right]=0$,
+$E\left[\left(W_{i}^{*}\right)^{2}\right]=1$ 
+\item Make new dependent variable $Y_{i}^{*}=X_{i}\hat{\beta}+\hat{\varepsilon}_{i}W_{i}^{*}$
+\item Fit linear model to $Y_{i}^{*}$, get $\left(\beta^{*},\sigma^{*}\right)$
+\end{enumerate}
+
+\pause{}
+
+Intuition:
+\[
+E\left[\hat{\varepsilon}_{i}W_{i}^{*}|\left\{ Y_{i},X_{i}\right\} _{i=1}^{N}\right]=0
+\]
+\[
+E\left[\left(\hat{\varepsilon}_{i}W_{i}^{*}\right)^{2}|\left\{ Y_{i},X_{i}\right\} _{i=1}^{N}\right]=\hat{\varepsilon}_{i}^{2}
+\]
+
+So $\varepsilon_{i}^{*}\equiv\hat{\varepsilon}_{i}W_{i}^{*}$ is mean
+independent of $X_{i}$ and replicates hetero found in data
+
+But do we want to impose mean independence?
+\end{frame}
+
+\begin{frame}[plain]{Theoretical results}
+
+\begin{itemize}
+\item Mammen (1993): 
+
+\begin{itemize}
+\item Wild BS yields refinement even under many regressors asymptotics $\left(p\rightarrow\infty,\mbox{ }p/n\rightarrow0\right)$
+provided linear model is correct
+\item Wild (\& ``pairs'') BS still consistent under misspecification
+\end{itemize}
+\medskip{}
+
+\item Kline and Santos (2012, JoE): Wild BS retains refinement under fixed
+$p$ asymptotics when ``locally'' misspecified
+\end{itemize}
+\medskip{}
+
+\begin{itemize}
+\item Kline and Santos (2012, JEMS): ``Score BS''
+
+\begin{itemize}
+\item extension of Wild BS to nonlinear models (e.g. Probit)
+\item avoid recomputation of estimator (major speedup)
+\item connection to Bayesian/Weighted BS
+\item implemented in ``\href{https://ideas.repec.org/c/boc/bocode/s458121.html}{BOOTTEST}''
+Stata package
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[plain]{Cameron, Gelbach, and Miller (2008, RESTAT)}
+
+\begin{itemize}
+\item Monte Carlo bootstrap tests in clustered data setting
+\item Variant of Wild BS that ``imposes the null'' performs best
+\end{itemize}
+Algorithm:
+\begin{enumerate}
+\item Fit \emph{restricted} linear model $Y_{i}=X_{i}\tilde{\beta}+\varepsilon_{i}$
+where $c\left(\tilde{\beta}\right)=0$
+\item Draw iid weights $\left\{ W_{i}^{*}\right\} _{i=1}^{N}$ obeying $E\left[W_{i}^{*}\right]=0$,
+$E\left[\left(W_{i}^{*}\right)^{2}\right]=1$ 
+\item Make new dependent variable $Y_{i}^{*}=X_{i}\hat{\tilde{\beta}}+\hat{\tilde{\varepsilon}}_{i}W_{i}^{*}$
+\item Fit \emph{unrestricted }linear model to $Y_{i}^{*}$, get $\left(\beta^{*},\sigma^{*}\right)$
+\item Compare clustered Wald stat $\hat{T}_{n}$ to appropriate quantile
+of bootstrap analogue $T_{n}^{*}$
+\end{enumerate}
+
+\pause{\smallskip{}
+}
+\begin{itemize}
+\item Canay, Shaikh, Santos (2016): CGM BS consistent for fixed \# of clusters
+as cluster size grows, given balanced design ($E\left[X_{i}X_{i}'|C_{i}\right]=E\left[X_{i}X_{i}'\right]$)
+and effect homogeneity $\beta_{c}=\beta$.
+\end{itemize}
+\end{frame}
+%%
+\begin{frame}
+\frametitle{Beware!}
+\includegraphics[scale=0.4]{aux/bootstrap_high_dimensions}
+\end{frame}
+%%
+\begin{frame}
+\frametitle{(The answer is no)}
+\includegraphics[scale=0.4]{aux/bootstrap_high_dimensions}
+\end{frame}
+
+\section{Two-Step Estimators}
+
+\begin{frame}[plain]{2-step estimators}
+
+Lots of settings where it is easier to estimate model in ``steps''
+\begin{itemize}
+\item 1st step parameter estimate $\hat{\gamma}$
+\item Second step m-estimator:
+\[
+\widehat{\theta}\equiv\underset{\theta\in\Theta}{\arg\min}\sum\limits _{i}q\left(\boldsymbol{Z}_{i},\theta;\widehat{\gamma}\right)
+\]
+\end{itemize}
+Example (WNLLS):
+\[
+\widehat{\theta}=\underset{\theta\in\Theta}{\arg\min}\sum_{i}\left[Y_{i}-m\left(X_{i},\theta\right)\right]^{2}w\left(X_{i};\widehat{\gamma}\right)
+\]
+
+\begin{itemize}
+\item $\hat{\gamma}\pto\gamma^{*}$
+\item How/when to adjust standard errors for use of $\hat{\gamma}$ instead
+of $\gamma^{*}$?
+\end{itemize}
+\end{frame}
+
+\begin{frame}[plain]{Influence fn representation}
+
+Asymptotic variability derives from two sources:
+\begin{eqnarray*}
+\sqrt{N}\left(\widehat{\theta}-\theta_{0}\right) & = & -E\left[\boldsymbol{H}_{i}\left(\theta_{0},\gamma^{\ast}\right)\right]^{-1}N^{-1/2}\sum_{i}\boldsymbol{s}_{i}\left(\theta_{0},\gamma^{\ast}\right)\\
+ &  & -E\left[\boldsymbol{H}_{i}\left(\theta_{0},\gamma^{\ast}\right)\right]^{-1}E\left[\bigtriangledown_{\gamma}\boldsymbol{s}_{i}\left(\theta_{0},\gamma^{\ast}\right)\right]\sqrt{N}\left(\widehat{\gamma}-\gamma^{\ast}\right)\\
+ &  & +o_{p}\left(1\right)
+\end{eqnarray*}
+Second term is zero when $E\left[\bigtriangledown_{\gamma}\boldsymbol{s}_{i}\left(\theta_{0},\gamma^{\ast}\right)\right]=0$!
+
+\medskip{}
+
+Example (WNLLS):
+\[
+\bigtriangledown_{\gamma}\boldsymbol{s}_{i}\left(\theta_{0},\gamma^{\ast}\right)=\left[Y_{i}-m\left(X_{i},\theta_{0}\right)\right]\frac{\partial}{\partial\theta}m\left(X_{i},\theta_{0}\right)\bigtriangledown_{\gamma}w\left(X_{i};\gamma^{\ast}\right)
+\]
+
+\begin{itemize}
+\item If $E\left[Y_{i}|X_{i}\right]=m\left(x_{i},\theta_{0}\right)$ then
+$E\left[\bigtriangledown_{\gamma}\boldsymbol{s}_{i}\left(\theta_{0},\gamma^{\ast}\right)\right]=0$
+(by LIE)
+\item Otherwise, all bets are off
+\end{itemize}
+\end{frame}
+%%
+\begin{frame}[plain]{Two-Steps estimators are everywhere}
+
+
+\begin{center}
+\includegraphics[scale=0.3]{aux/chetty3}
+\par\end{center}
+
+
+\end{frame}
+
+
+
+\begin{frame}[plain]{Place ``effects" }
+
+
+\begin{center}
+\includegraphics[scale=0.45]{aux/chetty1}
+\par\end{center}
+
+
+\end{frame}
+
+\begin{frame}[plain]{Two-step in action }
+
+
+\begin{center}
+\includegraphics[scale=0.45]{aux/chetty2}
+\par\end{center}
+
+
+\end{frame}
+\end{document}
