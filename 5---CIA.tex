@@ -1,0 +1,1084 @@
+\documentclass[notes=show]{beamer}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\AtBeginSubsection[
+  {\frame<beamer>{\frametitle{Outline}   
+    \tableofcontents[currentsection,currentsubsection]}}%
+]%
+{
+  \frame<beamer>{ 
+    \frametitle{Outline}   
+    \tableofcontents[currentsection,currentsubsection]}
+}
+\usepackage{ulem}
+\usepackage{pdflscape}
+\setbeamertemplate{caption}{\insertcaption}
+\usepackage{color,xcolor,ucs}
+\usepackage{beamerthemesplit}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{adjustbox}
+\usepackage{pdfpages} 
+\definecolor{mintgreen}{rgb}{0.6, 1.0, 0.6}
+\makeatletter
+\@addtoreset{subfigure}{framenumber}% subfigure counter resets every frame
+\makeatother
+\newcommand*{\Scale}[2][4]{\scalebox{#1}{$#2$}}%
+\newcommand*{\Resize}[2]{\resizebox{#1}{!}{$#2$}}%
+\usepackage{amsfonts}
+\usepackage{booktabs}
+\usepackage{color,soul}
+\usepackage{pdfpages}
+\setboolean{@twoside}{false}
+\usepackage{amsmath}
+\usepackage{pdflscape} 
+\usepackage{eurosym}
+\usepackage{amstext} % for \text
+\DeclareRobustCommand{\officialeuro}{%
+  \ifmmode\expandafter\text\fi
+  {\fontencoding{U}\fontfamily{eurosym}\selectfont e}}
+\usepackage[caption = false]{subfig}
+\usepackage{appendixnumberbeamer} 
+\usepackage{graphicx}
+\usepackage{mathpazo}
+\usepackage{hyperref}
+\usepackage{multimedia}
+\usepackage{graphicx}
+\usepackage{multirow}
+\usepackage{subfig}
+\usepackage{verbatim}
+\usepackage{booktabs, multicol, multirow}
+\setcounter{MaxMatrixCols}{10}
+\input{Macros.tex}
+\AtBeginSection[]
+{
+  \begin{frame}[noframenumbering]
+    \frametitle{Outline for section \thesection}
+    \tableofcontents[currentsection]
+  \end{frame}
+}
+
+
+\usepackage{xcolor,soul}
+\renewcommand<>{\hl}[1]{\only#2{\beameroriginal{\hl}}{#1}}
+
+% https://tex.stackexchange.com/questions/41683/why-is-it-that-coloring-in-soul-in-beamer-is-not-visible
+\makeatletter
+\newcommand\SoulColor{%
+  \let\set@color\beamerorig@set@color
+  \let\reset@color\beamerorig@reset@color}
+\makeatother
+\SoulColor
+\AtBeginSection{\frame{\sectionpage}}
+
+\newsavebox\mybox
+\newenvironment{aquote}[1]
+  {\savebox\mybox{#1}\begin{quote}\openautoquote\hspace*{-.7ex}}
+  {\unskip\closeautoquote\vspace*{1mm}\signed{\usebox\mybox}\end{quote}}
+
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{Assumption}[theorem]{Assumption}
+\newenvironment{stepenumerate}{\begin{enumerate}[<+->]}{\end{enumerate}}
+\newenvironment{stepitemize}{\begin{itemize}[<+->]}{\end{itemize} }
+\newenvironment{stepenumeratewithalert}{\begin{enumerate}[<+-| alert@+>]}{\end{enumerate}}
+\newenvironment{stepitemizewithalert}{\begin{itemize}[<+-| alert@+>]}{\end{itemize} }
+\usetheme{Madrid}
+\makeatletter
+\setbeamertemplate{footline}
+{
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}%
+    \usebeamerfont{author in head/foot}\insertshortauthor~~\beamer@ifempty{\insertshortinstitute}{}{(\insertshortinstitute)}
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+    \usebeamerfont{title in head/foot}\insertshorttitle
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,right]{date in head/foot}%
+    \usebeamerfont{date in head/foot}\insertshortdate{}\hspace*{2em}
+%    \insertframenumber{} / \inserttotalframenumber\hspace*{2ex} % DELETED
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+\makeatother
+\usepackage{pdfpages}
+\begin{document}
+	\title[]{\large Selection on Observables
+	\vspace{0.5cm}
+	}
+	\author[Raffaele Saggio - Econ 628]{Raffaele Saggio}
+	\institute[]{UBC}
+	\date{\today \\
+}
+	\maketitle
+
+
+
+\begin{frame}{Overview}
+
+\begin{itemize}
+\item {\small{}This lecture covers approaches to estimating }\textbf{\small{}causal
+effects}{\small{} in settings with selection on observables\medskip{}
+}{\small\par}
+\item {\small{}Also known as: unconfoundedness, exogeneity, ignorability,
+conditional independence\medskip{}
+}
+\end{itemize}
+\end{frame}
+\begin{frame}{Controlling Selection Bias: CIA}
+
+\begin{itemize}
+\item {\small{}A classic approach in the program evaluation literature is
+to adjust observational comparisons for differences in observed covariates\medskip{}
+}{\small\par}
+\item {\small{}This approach is motivated by a conditional independence
+assumption (CIA):}{\small\par}
+\end{itemize}
+\begin{center}
+{\small{}$(Y_{i}(1),Y_{i}(0))\bot T_{i}|X_{i}$}{\small\par}
+\par\end{center}
+\begin{itemize}
+\item {\small{}CIA is also called ``unconfoundedness,'' ``selection on
+observables,'' ``exogeneity,'' ``ignorability''}{\small\par}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Controlling Selection Bias: CIA}
+
+\begin{center}
+{\small{}$(Y_{i}(1),Y_{i}(0))\bot T_{i}|X_{i}$}{\small\par}
+\par\end{center}
+\begin{itemize}
+\item {\small{}The idea is that while treatment is not unconditionally random,
+it may be as good as random conditional on covariates \medskip{}
+}{\small\par}
+\item {\small{}Controlling for $X_{i}$ then captures any systematic relationship
+between potential outcomes and treatment, eliminating selection bias
+\medskip{}
+}{\small\par}
+\item {\small{}This is the case in stratified RCTs and may be true in observational
+data with the right controls}{\small\par}
+\pause
+\item Is this testable? Usually not but sometimes one can be ``smart" and provide evidence in favor of CIA (e.g. Card-Heining-Kline, 2013) .
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Full Covariate Matching}
+
+\begin{itemize}
+\item {\footnotesize{}Under CIA an obvious approach is to simply compare
+treatment and control groups conditional on the covariates:}{\footnotesize\par}
+\end{itemize}
+\begin{center}
+{\footnotesize{}$\Delta(X_{i})=E\left[Y_{i}|T_{i}=1,X_{i}\right]-E\left[Y_{i}|T_{i}=0,X_{i}\right]$}{\footnotesize\par}
+\par\end{center}
+\begin{itemize}
+\item {\footnotesize{}CIA implies}{\footnotesize\par}
+\end{itemize}
+\begin{center}
+{\footnotesize{}$\Delta(X_{i})=E\left[Y_{i}(1)|T_{i}=1,X_{i}\right]-E\left[Y_{i}(0)|T_{i}=0,X_{i}\right]$}{\footnotesize\par}
+\par\end{center}
+
+\begin{center}
+{\footnotesize{}$=E\left[Y_{i}(1)-Y_{i}(0)|X_{i}\right]$}{\footnotesize\par}
+\par\end{center}
+
+\begin{center}
+{\footnotesize{}$\equiv ATE(X_{i})$.}{\footnotesize\par}
+\par\end{center}
+\begin{itemize}
+\item {\footnotesize{}Covariate-specific treatment/control contrasts capture
+conditional average treatment effects\medskip{}
+}{\footnotesize\par}
+\item {\footnotesize{}By computing $\Delta(X_{i})$ for every value of $X_{i}$
+and then weighting appropriately, we can obtain any causal effect
+of interest}{\footnotesize\par}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Full Covariate Matching}
+
+\begin{center}
+{\small{}$ATE=\sum_{x}Pr\left[X_{i}=x\right]\Delta(x)$}{\small\par}
+\par\end{center}
+
+\begin{center}
+{\small{}$TOT=\sum_{x}Pr\left[X_{i}=x|T_{i}=1\right]\Delta(x)$ }{\small\par}
+\par\end{center}
+
+\begin{center}
+{\small{}$TNT=\sum_{x}Pr\left[X_{i}=x|T_{i}=0\right]\Delta(x)$ }{\small\par}
+\par\end{center}
+
+\end{frame}
+
+\begin{frame}{OLS as Matching}
+
+\begin{center}
+{\footnotesize{}$Y_{i}=D_{i}^{\prime}\Pi+\delta T_{i}+U_{i}$}{\footnotesize\par}
+\par\end{center}
+\begin{itemize}
+\item {\footnotesize{}Recall our discussion of OLS with a saturated set
+of dummies for all values of $X_{i}$. We showed}{\footnotesize\par}
+\end{itemize}
+\begin{center}
+{\footnotesize{}$\delta=E\left[\dfrac{\sigma_{T}^{2}(X_{i})}{E\left[\sigma_{T}^{2}(X_{i})\right]}\cdot\Delta(X_{i})\right]$}{\footnotesize\par}
+\par\end{center}
+{\tiny{see slide 42 of Lecture2}}
+\begin{itemize}
+\item {\footnotesize{}OLS with saturated controls is a version of full covariate
+matching that generates a variance-weighted average treatment effect\medskip{}
+}{\footnotesize\par}
+\item {\footnotesize{}OLS and matching are not qualitatively different\medskip{}
+}{\footnotesize\par}
+\begin{itemize}
+\item {\footnotesize{}Both are methods of adjusting for observables}{\footnotesize\par}
+\item {\footnotesize{}Coincide when the controls are flexible enough}{\footnotesize\par}
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Side Note: Controls in OLS}
+
+\begin{itemize}
+\item {\small{}Suppose we are interested in estimating the structural equation:}{\small\par}
+\end{itemize}
+\begin{center}
+{\small{}$Y_{i}=\alpha+\delta T_{i}+\epsilon_{i}$}{\small\par}
+\par\end{center}
+\begin{itemize}
+\item {\small{}We believe CIA holds, so we add controls for $X_{i}$:}{\small\par}
+\end{itemize}
+\begin{center}
+{\small{}$Y_{i}=\alpha+\delta T_{i}+X_{i}^{\prime}\gamma+e_{i}$}{\small\par}
+\par\end{center}
+\begin{itemize}
+\item {\small{}This is a structural equation, not an OLS regression. How
+should we interpret $\gamma$? What if we get a "weird" coefficient on $\gamma$?}{\small\par}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Side Note: Controls in OLS}
+
+\begin{center}
+{\small{}$Y_{i}=\alpha+\delta T_{i}+\epsilon_{i}$}{\small\par}
+\par\end{center}
+\begin{itemize}
+\item {\small{}We are only trying to estimate the causal effect of $T_{i}$,
+not of $X_{i}$}{\footnotesize{}\medskip{}
+}{\footnotesize\par}
+\item Consider the linear projection of the structural error $\epsilon_{i}$
+on $X_{i}$:
+\end{itemize}
+\begin{center}
+$\epsilon_{i}=X_{i}^{\prime}\gamma+e_{i}$
+\par\end{center}
+\begin{itemize}
+\item {\small{}This is an OLS regression, so $Cov(X_{i},e_{i})=0$ by definition}{\small\par}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Worker Bee Controls}
+
+\begin{itemize}
+\item {\small{}Substituting this projection into the structural equation
+yields}{\small\par}
+\end{itemize}
+\begin{center}
+{\small{}$Y_{i}=\alpha+\delta T_{i}+X_{i}^{\prime}\gamma+e_{i}$}{\small\par}
+\par\end{center}
+\begin{itemize}
+\item {\small{}The $X$'s in this equation are ``worker bee'' controls
+meant to eliminate selection bias }{\footnotesize{}\medskip{}
+}{\footnotesize\par}
+\item {\small{}We are not trying to estimate causal effects of $X_{i}$
+so it doesn't make sense to worry that $Cov(X_{i},e_{i})\neq0$}{\footnotesize{}\medskip{}
+}{\footnotesize\par}
+\item {\small{}It's important to be clear about which parameters are structural
+and which are projection coefficients on conditioning variables}{\small\par}
+\end{itemize}
+\end{frame}
+
+%%
+\section{Matching}
+\begin{frame}{Matching with High-dimensional Covariates}
+\begin{itemize}
+\item {\small{}Full covariate matching may not be feasible if there are
+many values of $X_{i}$ (the ``curse of dimensionality'')\medskip{}
+}{\small\par}
+\item {\small{}With imperfect overlap in the treatment and control covariate
+distributions, $\Delta(X_{i})$ can't be computed for some values
+of $X_{i}$\medskip{}
+}{\small\par}
+\item {\small{}With continuous covariates every value of $X_{i}$ is unique\medskip{}
+}{\small\par}
+\item {\small{}Matching with high-dimensional covariates requires comparing
+observations with ``similar'' values of $X_{i}$}{\small\par}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{The Propensity Score Theorem}
+
+\begin{itemize}
+\item {\small{}The}\textbf{\small{} }{\small{}propensity score theorem provides
+a path for reducing the dimensionality of the covariates\medskip{}
+}{\small\par}
+\item {\small{}The }\textbf{\small{}propensity score}{\small{} is the conditional
+probability of treatment, $e(X_{i})=Pr\left[T_{i}=1|X_{i}\right]$\medskip{}
+}{\small\par}
+\item {\small{}Rosenbaum and Rubin (1983) show that}{\small\par}
+\end{itemize}
+\begin{center}
+{\small{}$(Y_{i}(1),Y_{i}(0))\bot T_{i}|X_{i}\implies(Y_{i}(1),Y_{i}(0))\bot T_{i}|e(X_{i})$}{\small\par}
+\par\end{center}
+\begin{itemize}
+\item {\small{}Under CIA, it isn't necessary to fully condition on $X_{i}$
+to eliminate selection bias; it's sufficient to condition on the scalar
+$e(X_{i})$\medskip{}
+}{\small\par}
+\item {\small{}There may be few treatment/control observations sharing values
+of $X_{i}$ but many sharing values of $e(X_{i})$}{\small\par}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Proof of the Propensity Score Theorem}
+
+\begin{itemize}
+\item {\footnotesize{}Note that if $Pr\left[T_{i}=1|Y_{i}(1),Y_{i}(0),e(X_{i})\right]=Pr\left[T_{i}=1|e(X_{i})\right]$,
+it must be that $T_{i}\bot\left(Y_{i}(1),Y_{i}(0)\right)|e(X_{i})$. }{\footnotesize\par}
+\item {\footnotesize{}Now observe that:}{\footnotesize\par}
+\end{itemize}
+\begin{center}
+{\footnotesize{}$Pr\left[T_{i}=1|Y_{i}(1),Y_{i}(0),e(X_{i})\right]=E\left[T_{i}|Y_{i}(1),Y_{i}(0),e(X_{i})\right]$}{\footnotesize\par}
+\par\end{center}
+
+{\footnotesize{}}
+
+\begin{center}
+{\footnotesize{}$=E\left[E\left[T_{i}|Y_{i}(1),Y_{i}(0),X_{i}\right]|Y_{i}(1),Y_{i}(0),e(X_{i})\right]$}{\footnotesize\par}
+\par\end{center}
+
+{\footnotesize{}}
+
+\begin{center}
+{\footnotesize{}$=E\left[E\left[T_{i}|X_{i}\right]|Y_{i}(1),Y_{i}(0),e(X_{i})\right]$}{\footnotesize\par}
+\par\end{center}
+
+{\footnotesize{}}
+
+\begin{center}
+{\footnotesize{}$=E\left[e(X_{i})|Y_{i}(1),Y_{i}(0),e(X_{i})\right]$}{\footnotesize\par}
+\par\end{center}
+
+{\footnotesize{}}
+
+\begin{center}
+{\footnotesize{}$=e(X_{i})$.}{\footnotesize\par}
+\par\end{center}
+
+\end{frame}
+
+\begin{frame}{Balacing Distributions vs. Matching}
+
+\begin{itemize}
+\item {\footnotesize{}The p-score theorem says that we need to condition on the (potentially big) vector $X_{i}$ but just on the propensity score (one dimensional object)}{\small{}\medskip{}
+}{\small\par}
+\item {\footnotesize{}$e(X_{i})$ turns out to be the coarsest ``balancing
+score'' that yields full independence of treatments from potential
+outcomes given CIA assumption}{\small{}\medskip{}
+}{\small\par}
+\item {\footnotesize{}But how can it make sense to compare units with different
+$X_{i}$?}{\small{}\medskip{}
+}{\small\par}
+\item {\footnotesize{}Answer: it doesn't. }
+
+\begin{itemize}
+\item {\footnotesize{}Difference of means is comparing \emph{{\footnotesize{}distributions}}
+not units}{\footnotesize\par}
+\item {\footnotesize{}As we get more data on each $e\left(X_{i}\right)$
+cell, there are more matches with exactly the same $X_{i}$}
+
+\begin{itemize}
+\item {\footnotesize{}But no need to stratify on $X_{i}$ in estimation}{\footnotesize\par}
+\end{itemize}
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Estimating the Propensity Score}
+
+\begin{itemize}
+\item {\small{}The}\textbf{\small{} }{\small{}propensity score theorem shows
+that we can reduce the dimensionality of the covariates by matching
+on $e(X_{i})$ rather than $X_{i}$\medskip{}
+}{\small\par}
+\item {\small{}But $e(X_{i})$ is unknown except in special situations,
+so usually it must be estimated\medskip{}
+}{\small\par}
+\item {\small{}With discrete data $e(X_{i})$ can be estimated using covariate-specific
+empirical frequencies (but then why not do full matching?)\medskip{}
+}{\small\par}
+\item {\small{}In practice the propensity score is often estimated with
+a flexible logit or probit}{\small\par}
+\item Logit with 2nd-3rd degree polynomials in the continuous variables seem to be the way to go (MHE).
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Overlap}
+
+\begin{itemize}
+\item {\footnotesize{}After estimating the propensity score it is common
+to assess the overlap between treatment and control distributions
+of $e(X_{i})$\medskip{}
+}{\footnotesize\par}
+\item {\footnotesize{}Identification of the TOT requires $e(X_{i})<1\ \forall X_{i}$\medskip{}
+}{\footnotesize\par}
+\begin{itemize}
+\item {\footnotesize{}Requires constructing $E\left[Y_{i}(0)|T_{i}=1\right]$,
+and there is no hope of imputing counterfactual outcomes for treated
+observations with $e(X_{i})=1$.\medskip{}
+}{\footnotesize\par}
+\end{itemize}
+\item {\footnotesize{}Likewise, identifying the TNT requires $e(X_{i})>0$
+and the ATE requires $0<e(X_{i})<1$\medskip{}
+}{\footnotesize\par}
+\item {\footnotesize{}Crump et al. (2009): ``trim'' observations with
+small or large values of $e(X_{i})$ to improve overlap and reduce
+variance}{\footnotesize\par}
+\begin{itemize}
+\item {\footnotesize{}Note: this changes the estimand - but may be acceptable
+if effect heterogeneity is not of primary interest}{\footnotesize\par}
+\item {\footnotesize{}Huber, Lechner, and Wunsch (2013): let fraction trimmed
+decline asymptotically to 0}{\footnotesize\par}
+\end{itemize}
+\end{itemize}
+\end{frame}
+\setbeamercolor{background canvas}{bg=} \includepdf{aux/DW_score.pdf}
+\begin{frame}{Nearest Neighbor Matching}
+
+\begin{itemize}
+\item {\small{}A further question is how to select observations with similar
+values of the propensity score\medskip{}
+}{\small\par}
+\item {\small{}One common approach is nearest neighbor matching\medskip{}
+}{\small\par}
+\item A nearest neighbor matching estimator of the TOT can be written
+\end{itemize}
+\begin{center}
+$\hat{\delta}_{NN}=\left(\frac{1}{\sum_{i}T_{i}}\right){\displaystyle \sum}_{i}T_{i}\left(Y_{i}-Y_{n(i)}\right)$,
+\par\end{center}
+
+\begin{center}
+$n(i)={\displaystyle \arg\min_{j:T_{j}=0}}|\hat{e}(X_{i})-\hat{e}(X_{j})|$
+\par\end{center}
+\begin{itemize}
+\item {\small{}The NN estimator compares each treated observation to the
+control observation with the closest value of the propensity score}{\small\par}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Problems with Nearest Neighbor Matching}
+
+\begin{itemize}
+\item {\small{}One problem with nearest neighbor matching is a lack of efficiency:
+$\hat{\delta}_{NN}$ uses only the control match with the closest
+value of $e(X_{j})$ and ignores any other ``close'' matches \medskip{}
+}{\small\par}
+\item {\small{}A second problem is that it's difficult to get standard errors
+for nearest neighbor matching estimators\medskip{}
+}{\small\par}
+\begin{itemize}
+\item {\small{}Abadie and Imbens (2008): bootstrap fails for nearest neighbor
+matching due to the non-smoothness of the nearest neighbor function\medskip{}
+}{\small\par}
+\item Abadie and Imbens (2012): standard errors based on martingale approximation
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Kernel Matching}
+
+\begin{itemize}
+\item {\footnotesize{}Kernel matching estimators use all control observations
+to impute counterfactuals rather than just the nearest neighbor \medskip{}
+}{\footnotesize\par}
+\item {\footnotesize{}A kernel matching estimate of the TOT is given by}{\footnotesize\par}
+\end{itemize}
+\begin{center}
+{\footnotesize{}$\hat{\delta}_{K}=\left(\frac{1}{\sum_{i}T_{i}}\right){\displaystyle \sum}_{i}T_{i}\left[Y_{i}-\hat{\mu}_{0}\left(\hat{e}(X_{i})\right)\right]$,}{\footnotesize\par}
+\par\end{center}
+
+\begin{center}
+{\footnotesize{}$\hat{\mu}_{0}(e)=\dfrac{\sum_{j}(1-T_{j})K\left(\tfrac{\hat{e}(X_{j})-e}{h}\right)Y_{j}}{\sum_{j}(1-T_{j})K\left(\tfrac{\hat{e}(X_{j})-e}{h}\right)}$.}{\footnotesize\par}
+\par\end{center}
+\begin{itemize}
+\item {\footnotesize{}$K(\cdot)$ is a symmetric kernel weighting function
+maximized at 0 and $h$ is a bandwidth\medskip{}
+}{\footnotesize\par}
+\item {\footnotesize{}The kernel matching estimator compares each treated
+observation to a weighted average of control observations, with weights
+that are decreasing in the absolute value of the difference in propensity
+scores}{\footnotesize\par}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Problems with Kernel Matching}
+
+\begin{itemize}
+\item {\small{}Kernel matching estimators have lower variance than NN estimators
+since they use more data, but also have more bias since they use information
+from more dissimilar matches \medskip{}
+}{\small\par}
+\item {\small{}As with NN estimators, there are some thorny implementation
+issues with kernel matching\medskip{}
+}
+
+\begin{itemize}
+\item {\small{}Computing standard errors is complicated by the two-step
+nature of the estimation process (propensity score, then matching).
+This makes bootstrapping attractive but the validity of the bootstrap
+depends on the kernel\medskip{}
+}{\small\par}
+\item {\small{}Kernel matching also requires choosing the bandwidth $h$.
+There are cross-validation choices available for bandwidth choice
+but these can behave poorly in finite samples}{\small\par}
+\end{itemize}
+\end{itemize}
+\end{frame}
+%%
+\section{Reweighting}
+\begin{frame}{Why matching? Can't we just re-weight?}
+\label{weighting}
+\pause
+\begin{itemize}
+\item {\small{}Propensity score reweighting sidesteps the matching step
+and reweights covariate distributions to match in the treatment and
+control groups \medskip{}
+}{\small\par}
+\item {\small{}Suppose we want the TOT. $E\left[Y_{i}(1)|T_{i}=1\right]$
+is identified by the mean outcome in the treatment group; the hard
+part is identifying $E\left[Y_{i}(0)|T_{i}=1\right]$. \medskip{}
+}{\small\par}
+\item {\small{}Think about reweighting the control covariate distribution
+to match the treatment distribution. Defining $g_{X|T=t}(x)$ as the
+density (or mass) function of $X_{i}$ conditional on $T_{i}=t$,
+this requires a set of weights $\omega(x)$ satisfying }{\small\par}
+\end{itemize}
+\begin{center}
+{\small{}$\omega(x)g_{X|T=0}(x)=g_{X|T=1}(x)\ \forall x$}{\small\par}
+\par\end{center}
+
+\end{frame}
+
+\begin{frame}{Propensity Score Reweighting}
+
+\begin{itemize}
+\item {\footnotesize{}By Bayes rule we can write}{\footnotesize\par}
+\end{itemize}
+\begin{center}
+{\footnotesize{}$g_{X|T=t}(x)=\dfrac{Pr\left[T_{i}=t|X_{i}=x\right]g_{X}(x)}{Pr\left[T_{i}=t\right]}$}{\footnotesize\par}
+\par\end{center}
+\begin{itemize}
+\item {\footnotesize{}The marginal density $g_{X}(x)$ cancels when we divide
+the conditional densities, yielding}{\footnotesize\par}
+\end{itemize}
+\begin{center}
+{\footnotesize{}$\omega(x)=\dfrac{Pr\left[T_{i}=1|X_{i}=x\right]}{Pr\left[T_{i}=0|X_{i}=x\right]}\cdot\dfrac{Pr\left[T_{i}=0\right]}{Pr\left[T_{i}=1\right]}$}{\footnotesize\par}
+\par\end{center}
+
+\begin{center}
+{\footnotesize{}$=\dfrac{e(x)}{1-e(x)}\cdot\dfrac{1-Pr\left[T_{i}=1\right]}{Pr\left[T_{i}=1\right]}$}{\footnotesize\par}
+\par\end{center}
+
+\end{frame}
+
+\begin{frame}{Propensity Score Reweighting}
+
+\begin{itemize}
+\item {\footnotesize{}Now reweight the observed outcome distribution for
+the controls:}{\footnotesize\par}
+\end{itemize}
+\begin{center}
+{\footnotesize{}$E\left[\omega(X_{i})Y_{i}|T_{i}=0\right]=\int\int\omega(x)\cdot y\cdot f_{Y(0),X|T=0}(x,y)dydx$}{\footnotesize\par}
+\par\end{center}
+
+\begin{center}
+{\footnotesize{}$=\int\left[\int yf_{Y(0)|X,T=0}(y)dy\right]\omega(x)g_{X|T=0}(x)dx$}{\footnotesize\par}
+\par\end{center}
+
+\begin{center}
+{\footnotesize{}$=\int E\left[Y_{i}(0)|T_{i}=0,X_{i}=x\right]g_{X|T=1}(x)dx$}{\footnotesize\par}
+\par\end{center}
+\begin{center}
+{\footnotesize{}$=\int E\left[Y_{i}(0)|X_{i}=x\right]g_{X|T=1}(x)dx$}{\footnotesize\par}
+\par\end{center}
+
+\begin{center}
+{\footnotesize{}$=E\left[Y_{i}(0)|T_{i}=1\right]$}{\footnotesize\par}
+\par\end{center}
+
+\end{frame}
+
+\begin{frame}{Propensity Score Reweighting}
+
+\begin{center}
+$E\left[\omega(X_{i})Y_{i}|T_{i}=0\right]=E\left[Y_{i}(0)|T_{i}=1\right]$
+\par\end{center}
+\begin{itemize}
+\item The counterfactual mean for the treatment group can therefore be obtained
+by reweighting the control covariate distribution to match the treated
+distribution{\small{}\medskip{}
+}{\small\par}
+\item But why stopping at the mean? 
+\pause
+\medskip
+\item This can be done for any function $h(Y_{i})$ so we can recover the
+entire distribution of $Y_{i}(0)$ for the treatment group, not just
+the mean!
+\medskip
+\item Can be used to answer questions like: what would the distribution of wages look like now if we had the unionionization rate observed in of the 1970's? See Di Nardo, Fortin and Lemieux (1996).
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Propensity Score Reweighting}
+
+\begin{itemize}
+\item {\footnotesize{}Similarly, define}{\footnotesize\par}
+\end{itemize}
+\begin{center}
+{\footnotesize{}$\tilde{\omega}_{1}(x)=\dfrac{Pr\left[T_{i}=1\right]}{e(x)}$,
+$\tilde{\omega}_{0}(x)=\dfrac{Pr\left[T_{i}=0\right]}{1-e(x)}$}{\footnotesize\par}
+\par\end{center}
+\begin{itemize}
+\item {\footnotesize{}Then}{\footnotesize\par}
+\end{itemize}
+\begin{center}
+{\footnotesize{}$E\left[\tilde{\omega}_{1}(X_{i})Y_{i}|T_{i}=1\right]=E\left[Y_{i}(1)\right]$}{\footnotesize\par}
+\par\end{center}
+
+\begin{center}
+{\footnotesize{}$E\left[\tilde{\omega}_{0}(X_{i})Y_{i}|T_{i}=0\right]=E\left[Y_{i}(0)\right]$}{\footnotesize\par}
+\par\end{center}
+\begin{itemize}
+\item {\footnotesize{}Weighting observations by the inverse of the conditional
+probability of their treatment assignments recovers population mean
+potential outcomes}{\footnotesize\par}
+\begin{itemize}
+\item {\footnotesize{}Horvitz and Thompson (1952) estimator for dealing
+with unequal sampling probabilities \medskip{}
+}{\footnotesize\par}
+\end{itemize}
+\item {\footnotesize{}Define $\tilde{Y}_{i}=Y_{i}\left(\tilde{\omega}_{1}(X_{i})T_{i}+\tilde{\omega}_{0}(X_{i})(1-T_{i})\right)$.
+Then a regression of $\tilde{Y}_{i}$ on $T_{i}$ yields the ATE.}{\footnotesize\par}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Propensity Score Reweighting: Practical Issues}
+
+\begin{itemize}
+\item {\footnotesize{}Reweighting estimators are usually easier to implement
+than matching, and it's easier to obtain standard errors -- bootstrapping
+works as long as the overlap condition is satisfied\medskip{}
+}{\footnotesize\par}
+\item {\footnotesize{}Reweighting performs much better when the model used
+to fit $e(X_{i})$ is a good approximation. It is therefore important
+to conduct thorough specification testing after estimating the propensity
+score, e.g. by:\medskip{}
+}
+
+\begin{itemize}
+\item {\footnotesize{}Comparing model fits to nonparametric treatment probabilities
+in covariate cells\medskip{}
+}{\footnotesize\par}
+\item {\footnotesize{}Checking that reweighting balances the treatment and
+control distributions of key individual covariates\medskip{}
+}{\footnotesize\par}
+\end{itemize}
+\item {\footnotesize{}These tests are based on the fact that $T_{i}\bot X_{i}|e(X_{i})$.
+Covariate distributions cannot differ between treatment and control
+groups conditional on the true propensity score}{\footnotesize\par}
+\end{itemize}
+\end{frame}
+\section{Decomposition}
+\begin{frame}{Decomposition Methods}
+\label{oaxaca}
+\begin{itemize}
+\item Matching and reweighting estimators are closely related to decomposition
+methods{\footnotesize{}\medskip{}
+}{\footnotesize\par}
+\item Decomposition methods are traditionally used to separate differences
+between groups into a component explained by observables and an unexplained
+component{\footnotesize{}\medskip{}
+}{\footnotesize\par}
+\item This is conceptually similar to decomposing a treatment/control difference
+into a component explained by controls (bias) and an unexplained component
+(treatment effect)
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Oaxaca-Blinder Decompositions }
+
+\begin{itemize}
+\item {\small{}Standard tool in labor economics: the Oaxaca (1973)-Blinder
+(1973) decomposition\medskip{}
+}{\small\par}
+\item {\small{}Let's briefly review how OB decompositions work\medskip{}
+}{\small\par}
+\item {\small{}There are two groups, $M$'s and $W$'s\medskip{}
+}{\small\par}
+\item {\small{}Average outcomes are $\bar{Y}_{M}$ and $\bar{Y}_{W}$, where
+$\bar{Y}_{g}=E\left[Y_{ig}|group_{i}=g\right]$\medskip{}
+}{\small\par}
+\item {\small{}We hope to explain group differences with an observed covariate
+vector $X_{i}$ }{\small\par}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Oaxaca-Blinder Decompositions }
+
+\begin{itemize}
+\item {\small{}Quantity to be explained:}{\small\par}
+\end{itemize}
+\begin{center}
+{\small{}$\Delta\equiv\bar{Y}_{M}-\bar{Y}_{W}$}{\small\par}
+\par\end{center}
+\begin{itemize}
+\item {\small{}Suppose we run a regression for each group}{\small\par}
+\end{itemize}
+\begin{center}
+{\small{}$Y_{ig}=X_{ig}^{\prime}\beta_{g}+\epsilon_{ig}$}{\small\par}
+\par\end{center}
+\begin{itemize}
+\item {\small{}$X_{ig}$ includes a constant\medskip{}
+}{\small\par}
+\item {\small{}OLS coefficient vector $\beta_{g}=E\left[X_{ig}X_{ig}^{\prime}|g\right]^{-1}E\left[X_{ig}Y_{ig}|g\right]$}{\small\par}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Oaxaca-Blinder Decompositions }
+
+\begin{itemize}
+\item {\footnotesize{}By construction OLS fits group means:}{\footnotesize\par}
+\end{itemize}
+\begin{center}
+{\footnotesize{}$\bar{Y}_{g}=\bar{X}_{g}^{\prime}\beta_{g}$.}{\footnotesize\par}
+\par\end{center}
+\begin{itemize}
+\item {\footnotesize{}Therefore we can write}{\footnotesize\par}
+\end{itemize}
+\begin{center}
+{\footnotesize{}$\Delta=\bar{X}_{M}^{\prime}\beta_{M}-\bar{X}_{W}^{\prime}\beta_{W}$}{\footnotesize\par}
+\par\end{center}
+
+{\footnotesize{}}
+
+\begin{center}
+{\footnotesize{}$=\left(\bar{X}_{M}-\bar{X}_{W}\right)^{\prime}\beta_{M}+\bar{X}_{W}^{\prime}\left(\beta_{M}-\beta_{W}\right)$}{\footnotesize\par}
+\par\end{center}
+\begin{itemize}
+\item {\footnotesize{}The OB decomposition splits $\Delta$ into a component
+explained by $X$'s, and a component explained by $\beta$'s\medskip{}
+}{\footnotesize\par}
+\item {\footnotesize{}First term answers the question: How much more would
+M's make than W's if both groups were paid like M's for observables?\medskip{}
+}{\footnotesize\par}
+\item {\footnotesize{}Second term answers the question: How much of $\Delta$
+is due to differences in earnings within groups?}{\footnotesize\par}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Oaxaca-Blinder Decompositions }
+
+\begin{center}
+{\small{}$\Delta=\left(\bar{X}_{M}-\bar{X}_{W}\right)^{\prime}\beta_{M}+\bar{X}_{W}^{\prime}\left(\beta_{M}-\beta_{W}\right)$}{\small\par}
+\par\end{center}
+\begin{itemize}
+\item {\small{}Can also write the alternative decomposition:}{\small\par}
+\end{itemize}
+\begin{center}
+{\small{}$\Delta=\left(\bar{X}_{M}-\bar{X}_{W}\right)^{\prime}\beta_{W}+\bar{X}_{M}^{\prime}\left(\beta_{M}-\beta_{W}\right)$}{\small\par}
+\par\end{center}
+\begin{itemize}
+\item {\small{}New first term answers the question: How much more would
+M's make than W's if both groups were paid like W's for observables?\medskip{}
+}{\small\par}
+\item {\small{}Second term measures much of $\Delta$ is explained by the
+$\beta$'s, weighting with M's characteristics}{\small\par}
+\end{itemize}
+\end{frame}
+%%
+\section{How to Choose Controls?}
+\begin{frame}[plain]{Cookbook}
+\begin{itemize}
+\item Need a model for how is treatment determined.
+\medskip
+\item Good institutional knowledge of the context is often key here.
+\medskip
+\item Nothing is definite in empirical work, the question is whether your proposed CIA research design is an improvement relative to existing literature.
+\medskip
+\item Still, how can one can come up with a reasonable research design based on CIA? Can this be outsourced to AI?
+\medskip
+\item We'll examine these big questions in class via an example based on Dale and Kruger (2002) 
+\end{itemize}
+\end{frame}
+%%
+\begin{frame}[plain]{Dale and Krueger (2002)}
+\begin{center}
+\includegraphics[scale=0.2]{aux/dale_krueger}
+\par\end{center}
+
+
+\end{frame}
+%%
+\begin{frame}[shrink=15]
+\begin{itemize}
+\item Suppose we have this simple model of potential outcomes where treatment ($D_{i}$) indicates whether individual $i$ attended a more selective college (just to fix ideas, think of this as being an Ivy league or private university, e.g. Harvard).
+\be
+Y_{i0}=\alpha+\eta_{i}
+\ee
+\be
+Y_{i1}=Y_{i0}+\rho
+\ee
+\item Observed earnings:
+\be
+Y_{i}=D_{i}Y_{i1}+(1-D_{i})Y_{i0}=\alpha + \rho D_{i} + \eta_{i}
+\ee
+\item Running a regression of $Y_{i}$ on $D_{i}$ won't allow me to identify $\rho$!
+\medskip
+\item Let's introduce a CIA assumption. Suppose we have a set of variables, called that $A_{i}$, measured prior-to-treatment such that
+\be
+\E[\eta_{i}\vert D_{i},A_{i}]=\E[\eta_{i}\vert A_{i}]
+\ee
+\medskip
+\item Further \underline{assume} that 
+\be
+\eta_{i} = \gamma'A_{i} + \varepsilon_{i}
+\ee
+where  $\E[\varepsilon_{i}\vert A_{i}]=0$. This leads to
+\be
+\E[Y_{i}\vert D_{i}, A_{i}] = \alpha + \rho D_{i} +\E[\eta_{i}\vert A_{i}]=\alpha + \rho D_{i} + \gamma'A_{i}
+\ee
+\end{itemize}
+\end{frame}
+%%
+\begin{frame}[shrink=10]
+\frametitle{Dale and Kruger Research Design}
+\begin{itemize}
+\item Ok great, but what is a reasonable choice of $A_{i}$?
+\medskip
+\item Dale and Kruger (2002): an unrestricted set of dummy variables capturing the set of colleges that students applied to and got admitted to.
+\medskip
+\item Once controlling for this, the decision to attend a more ``elite" university does not \textit{systematically} depend on $\varepsilon_{i}$.
+\medskip
+\pause
+\medskip
+\item DK Research design thus compares differences in earnings among students that applied and got admitted to the same set of schools (e.g. Duke and North Carolina) but where one decided to go to North Carolina and the other went to Duke. 
+\pause
+\medskip
+\begin{enumerate}
+    \item How do we feel about the overlap condition in this context?
+    \item How would these arguments look if returns to private college were heterogeneous?
+    \item Be R2. What is it that you don't like about this? 
+\end{enumerate}
+\pause
+\item Regression run by DK
+\be
+Y_{i} = \alpha + \rho D_{i} + \underbrace{\delta_{0} C_{i} + \sum_{j=1}^{150}\delta_{j}Group_{j}}_{\gamma' A_{i}} + \varepsilon_{i}
+\ee
+\end{itemize}
+\end{frame}
+%%%
+\begin{frame}[plain]
+
+\begin{center}
+\includegraphics[scale=0.12]{aux/dk_table1}
+\par\end{center}
+
+
+\end{frame}
+\begin{frame}[plain]
+
+\begin{center}
+\includegraphics[scale=0.12]{aux/overlapping}
+\par\end{center}
+
+
+\end{frame}
+\begin{frame}[plain]
+
+\begin{center}
+\includegraphics[scale=0.15]{aux/dk2002.jpg}
+\par\end{center}
+
+
+\end{frame}
+\begin{frame}[plain]
+\frametitle{Holds in Texas as well! Hickman and Mountjoy (2021)}
+\begin{center}
+\includegraphics[scale=0.2]{aux/jack.jpg}
+\par\end{center}
+
+
+\end{frame}
+\begin{frame}[plain]
+
+\begin{center}
+\includegraphics[scale=0.12]{aux/quote_DK.jpg}
+\par\end{center}
+
+
+\end{frame}
+\begin{frame}[plain]{Welcome to the Machine}
+
+\pause
+\begin{center}
+\includegraphics[scale=0.8]{aux/pink}
+\par\end{center}
+
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Machine Learning meets (Mostly Harmless) Econometrics}
+\begin{itemize}
+\item Machine learning (ML): explosion in computer science, key to provide good \underline{predictions}.
+\medskip
+\item In this course we don't care about predictions. We care about estimating causal effects.
+\medskip
+\item However, ML methods can still be useful when pursuing estimation of  causal effects.
+\medskip
+\item In particular, can ML help us automatically select the right X's for a selection on observables strategy?
+\pause
+\medskip
+\item Next slides will provide some answers to this question while trying to explain why predictions problems are different from causal analysis.
+\item Heavily based on Angrist-Frandsen (2020): ``Machine Labor" , another good reference is Mullainathan-Spiess (2019) in JEP.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[shrink=10]
+\frametitle{What do we know in terms of prediction?}
+\begin{itemize}
+\item Regression provides best linear approximation to the CEF by solving
+\be
+\beta = \argmin_{b}\E[(Y-X_{i}'b)^{2}]=\E(X_{i}X_{i}')^{-1}\E(X_{i}Y_{i})
+\ee
+\medskip
+\item CEF is the ``best" function to predict a $Y_{i}$ given a $K\times1$ vector $X_{i}$.
+\item Given a random sample, my LS estimator is therefore 
+\medskip
+\be
+\hat{\beta}_{LS}=(\dfrac{1}{N}\sum_{i=1}^{N}X_{i}X_{i}')^{-1}(\dfrac{1}{N}\sum_{i=1}^{N}X_{i}Y_{i})
+\ee
+\pause
+\item So why Machine Learning even exists? Things look different when we have to do out-of-sample predictions.
+\medskip
+\item Suppose I want to predict $Y_{N+1}$ given $X_{N+1}$ and observation $N+1$ is not included in the sample that I used to estimate $\hat{\beta}_{LS}$. Prediction based on upon least squares:
+\be
+\hat{y}_{N+1}=X_{N+1}'\hat{\beta}_{LS}
+\ee
+\medskip
+\item ML methods deploy regularization techniques (essentially to avoid over-fit). Class of estimators defined by
+\be
+\beta_{ML} = \argmin_{b}\E[(Y-X_{i}'b)^{2}+\lambda \vert \vert b \vert \vert_{q}^{q}]
+\ee
+where $\lambda$ is a regularization constant and $\vert\vert b\vert\vert_{q}=\left(\sum_{k}\vert b\vert^{q}\right)^{1/q}$
+\end{itemize}
+\end{frame}
+%%
+\begin{frame}
+\frametitle{So What?}
+\begin{itemize}
+\item But who cares about predictions? We want to estimate causal effects in this course.
+\medskip
+\item ML can still be useful because it allows us to see true generalizable ``patterns" in the data $\rightarrow$ recover complex structure that was not specified in advance. 
+\medskip
+\item Can a machine tell us what controls to use when wanting to estimate the causal effect of a particular treatment?
+\medskip
+\item Let's apply this logic in the context of Dale and Krueger (2002).							 
+\end{itemize}
+\end{frame}
+%%
+\begin{frame}[shrink=15]
+\frametitle{DK Research Design}
+\begin{itemize}
+\item Remember DK original equation 
+\be
+Y_{i}=\alpha+ \rho D_{i} + \eta_{i}
+\ee
+\item DK proposed a set of variables, $A_{i}$, that can be used to condition on to invoke the CIA assumption
+\be
+\E[\eta_{i}\vert D_{i},A_{i}]=\E[\eta_{i}\vert A_{i}]
+\ee
+\item We are not as smart as DK. However, we wonder if the machine can tell us what is the right set of control to use to derive the causal effect of $D_{i}$ on $Y_{i}$. 
+\medskip
+\item There is a dictionary of (potential) control variables $W_{i}$ with size $m>N$. We assume that within this very large set of variables it is possible to invoke a CIA 
+\be
+\E(\eta_{i}\vert D_{i},W_{i})=\E(\eta_{i} \vert W_{i})=\gamma_{0}'W_{i} + r_{0i}
+\ee
+\begin{itemize}
+\item $r_{0i}$ is an approximation error.
+\item Sparsity assumption: only a subset of $\gamma_{0}$  ($s_{0}<N$) are truly different from zero (and we observe the entire dictionary).
+\item We don't know which are the ``useful" controls but LASSO will be able to pick them up for us under the sparsity assumption.
+\end{itemize}
+\item Similar assumption used for the propensity score
+\be
+\E(D_{i}\vert W_{i})=\gamma_{1}'W_{i} + r_{1i}
+\ee
+
+\end{itemize}
+\end{frame}
+
+
+
+\begin{frame}{Double Selection Lasso}
+
+\begin{itemize}
+\item {\scriptsize{}Belloni, Chernozhukov, and Hansen (2014): Machine learning
+approach to covariate selection under approximate ``sparsity'' (most
+controls irrelevant)\medskip{}
+}{\scriptsize\par}
+\begin{enumerate}
+\item {\scriptsize{}LASSO the p-score ($D_{i}$ on $W_{i}$), get relevant
+subset of regressors $\left(W_{Di}\right)$\medskip{}
+}{\scriptsize\par}
+\item {\scriptsize{}LASSO the outcome ($Y_{i}$ on $W_{i}$), get relevant
+subset of regressors $\left(W_{Yi}\right)$\medskip{}
+}{\scriptsize\par}
+\item {\scriptsize{}Regress $Y_{i}$ on $\left(D_{i},W_{Di},W_{Yi}\right)$
+$\Rightarrow$ ``oracle'' estimate (as good as if you knew the coefficients
+on the whole set of potential controls)\medskip{}
+}{\scriptsize\par}
+\end{enumerate}
+\item {\scriptsize{}Interaction controls with $D_{i}$ to generalize to
+ATE/TNT/TOT\medskip{}
+}{\scriptsize\par}
+\item {\scriptsize{}Advantages: no fiddling around with which $W_{i}$'s
+or specification tests\medskip{}
+}{\scriptsize\par}
+\medskip
+\pause
+\item Recent application: Dube-Jacobs-Naidu-Suri(2020) to test monopsony in online job markets (AER:I, 2020). 
+\end{itemize}
+\end{frame}
+\begin{frame}[plain]
+\centering
+\includegraphics[scale=0.3]{aux/ml}
+\end{frame}
+
+
+\begin{frame}{Selection on Observables: The Bottom Line}
+
+\begin{itemize}
+\item There is obviously no theorem about when controlling
+for observables is sufficient to eliminate selection bias. This depends
+on the quality of the covariates and the nature of the selection process
+\medskip
+\item Compelling selection on observable strategies rely on good institutional knowledge and a plausible model of treatment assignment.  
+\medskip
+\item DSL of Belloni et al. (2014) might be nice complement in research toolbox (as robustness)  
+\medskip
+\item Even when rich covariates are available, lack of common
+support may limit the set of treatment effects that can be identified.
+\end{itemize}
+\end{frame}
+
+\end{document}
