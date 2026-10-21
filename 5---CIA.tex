@@ -343,9 +343,7 @@ of $X_{i}$ but many sharing values of $e(X_{i})$}{\small\par}
 \begin{frame}{Proof of the Propensity Score Theorem}
 
 \begin{itemize}
-\item {\footnotesize{}Note that if $Pr\left[T_{i}=1|Y_{i}(1),Y_{i}(0),e(X_{i})\right]=Pr\left[T_{i}=1|e(X_{i})\right]$,
-it must be that $T_{i}\bot\left(Y_{i}(1),Y_{i}(0)\right)|e(X_{i})$. }{\footnotesize\par}
-\item {\footnotesize{}Now observe that:}{\footnotesize\par}
+\item {\footnotesize{}Proof:}{\footnotesize\par}
 \end{itemize}
 \begin{center}
 {\footnotesize{}$Pr\left[T_{i}=1|Y_{i}(1),Y_{i}(0),e(X_{i})\right]=E\left[T_{i}|Y_{i}(1),Y_{i}(0),e(X_{i})\right]$}{\footnotesize\par}
@@ -461,7 +459,7 @@ values of the propensity score\medskip{}
 }{\small\par}
 \item {\small{}One common approach is nearest neighbor matching\medskip{}
 }{\small\par}
-\item A nearest neighbor matching estimator of the TOT can be written
+\item Idea:
 \end{itemize}
 \begin{center}
 $\hat{\delta}_{NN}=\left(\frac{1}{\sum_{i}T_{i}}\right){\displaystyle \sum}_{i}T_{i}\left(Y_{i}-Y_{n(i)}\right)$,
@@ -473,6 +471,7 @@ $n(i)={\displaystyle \arg\min_{j:T_{j}=0}}|\hat{e}(X_{i})-\hat{e}(X_{j})|$
 \begin{itemize}
 \item {\small{}The NN estimator compares each treated observation to the
 control observation with the closest value of the propensity score}{\small\par}
+\item What are we estimating with $\hat{\delta}_{NN}$? ATE? TOT? TNT?
 \end{itemize}
 \end{frame}
 
