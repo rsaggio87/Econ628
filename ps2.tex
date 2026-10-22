@@ -223,10 +223,12 @@ b) Block bootstrap the clustered t-statistic from the Probit. Use
 a symmetric bootstrap percentile-t test to compute a new p-value.
 
 c) Conduct a cluster robust score test of the null hypothesis that
-the coefficient on D equals zero. Report the p-value.
+the coefficient on D equals zero, \emph{without} bootstrapping. Report the p-value.
 
-d) Now block bootstrap the clustered t-statistic.
-Use a symmetric bootstrap percentile t-test to compute a new p-value.
+d) Now bootstrap the score statistic that you computed in part (c).
+Use a symmetric bootstrap percentile-t test to compute a new p-value.
+\emph{Hint}: read Kline and Santos (2012), ``A Score Based Approach to Wild
+Bootstrap Inference'', Journal of Econometric Methods 1(1), 23--41.
 
 e) Which of these p-values do you think is most accurate? Discuss
 the tradeoff involved in choosing between alternative bootstrap methods.
