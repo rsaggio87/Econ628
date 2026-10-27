@@ -24,53 +24,6 @@ Answers must be typed. You can work in teams under the constraint: Max(Team Size
 \par\end{center}
 \begin{enumerate}
 
-\item  (\textbf{Mass-Layoffs}) At this link I created for you a a computer generated pseudo matched employer-employee dataset \url{https://www.dropbox.com/s/0xppet65s9aaahm/fake_matched_employer_employee.csv?dl=1}. These data contain 15 million person-year observations so make sure to use a computer with sufficient memory. In these data, each person-year observation provides information on log daily wages and log earnings of an individual $i$ in year $t$, characteristics of the individual (e.g. gender) and the identity of the employer (``firmid") of individual $i$ in period $t$ which we will denote via the function $J(i,t)$ discussed in class. Notice that this panel is unbalanced. Some workers might be observed in period $t$ and period $t+2$ but not in period $t+1$. You can assume that such individual was unemployed in period $t+1$ and so did not receive any labor market earnings (i.e. you can set her earnings to zero). 
-
-\medskip{}
-
-a) Here you will use these administrative records to identify mass layoffs. A mass-layoff corresponds to an event in which firm $j$  experiences a reduction in size of more than 30\% from year $t$ to year  $t+1$. Create a variable $e_{J(i,t),t}^{*}=1$ if firm $J(i,t)$ experienced a mass layoff event in year $t$. Focus just on firms that in year $t$ had 50 or more workers. How many mass-layoff events did you find? (Note: make sure to count also cases where a firm closes from year $t$ to year $t+1$, i.e. a firm identifier $j$ is present in year $t$ but disappears from the data in $t+1$, $t+2$, etc.
- 
-b) Now focus on set of workers that suffered the mass-layoff event. Create a variable, $\text{layoff}_{it}$ equal to 1 if worker $i$ suffered for the first time in her career  a mass-layoff in year $t$, the employment history of the worker is such that $J(i,t+1)\neq J(i,t)=J(i,t-1)=J(i,t-2)$ and the age of the worker in year $t$ is less than 50.  Call the group of workers for which at some point in their observed work history $\text{layoff}_{it}=1$ the ``treated workers". Call the group of workers for which $\text{layoff}_{it}=0$, $\forall t$ the group of ``potential controls". If a worker experience more than one mass-layoff event, just consider her earliest mass-layoff event. Are the observable characteristics of these treated workers different from the remaining pool of  workers? 
-
-(c Now perform an ``hybrid" exact matching. Specifically, find for each treated worker who experienced a mass-layoff in year $t$ whether there exists a matched control worker that in year $t$ has the same province, 2-digit sector (variable csc), age, tenure\footnote{$Tenure_{it}$ measures the amount of years that individual $i$ has spent with her current employer up to year $t$ (e.g. if Raffa started working for UBC in 2018 and he is still employed by UBC in  $t$=2021, then $Tenure=3$.} gender and the log wage at $t-2$ is within a 0.05 band from the log wage of the treated worker (i.e. if treated worker has  $Log Wages_{it-2}=4$ the matched control worker must have  $Log Wages_{it-2}\in(3.95,4.05)$. In case where a control worker is matched with a treated worker that experienced a mass layoff in year $t$ but also with a worker who experienced a mass layoff in year $t+s$, always keep the pair with the earliest mass-layoff year.  Hint: take a look at the command calipmatch in Stata.  
-
-(d Save the sample of matched pairs. How many pairs did you successfully match? How many treated workers do you ended up dropping? Is the sample of matched treated workers different from the sample of all potential treated workers? How would you improve the matching?
-
-(e  Now ``balanced" the matched sampled created above. For example, if worker $i$ has  entered the labor market in 1990 but has missing records in any $t>1990$, fill the missing observations by setting her earnings equal to zero. Hint: take a look at the command ``tsfill" in Stata.
-
-(f Construct the event study dummies:
-
-\begin{equation}
-D_{it}^{k} = \mathbf{1}\{t=t^{*}_{i}+k\}
-\end{equation}
-
-where $t_{i}^{*}$ is the year in which worker $i$ suffers the mass-layoff event (or in the case of a control worker, the year in which the matched treated worker suffers the mass-layoff event). Plot the distribution of $t_{i}^{*}$. Based on that plot, binned your event studies accordingly and justify your reasoning. Plot now the average earnings in event time the mass-layoff both for treated and control (or placebo) workers. Comment on the figure. 
-
-
-(g Estimate the following event study specification
-
-\begin{equation}
-\label{ES}
-\text{Earnings}_{it} =\alpha_{i}  + \lambda_{t} +   \sum_{k=a}^{b}D_{it}^{k}\beta_{k} + \sum_{k=a}^{b}(D_{it}^{k}\times T_{i})\theta_{k} +u_{it}
-\end{equation}
-
-where $T_{i}$ is an indicator equal to $1$ if worker $i$ experienced in her career a mass layoff (a treated worker) and $a$ and $b$ were chosen by you in the previous part. How do you interpret the coefficients $\beta_{k}$? What about $\theta_{k}$? Plot the estimated $\{\theta_{k}\}$ and discuss the normalization that you imposed to estimate this model.  How did you cluster the standard errors? Why? 
-
-(h Restimate the equation above but this time dropping the control workers. Do the coefficients change? Interpret the differences between the two models.
-
-(l Having learned of the potential pitfalls of two-way fixed effects model in the presence of treatment effects heterogeneity, you decided to run a more sophisticated model where you estimate equation (\ref{ES}) separately by $t_{i}^{*}$ (adding back the matched control workers in the estimation sample). Compute a  weighted average of the event-study coefficients that look as follows
-
-\begin{equation}
-\dot{\theta}_{k}=\sum_{t^{*}}w_{t^{*}}\theta_{k}^{t^{*}}
-\end{equation}
-where $w_{t}^{*}$ is the fraction of treated workers who experienced a mass-layoff  in year $t^{*}$ and $\theta_{k}^{t^{*}}$ is the event-study coefficient obtained by running  (\ref{ES}) just for cohort $t_{i}^{*}$. How does a plot of the event study coefficients $\dot{\theta}_{k}$ compare to the original $\theta_{k}$ that you got from the (not saturated)
-event-study model from equation (\ref{ES})? Comment on the potential pitfalls of two-way fixed effects model in the presence of (cohort-based) treatment effects heterogeneity.
-
-(ll) Now re-estimate the event-study specification model in equation (2) using the methodology proposed by Borusyak, Jaravel, Spiess (2022-BJS henceforth). Create a plot where you overlay the effects on earnings obtained from the two-way fixed effects OLS specification described in part (g), part (h), the ones obtained in part (l) and the estimates from BJS. What do you conclude about the biases due to treatment effects heterogeneity in this application?
- 
-
-\bigskip{}
-
 \item (\textbf{Event Study}) Download the file ``curfew.csv'' from the \texttt{data}
 folder on the course website. This file contains data on the number of arrests of
 youth in a panel of cities enacting juvenile curfew laws in different
@@ -148,6 +101,53 @@ $\pi_{k,t}=\pi_{k,t'}\mbox{ \ensuremath{\forall\left(t,t'\right)<k}}$.
 Enumerate all of the restrictions and test them jointly. Can you reject
 the model? What important inferential assumptions are you using in
 constructing your p-values?
+
+\bigskip{}
+
+\item  (\textbf{Mass-Layoffs}) At this link I created for you a a computer generated pseudo matched employer-employee dataset \url{https://www.dropbox.com/s/0xppet65s9aaahm/fake_matched_employer_employee.csv?dl=1}. These data contain 15 million person-year observations so make sure to use a computer with sufficient memory. In these data, each person-year observation provides information on log daily wages and log earnings of an individual $i$ in year $t$, characteristics of the individual (e.g. gender) and the identity of the employer (``firmid") of individual $i$ in period $t$ which we will denote via the function $J(i,t)$ discussed in class. Notice that this panel is unbalanced. Some workers might be observed in period $t$ and period $t+2$ but not in period $t+1$. You can assume that such individual was unemployed in period $t+1$ and so did not receive any labor market earnings (i.e. you can set her earnings to zero). 
+
+\medskip{}
+
+a) Here you will use these administrative records to identify mass layoffs. A mass-layoff corresponds to an event in which firm $j$  experiences a reduction in size of more than 30\% from year $t$ to year  $t+1$. Create a variable $e_{J(i,t),t}^{*}=1$ if firm $J(i,t)$ experienced a mass layoff event in year $t$. Focus just on firms that in year $t$ had 50 or more workers. How many mass-layoff events did you find? (Note: make sure to count also cases where a firm closes from year $t$ to year $t+1$, i.e. a firm identifier $j$ is present in year $t$ but disappears from the data in $t+1$, $t+2$, etc.
+ 
+b) Now focus on set of workers that suffered the mass-layoff event. Create a variable, $\text{layoff}_{it}$ equal to 1 if worker $i$ suffered for the first time in her career  a mass-layoff in year $t$, the employment history of the worker is such that $J(i,t+1)\neq J(i,t)=J(i,t-1)=J(i,t-2)$ and the age of the worker in year $t$ is less than 50.  Call the group of workers for which at some point in their observed work history $\text{layoff}_{it}=1$ the ``treated workers". Call the group of workers for which $\text{layoff}_{it}=0$, $\forall t$ the group of ``potential controls". If a worker experience more than one mass-layoff event, just consider her earliest mass-layoff event. Are the observable characteristics of these treated workers different from the remaining pool of  workers? 
+
+(c Now perform an ``hybrid" exact matching. Specifically, find for each treated worker who experienced a mass-layoff in year $t$ whether there exists a matched control worker that in year $t$ has the same province, 2-digit sector (variable csc), age, tenure\footnote{$Tenure_{it}$ measures the amount of years that individual $i$ has spent with her current employer up to year $t$ (e.g. if Raffa started working for UBC in 2018 and he is still employed by UBC in  $t$=2021, then $Tenure=3$.} gender and the log wage at $t-2$ is within a 0.05 band from the log wage of the treated worker (i.e. if treated worker has  $Log Wages_{it-2}=4$ the matched control worker must have  $Log Wages_{it-2}\in(3.95,4.05)$. In case where a control worker is matched with a treated worker that experienced a mass layoff in year $t$ but also with a worker who experienced a mass layoff in year $t+s$, always keep the pair with the earliest mass-layoff year.  Hint: take a look at the command calipmatch in Stata.  
+
+(d Save the sample of matched pairs. How many pairs did you successfully match? How many treated workers do you ended up dropping? Is the sample of matched treated workers different from the sample of all potential treated workers? How would you improve the matching?
+
+(e  Now ``balanced" the matched sampled created above. For example, if worker $i$ has  entered the labor market in 1990 but has missing records in any $t>1990$, fill the missing observations by setting her earnings equal to zero. Hint: take a look at the command ``tsfill" in Stata.
+
+(f Construct the event study dummies:
+
+\begin{equation}
+D_{it}^{k} = \mathbf{1}\{t=t^{*}_{i}+k\}
+\end{equation}
+
+where $t_{i}^{*}$ is the year in which worker $i$ suffers the mass-layoff event (or in the case of a control worker, the year in which the matched treated worker suffers the mass-layoff event). Plot the distribution of $t_{i}^{*}$. Based on that plot, binned your event studies accordingly and justify your reasoning. Plot now the average earnings in event time the mass-layoff both for treated and control (or placebo) workers. Comment on the figure. 
+
+
+(g Estimate the following event study specification
+
+\begin{equation}
+\label{ES}
+\text{Earnings}_{it} =\alpha_{i}  + \lambda_{t} +   \sum_{k=a}^{b}D_{it}^{k}\beta_{k} + \sum_{k=a}^{b}(D_{it}^{k}\times T_{i})\theta_{k} +u_{it}
+\end{equation}
+
+where $T_{i}$ is an indicator equal to $1$ if worker $i$ experienced in her career a mass layoff (a treated worker) and $a$ and $b$ were chosen by you in the previous part. How do you interpret the coefficients $\beta_{k}$? What about $\theta_{k}$? Plot the estimated $\{\theta_{k}\}$ and discuss the normalization that you imposed to estimate this model.  How did you cluster the standard errors? Why? 
+
+(h Restimate the equation above but this time dropping the control workers. Do the coefficients change? Interpret the differences between the two models.
+
+(l Having learned of the potential pitfalls of two-way fixed effects model in the presence of treatment effects heterogeneity, you decided to run a more sophisticated model where you estimate equation (\ref{ES}) separately by $t_{i}^{*}$ (adding back the matched control workers in the estimation sample). Compute a  weighted average of the event-study coefficients that look as follows
+
+\begin{equation}
+\dot{\theta}_{k}=\sum_{t^{*}}w_{t^{*}}\theta_{k}^{t^{*}}
+\end{equation}
+where $w_{t}^{*}$ is the fraction of treated workers who experienced a mass-layoff  in year $t^{*}$ and $\theta_{k}^{t^{*}}$ is the event-study coefficient obtained by running  (\ref{ES}) just for cohort $t_{i}^{*}$. How does a plot of the event study coefficients $\dot{\theta}_{k}$ compare to the original $\theta_{k}$ that you got from the (not saturated)
+event-study model from equation (\ref{ES})? Comment on the potential pitfalls of two-way fixed effects model in the presence of (cohort-based) treatment effects heterogeneity.
+
+(ll) Now re-estimate the event-study specification model in equation (2) using the methodology proposed by Borusyak, Jaravel, Spiess (2022-BJS henceforth). Create a plot where you overlay the effects on earnings obtained from the two-way fixed effects OLS specification described in part (g), part (h), the ones obtained in part (l) and the estimates from BJS. What do you conclude about the biases due to treatment effects heterogeneity in this application?
+ 
 
 \end{enumerate}
 \end{document}
