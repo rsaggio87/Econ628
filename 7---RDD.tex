@@ -1,0 +1,918 @@
+\documentclass[notes=show]{beamer}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\AtBeginSubsection[
+  {\frame<beamer>{\frametitle{Outline}   
+    \tableofcontents[currentsection,currentsubsection]}}%
+]%
+{
+  \frame<beamer>{ 
+    \frametitle{Outline}   
+    \tableofcontents[currentsection,currentsubsection]}
+}
+\usepackage{ulem}
+\usepackage{pdflscape}
+\setbeamertemplate{caption}{\insertcaption}
+\usepackage{color,xcolor,ucs}
+\usepackage{beamerthemesplit}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{adjustbox}
+\usepackage{pdfpages} 
+\definecolor{mintgreen}{rgb}{0.6, 1.0, 0.6}
+\makeatletter
+\@addtoreset{subfigure}{framenumber}% subfigure counter resets every frame
+\makeatother
+\newcommand*{\Scale}[2][4]{\scalebox{#1}{$#2$}}%
+\newcommand*{\Resize}[2]{\resizebox{#1}{!}{$#2$}}%
+\usepackage{amsfonts}
+\usepackage{booktabs}
+\usepackage{color,soul}
+\usepackage{pdfpages}
+\setboolean{@twoside}{false}
+\usepackage{amsmath}
+\usepackage{pdflscape} 
+\usepackage{eurosym}
+\usepackage{amstext} % for \text
+\DeclareRobustCommand{\officialeuro}{%
+  \ifmmode\expandafter\text\fi
+  {\fontencoding{U}\fontfamily{eurosym}\selectfont e}}
+\usepackage[caption = false]{subfig}
+\usepackage{appendixnumberbeamer} 
+\usepackage{graphicx}
+\usepackage{mathpazo}
+\usepackage{hyperref}
+\usepackage{multimedia}
+\usepackage{graphicx}
+\usepackage{multirow}
+\usepackage{subfig}
+\usepackage{verbatim}
+\usepackage{booktabs, multicol, multirow}
+\setcounter{MaxMatrixCols}{10}
+\input{Macros.tex}
+\AtBeginSection[]
+{
+  \begin{frame}[noframenumbering]
+    \frametitle{Outline for section \thesection}
+    \tableofcontents[currentsection]
+  \end{frame}
+}
+
+
+\usepackage{xcolor,soul}
+\renewcommand<>{\hl}[1]{\only#2{\beameroriginal{\hl}}{#1}}
+
+% https://tex.stackexchange.com/questions/41683/why-is-it-that-coloring-in-soul-in-beamer-is-not-visible
+\makeatletter
+\newcommand\SoulColor{%
+  \let\set@color\beamerorig@set@color
+  \let\reset@color\beamerorig@reset@color}
+\makeatother
+\SoulColor
+\AtBeginSection{\frame{\sectionpage}}
+
+\newsavebox\mybox
+\newenvironment{aquote}[1]
+  {\savebox\mybox{#1}\begin{quote}\openautoquote\hspace*{-.7ex}}
+  {\unskip\closeautoquote\vspace*{1mm}\signed{\usebox\mybox}\end{quote}}
+
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{Assumption}[theorem]{Assumption}
+\newenvironment{stepenumerate}{\begin{enumerate}[<+->]}{\end{enumerate}}
+\newenvironment{stepitemize}{\begin{itemize}[<+->]}{\end{itemize} }
+\newenvironment{stepenumeratewithalert}{\begin{enumerate}[<+-| alert@+>]}{\end{enumerate}}
+\newenvironment{stepitemizewithalert}{\begin{itemize}[<+-| alert@+>]}{\end{itemize} }
+\usetheme{Madrid}
+\makeatletter
+\setbeamertemplate{footline}
+{
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}%
+    \usebeamerfont{author in head/foot}\insertshortauthor~~\beamer@ifempty{\insertshortinstitute}{}{(\insertshortinstitute)}
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+    \usebeamerfont{title in head/foot}\insertshorttitle
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,right]{date in head/foot}%
+    \usebeamerfont{date in head/foot}\insertshortdate{}\hspace*{2em}
+%    \insertframenumber{} / \inserttotalframenumber\hspace*{2ex} % DELETED
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+\makeatother
+\usepackage{pdfpages}
+\begin{document}
+	\title[]{\large Regression Discontinuity
+	\vspace{0.5cm}
+	}
+	\author[Raffaele Saggio - Econ 628]{Raffaele Saggio}
+	\institute[]{UBC}
+	\date{\today \\
+}
+	\maketitle
+
+
+\begin{frame}{Introduction}
+
+\begin{itemize}
+\item The \textbf{regression discontinuity design }(RD) is one of the most
+popular quasi-experimental research designs in contemporary applied
+research\medskip{}
+\item RD methods can be applied when a researcher has specific information
+about the rules determining the treatment of interest\medskip{}
+\item This lecture describes the RD framework and implementation\medskip{}
+\item See MHE; Imbens and Lemieux (2008), Lee and Lemieux (2010), and Imbens
+and Wooldridge (2009) for recent overviews of RD
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{Sharp RD: Basic Setup}
+
+\begin{itemize}
+\item Consider a setting with a treatment $T_{i}\in\{0,1\}$, and potential
+outcomes $Y_{i}(1)$ and $Y_{i}(0)$\medskip{}
+\item Suppose the treatment is a \emph{deterministic} function of an observed
+covariate $R_{i}$, such that
+\end{itemize}
+\begin{center}
+$T_{i}=1\left\{ R_{i}>c\right\} $. 
+\par\end{center}
+\begin{itemize}
+\item $R_{i}$ is called the \textbf{running variable}\medskip{}
+\item This is a \textbf{sharp} \textbf{RD} because the probability of treatment
+switches from zero to one at the threshold\medskip{}
+\item Example: Scholarship awarded to students who score above a test score
+threshold (Thistlethwaite and Campbell 1960)
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Sharp RD: Basic Setup}
+
+\begin{itemize}
+\item We get to observe $Y_{i}(1)$ when $R_{i}>c$ and $Y_{i}(0)$ when
+$R_{i}\leq c$\medskip{}
+\item Basic idea of RD design: Compare observations just above and just
+below the threshold to infer treatment effect\medskip{}
+\item Intuitively, the treatment may be as good as randomly assigned for
+individuals in the neighborhood of $R_{i}=c$, so comparing treated
+and nontreated reveals a treatment effect
+\end{itemize}
+\end{frame}
+
+\setbeamercolor{background canvas}{bg=} \includepdf{aux/RDD.pdf}
+\begin{frame}{Sharp RD Identification}
+
+\begin{itemize}
+\item Key RD identifying assumption: potential outcomes are smooth at the
+threshold\medskip{}
+\item Formally:
+\end{itemize}
+\begin{center}
+${\displaystyle \lim_{r\rightarrow c^{+}}E\left[Y_{i}(t)|R_{i}=r\right]}={\displaystyle \lim_{r\rightarrow c^{-}}E\left[Y_{i}(t)|R_{i}=r\right]},\ t\in\{0,1\}$
+\par\end{center}
+\begin{itemize}
+\item Potential outcome CEFs must be continuous at the threshold\medskip{}
+\item The population just below must not be discretely different from the
+population just above
+\medskip{}
+\item The only thing that is allowed to change disproportionately at the threshold is the assignment probability of treatment 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Sharp RD Identification}
+
+\begin{itemize}
+\item If this assumption holds we have
+\end{itemize}
+\begin{center}
+${\displaystyle \lim_{r\rightarrow c^{+}}E\left[Y_{i}|R_{i}=r\right]-{\displaystyle \lim_{r\rightarrow c^{-}}E\left[Y_{i}|R_{i}=r\right]}}$
+\par\end{center}
+
+\begin{center}
+$={\displaystyle \lim_{r\rightarrow c^{+}}E\left[Y_{i}(1)|R_{i}=r\right]-{\displaystyle \lim_{r\rightarrow c^{-}}E\left[Y_{i}(0)|R_{i}=r\right]}}$
+\par\end{center}
+
+\begin{center}
+$={\displaystyle E\left[Y_{i}(1)|R_{i}=c\right]-{\displaystyle E\left[Y_{i}(0)|R_{i}=c\right]}}$
+\par\end{center}
+
+\begin{center}
+$=E\left[Y_{i}(1)-Y_{i}(0)|R_{i}=c\right]$
+\par\end{center}
+\begin{itemize}
+\item When potential outcomes are smooth around the threshold, a comparison
+of individuals just above and just below yields the average treatment
+effect for individuals at the threshold\medskip{}
+\item This identification argument is nonparametric: we didn't have to assume
+anything about the distribution of $Y_{i}(t)$ other than continuity
+of CEFs
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Sharp RD Interpretation}
+
+\begin{itemize}
+\item Note that in a sharp RD design we have the CIA condition
+\end{itemize}
+\begin{center}
+$(Y_{i}(1),Y_{i}(0))\bot T_{i}|R_{i}$
+\par\end{center}
+\begin{itemize}
+\item CIA holds trivially because there is no variation in $T_{i}$ conditional
+on $R_{i}$\medskip{}
+\item But there is also no common support -- $T_{i}$ is either always
+zero or always one conditional on $R_{i}$\medskip{}
+\item RD estimation is a local extrapolation outside the support of the
+data to predict the mean treated and untreated potential outcomes
+at $R_{i}=c$
+\end{itemize}
+\end{frame}
+
+\begin{frame}{RD Estimation}
+
+\begin{itemize}
+\item Implementing a sharp RD requires estimating the right- and left-hand
+limits
+\end{itemize}
+\begin{center}
+${\displaystyle \lim_{r\rightarrow c^{+}}E\left[Y_{i}|R_{i}=r\right]}$
+\par\end{center}
+
+\begin{center}
+${\displaystyle \lim_{r\rightarrow c^{-}}E\left[Y_{i}|R_{i}=r\right]}$
+\par\end{center}
+\begin{itemize}
+\item Since extrapolation is central to the RD design, functional form used
+to approximate $E\left[Y_{i}|R_{i}\right]$ really matters\medskip{}
+\item Not enough to just do OLS and rely on approximation theorems\medskip{}
+\item Insufficiently flexible specification of the CEF runs the risk of
+mistaking nonlinearity for treatment effect\medskip{}
+\item But overly flexible specification reduces precision and runs the risk
+of overfitting
+\end{itemize}
+\end{frame}
+
+\setbeamercolor{background canvas}{bg=} \includepdf{aux/rdmhe_1.pdf}
+
+\setbeamercolor{background canvas}{bg=} \includepdf{aux/rdmhe_2.pdf}
+
+\setbeamercolor{background canvas}{bg=} \includepdf{aux/rdmhe_3.pdf}
+\begin{frame}{RD Estimation}
+
+\begin{itemize}
+\item Two general approaches to estimation:\medskip{}
+
+\begin{itemize}
+\item Global parametric\medskip{}
+\item Local nonparametric
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Global Polynomial}
+
+\begin{itemize}
+\item The global approach uses parametric functions to approximate $E\left[Y_{i}|R_{i}\right]$,
+typically polynomials\medskip{}
+\item Estimating equation:
+\end{itemize}
+\begin{center}
+$Y_{i}=\alpha+\beta1\left\{ R_{i}>c\right\} +\sum_{k=1}^{K}\gamma_{0k}\left(R_{i}-c\right)^{k}+\sum_{k=1}^{K}\gamma_{1k}1\left\{ R_{i}<c\right\} \left(R_{i}-c\right)^{k}+\epsilon_{i}$
+\par\end{center}
+\begin{itemize}
+\item This specification uses a $K$-th order polynomial with coefficients
+that differ on each side of the threshold\medskip{}
+\item The parameter $\beta$ measures the jump at the threshold
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Local Linear Regression}
+
+\begin{itemize}
+\item More modern approach: use nonparametric techniques to approximate
+the left- and right-hand limits\medskip{}
+\item Local linear regression:
+\end{itemize}
+\begin{center}
+$\left(\hat{\alpha}_{0},\hat{\delta}_{0}\right)={\displaystyle \arg\min_{\alpha_{0},\delta_{0}}}{\displaystyle \sum_{i}}1\left\{ R_{i}\leq c\right\} K\left(\tfrac{R_{i}-c}{h}\right)\left(Y_{i}-\alpha_{0}-\delta_{0}\left(R_{i}-c\right)\right)^{2}$
+\par\end{center}
+\begin{itemize}
+\item Here $K(\cdot)$ is a symmetric kernel function maximized at 0, and
+$h$ is a bandwidth that vanishes asymptotically
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Local Linear Regression}
+
+\begin{center}
+$\left(\hat{\alpha}_{0},\hat{\delta}_{0}\right)={\displaystyle \arg\min_{\alpha_{0},\delta_{0}}}{\displaystyle \sum_{i}}1\left\{ R_{i}\leq c\right\} K\left(\tfrac{R_{i}-c}{h}\right)\left(Y_{i}-\alpha_{0}-\delta_{0}\left(R_{i}-c\right)\right)^{2}$
+\par\end{center}
+\begin{itemize}
+\item This is weighted least squares using observations to the left of the
+threshold, and weighting by proximity to the threshold\medskip{}
+\item The bandwidth $h$ determines how quickly weight falls off away from
+the discontinuity\medskip{}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Local Linear Regression}
+
+\begin{center}
+$\left(\hat{\alpha}_{0},\hat{\delta}_{0}\right)={\displaystyle \arg\min_{\alpha_{0},\delta_{0}}}{\displaystyle \sum_{i}}1\left\{ R_{i}\leq c\right\} K\left(\tfrac{R_{i}-c}{h}\right)\left(Y_{i}-\alpha_{0}-\delta_{0}\left(R_{i}-c\right)\right)^{2}$
+\par\end{center}
+\begin{itemize}
+\item $\hat{\alpha}_{0}$ is an estimate of ${\displaystyle \lim_{r\rightarrow c^{-}}E\left[Y_{i}|R_{i}=r\right]}$\medskip{}
+\item Run similar regression for the sample with $R_{i}>c$ to get $\hat{\alpha}_{1}$\medskip{}
+\item Treatment effect estimate is $\hat{\alpha}_{1}-\hat{\alpha}_{0}$
+\end{itemize}
+\end{frame}
+
+\begin{frame}{RD Implementation Issues}
+
+\begin{itemize}
+\item Remaining questions:\medskip{}
+
+\begin{itemize}
+\item Global or local?\medskip{}
+\item How to choose order of polynomial?\medskip{}
+\item How to choose bandwidth?\medskip{}
+\end{itemize}
+\item We will come back to these issues
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Fuzzy RD}
+
+\begin{itemize}
+\item In reality treatment is often generated by a discontinuous assignment
+rule that isn't deterministic\medskip{}
+\item Suppose that 
+\end{itemize}
+\begin{center}
+${\displaystyle \lim_{r\rightarrow c^{-}}Pr\left[T_{i}=1|R_{i}=r\right]\neq\lim_{r\rightarrow c^{+}}Pr\left[T_{i}=1|R_{i}=r\right]}$
+\par\end{center}
+\begin{itemize}
+\item The probability of treatment jumps at $R_{i}=c$, but not necessarily
+from zero to one \medskip{}
+\item This is a \textbf{fuzzy RD} scenario because treatment is only partly
+determined by the threshold\medskip{}
+\item Example: An income threshold determines eligibility for a government
+program, but not every eligible household participates
+\end{itemize}
+\end{frame}
+
+\setbeamercolor{background canvas}{bg=} \includepdf{aux/RDD2.pdf}
+\begin{frame}{Fuzzy RD Assumptions}
+
+\begin{itemize}
+\item As before, assume the distributions of $Y_{i}(1)$ and $Y_{i}(0)$
+are smooth around the threshold\medskip{}
+\item Let $T_{i}(1)$ and $T_{i}(0)$ denote potential treatment statuses
+for individual $i$ if s/he were located above and below the threshold.
+Assume these are also smooth across the threshold, and
+\end{itemize}
+\begin{center}
+$T_{i}(1)\geq T_{i}(0)\ \forall i$
+\par\end{center}
+\medskip
+\begin{itemize}
+\item Crossing the threshold weakly increases the probability of treatment
+for everyone
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Fuzzy RD}
+
+\begin{itemize}
+\item Again compare individuals above and below the threshold:
+\end{itemize}
+\begin{center}
+${\displaystyle \lim_{r\rightarrow c^{+}}E\left[Y_{i}|R_{i}=r\right]-{\displaystyle \lim_{r\rightarrow c^{-}}E\left[Y_{i}|R_{i}=r\right]}}$
+\par\end{center}
+
+\begin{center}
+$={\displaystyle \lim_{r\rightarrow c^{+}}E\left[Y_{i}(0)+(Y_{i}(1)-Y_{i}(0))T_{i}|R_{i}=r\right]}$
+\par\end{center}
+
+\begin{center}
+$-{\displaystyle \lim_{r\rightarrow c^{-}}E\left[Y_{i}(0)+(Y_{i}(1)-Y_{i}(0))T_{i}|R_{i}=r\right]}$
+\par\end{center}
+
+\begin{center}
+{\small{}$={\displaystyle \lim_{r\rightarrow c^{+}}E\left[(Y_{i}(1)-Y_{i}(0))T_{i}(1)|R_{i}=r\right]-{\displaystyle \lim_{r\rightarrow c^{-}}E\left[(Y_{i}(1)-Y_{i}(0))T_{i}(0)|R_{i}=r\right]}}$}{\small\par}
+\par\end{center}
+
+\begin{center}
+$=E\left[\left(Y_{i}(1)-Y_{i}(0)\right)\left(T_{i}(1)-T_{i}(0)\right)|R_{i}=c\right]$
+\par\end{center}
+
+\end{frame}
+
+\begin{frame}{Fuzzy RD}
+
+\begin{itemize}
+\item Using monotonicity we can rewrite this as
+\end{itemize}
+\begin{center}
+$=E\left[\left(Y_{i}(1)-Y_{i}(0)\right)\left(T_{i}(1)-T_{i}(0)\right)|R_{i}=c\right]$
+\par\end{center}
+
+\begin{center}
+$=E\left[Y_{i}(1)-Y_{i}(0)|T_{i}(1)>T_{i}(0),R_{i}=c\right]\times Pr\left[T_{i}(1)>T_{i}(0)|R_{i}=c\right]$
+\par\end{center}
+\begin{itemize}
+\item The compliance probability at the threshold is given by
+\end{itemize}
+\begin{center}
+${\displaystyle \lim_{r\rightarrow c^{+}}E\left[T_{i}|R_{i}=r\right]-}{\displaystyle \lim_{r\rightarrow c^{-}}E\left[T_{i}|R_{i}=r\right]}=Pr\left[T_{i}(1)>T_{i}(0)|R_{i}=c\right]$
+\par\end{center}
+
+\end{frame}
+
+\begin{frame}{Fuzzy RD}
+
+\begin{itemize}
+\item Then by taking a ratio we obtain
+\end{itemize}
+\begin{center}
+$\dfrac{{\displaystyle \lim_{r\rightarrow c^{+}}E\left[Y_{i}|R_{i}=r\right]-{\displaystyle \lim_{r\rightarrow c^{-}}E\left[Y_{i}|R_{i}=r\right]}}}{{\displaystyle \lim_{r\rightarrow c^{+}}E\left[T_{i}|R_{i}=r\right]-{\displaystyle \lim_{r\rightarrow c^{-}}E\left[T_{i}|R_{i}=r\right]}}}=E\left[Y_{i}(1)-Y_{i}(0)|T_{i}(1)>T_{i}(0),R_{i}=c\right]$
+\par\end{center}
+\begin{itemize}
+\item The ratio of the jump in the outcome CEF to the jump in the treatment
+probability identifies an average treatment effect for individuals
+who switch treatment status at the threshold\medskip{}
+\item Look familiar?
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Fuzzy RD is IV}
+
+\begin{itemize}
+\item Fuzzy RD is IV using a threshold indicator $Z_{i}=1\left\{ R_{i}>c\right\} $
+as an instrument for treatment in the neighborhood of the threshold
+\end{itemize}
+\end{frame}
+
+\begin{frame}{RD is doubly LATE}
+
+\begin{itemize}
+\item This implies fuzzy RD estimates are local in two senses\medskip{}
+\item First, they are local to the threshold, $R_{i}=c$\medskip{}
+
+\begin{itemize}
+\item Also applies to strict RD estimates\medskip{}
+\end{itemize}
+\item Second, they apply only to compliers at the threshold, rather than
+everyone with $R_{i}=c$\medskip{}
+
+\begin{itemize}
+\item This is the ``local'' in LATE
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Fuzzy RD Implementation}
+
+\begin{itemize}
+\item Can implement fuzzy RD with a global polynomial 2SLS approach:
+\end{itemize}
+\begin{center}
+$T_{i}=\lambda+\pi1\left\{ R_{i}>c\right\} +\sum_{k=1}^{K}\theta_{0k}(R_{i}-c)^{k}+\sum_{k=1}^{K}\theta_{1k}1\left\{ R_{i}>c\right\} \left(R_{i}-c\right)^{k}+\eta_{i}$
+\par\end{center}
+
+\begin{center}
+$Y_{i}=\alpha+\beta\hat{T}_{i}+\sum_{k=1}^{K}\gamma_{0k}(R_{i}-c)^{k}+\sum_{k=1}^{K}\gamma_{1k}1\left\{ R_{i}>c\right\} (R_{i}-c)^{k}+\epsilon_{i}$
+\par\end{center}
+\begin{itemize}
+\item Excluded instrument is $1\left\{ R_{i}>c\right\} $\medskip{}
+\item Alternatively, can estimate each of the four limits in the Wald ratio
+by local linear regressions of $Y_{i}$ and $T_{i}$ on $R_{i}$
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Visual RD}
+
+\begin{itemize}
+\item RD is appealing because the design is relatively simple and transparent\medskip{}
+\item Key relationships are between the outcome and running variable, and
+treatment and running variable\medskip{}
+\item These relationships can be plotted, and one can look visually for
+evidence of a discontinuity\medskip{}
+\item In practice people won't believe an RD estimate if the result isn't
+visible in a plot
+
+\begin{itemize}
+\item Automated plotting procedure: ``rdbinselect'' (Calonico, Cattaneo
+and Titiunik, 2014)
+\end{itemize}
+\end{itemize}
+\end{frame}
+\begin{frame}{RD Diagnostics}
+
+\begin{itemize}
+\item Fundamental RD identifying assumption: potential outcome distributions
+are smooth around the threshold\medskip{}
+\item $1\left\{ R_{i}>c\right\} $ must be as good as randomly assigned
+in the neighborhood of $R_{i}=c$\medskip{}
+\item May be violated if individuals can exactly control the value of $R_{i}$
+and therefore location relative to the threshold\medskip{}
+\item Example: suppose income is self-reported, and people intentionally
+misreport to gain program eligibility\medskip{}
+\item Identifying assumption is untestable, but some common diagnostics
+can serve as a guide to its plausibility
+\end{itemize}
+\end{frame}
+
+\begin{frame}{RD Diagnostic I: Covariate Balance}
+
+\begin{itemize}
+\item If people are sorting in the neighborhood of the threshold, we'd expect
+to see imbalance in distributions of observed covariates \medskip{}
+\item This motivates a check for whether there is a discontinuity in $E\left[X_{i}|R_{i}=r\right]$
+at $R_{i}=c$\medskip{}
+\item Exactly analogous to a balance check in an RCT\medskip{}
+\item Implement by using $X_{i}$ as the RD dependent variable
+\end{itemize}
+\end{frame}
+
+\begin{frame}{RD Diagnostic II: Bunching}
+
+\begin{itemize}
+\item McCrary (2008) proposes a test for sorting that might compromise the
+validity of an RD design\medskip{}
+\item If individuals are strategically locating above or below the threshold,
+we'd expect ``bunching'' on whichever side of the discontinuity
+is preferable\medskip{}
+\item More generally, strategic manipulation may generate anomalies in the
+distribution of $R_{i}$ around the threshold\medskip{}
+\item McCrary suggests looking for a discontinuity in the density of $R_{i}$
+near $R_{i}=c$\medskip{}
+\item This is often implemented visually\medskip{}
+\item Bunching around the threshold compromises RD estimates of treatment
+effects, but reflects a behavioral response that may be of substantive
+interest, see Saez's research on bunching at kink point of tax schedule for instance.
+\end{itemize}
+\end{frame}
+\begin{frame}
+\frametitle{Urquiola and Verhoogen (2009)}
+\setbeamercolor{background canvas}{bg=} \includepdf{aux/UV_f1.pdf}
+\end{frame}
+
+\setbeamercolor{background canvas}{bg=} \includepdf{aux/UV_f2.pdf}
+
+\setbeamercolor{background canvas}{bg=} \includepdf{aux/UV_f3.pdf}
+
+\setbeamercolor{background canvas}{bg=} \includepdf{aux/UV_f4.pdf}
+
+\begin{frame}{RD Estimation: Global vs. Local}
+
+\begin{itemize}
+\item Let's return to our discussion of RD implementation\medskip{}
+\item When should we use a global polynomial approach vs. a nonparametric
+local approach?\medskip{}
+\item There is no real conceptual distinction: we need to choose a bandwidth
+and a polynomial order\medskip{}
+\item Global estimators use an infinite bandwidth and a relatively high-order
+polynomial\medskip{}
+\item Local estimators use a smaller bandwidth and a lower-order polynomial
+(often linear)
+\end{itemize}
+\end{frame}
+
+\begin{frame}{RD Estimation: Global vs. Local}
+
+\begin{itemize}
+\item Global estimators can rely heavily on data far from the discontinuity
+(Gelman and Imbens 2014, ``Why high-order polynomials should not
+be used in regression discontinuity designs'')\medskip{}
+\item If the outcome CEF is well-approximated by a polynomial, then using
+points far from the discontinuity to estimate the polynomial is legitimate
+and increases precision. If not, the global approach may perform poorly\medskip{}
+\item Not much is known about choosing the optimal order of a global polynomial
+for estimating the causal effect of interest; in contrast, there is
+a large literature on optimal bandwidths for local estimators of treatment
+effects\medskip{}
+\item Most researchers have gravitated towards the local approach
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Kernels and Bandwidths}
+
+\begin{itemize}
+\item Suppose we want to run local linear regression. What kernel and bandwidth
+should we choose?\medskip{}
+\item Many researchers use the ``edge'' kernel:
+\end{itemize}
+\begin{center}
+$K(u)=1\left\{ |u|\leq1\right\} \cdot(1-|u|)$
+\par\end{center}
+\begin{itemize}
+\item The edge kernel has optimality properties in boundary estimation problems
+(Cheng et al., 1997)\medskip{}
+\item Also intuitively appealing: generates weighting function
+\end{itemize}
+\begin{center}
+$K\left(\tfrac{R_{i}-c}{h}\right)=1\left\{ |R_{i}-c|\leq h\right\} \cdot\left(1-\tfrac{|R_{i}-c|}{h}\right)$
+\par\end{center}
+\begin{itemize}
+\item The bandwidth $h$ can then be interpreted as cutoff distance beyond
+which data are not used, and weights fall linearly from 1 to 0 in
+remaining sample
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Optimal Bandwidth}
+
+\begin{itemize}
+\item Recent literature focuses on optimal choice of bandwidth $h$\medskip{}
+\item Bias/variance tradeoff: Smaller bandwidth reduces bias from using
+points away from the boundary, but increases precision\medskip{}
+\item Intuitively, if there is not a lot of curvature in the CEF of $Y_{i}$,
+the bias from using points away from the boundary to estimate a regression
+will be small\medskip{}
+\item Imbens and Kalyanaraman (IK, 2012) use an asymptotic approximation
+to the mean squared error of the RD estimator and derive the MSE-minimizing
+bandwidth\medskip{}
+\item The optimal bandwidth depends on the curvature of the CEF near the
+discontinuity -- IK propose to use plug-in estimators of parameters
+governing curvature
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Robust Confidence Intervals}
+
+\begin{itemize}
+\item The IK bandwidth minimizes MSE and is therefore well-suited to estimation
+\medskip{}
+\item Calonico, Cattaneo and Titiunik (CCT, 2014) show that it is poorly
+suited for inference, however: the IK bandwidth leaves an asymptotically
+non-negligible bias term in the estimate, so naive inference
+can lead to misleading confidence intervals \medskip{}
+\item CCT advocate using a second, smaller bandwidth that removes this bias
+term when constructing confidence intervals
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Robust Confidence Intervals}
+
+\begin{itemize}
+\item Unfortunately, the CCT bandwidth is typically much smaller than the
+IK bandwidth and generates large confidence intervals\medskip{}
+\item The optimal bandwidth literature may limit the feasibility of RD projects
+in practice since lots of data is required to detect an effect with
+CCT's robust confidence intervals\medskip{}
+\item The IK bandwidth, CCT confidence intervals, and corresponding estimators
+for fuzzy RD designs are automated in the \emph{rdrobust} stata package
+\end{itemize}
+\end{frame}
+%%
+\begin{frame}[plain]{Is this a compelling RD-plot?}
+\begin{center}
+\includegraphics[scale=0.7]{aux/kirabobetter1}
+\par\end{center}
+\end{frame}
+%%
+\begin{frame}[plain]{Can you guys guess what is the t-stat in this graph?}
+\begin{center}
+\includegraphics[scale=0.7]{aux/kirabobetter}
+\par\end{center}
+\end{frame}
+%%
+
+%%
+%%
+%%
+\begin{frame}[plain]{RD with a Discrete Running Variable}
+\pause
+\begin{center}
+\includegraphics[height=0.82\textheight,keepaspectratio]{aux/card_lee.jpg}
+\par\end{center}
+\end{frame}
+%%
+
+\begin{frame}{RD with a Discrete Running Variable}
+\begin{itemize}
+\item In some cases the running variable is discrete rather than continuous\medskip{}
+\item This can occur either because the true running variable is continuous
+but the data are grouped, or because assignment occurs at the group
+level\medskip{}
+\item Example: Medicare eligibility begins at age 65, but age is typically
+recorded in months or years\medskip{}
+\item With data of this type it is not possible to compare outcomes in arbitrarily
+small neighborhoods of the cutoff; identification requires some form
+of parametric extrapolation\medskip{}
+\item Card and Lee (2008): recommend clustering on values of the running variable in settings
+with a group-level running variable
+\end{itemize}
+\end{frame}
+%%
+\begin{frame}[plain]{Sitting on the frontier}
+\begin{center}
+\includegraphics[scale=0.3]{aux/kolesar}
+\par\end{center}
+\end{frame}
+\begin{frame}[plain]{Sitting on the frontier}
+\begin{center}
+\includegraphics[scale=0.3]{aux/honest.jpg}
+\par\end{center}
+\end{frame}
+%%
+\begin{frame}{RD Example: Clark and Martorell (2014)}
+
+\begin{itemize}
+\item Clark and Martorell (JPE 2014) use an RD design to estimate the causal
+effect of high school graduation on earnings \medskip{}
+\item Two views on the causal effect of schooling on earnings:\medskip{}
+
+\begin{itemize}
+\item Human capital: Schooling raises productivity\medskip{}
+\item Signaling: Schooling reveals ability but has no productive value\medskip{}
+\end{itemize}
+\item OLS returns to education are especially large for grade 12\medskip{}
+\item How much of this ``sheepskin effect'' reflects signaling?
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Clark and Martorell (2014)}
+
+\begin{itemize}
+\item CM use the fact that students in Texas must pass exams before graduating
+high school\medskip{}
+\item Testing starts in 10th grade and students can try multiple times,
+but eventually face a ``last chance'' exam at the end of 12th grade\medskip{}
+\item Students who just barely fail vs. barely pass should have similar
+human capital, but differ in educational credentials \medskip{}
+\item RD therefore plausibly identifies the signaling value of a diploma\medskip{}
+\item There is some ``slippage'' even with last-chance exams -- so the
+RD is fuzzy
+\end{itemize}
+\end{frame}
+
+\setbeamercolor{background canvas}{bg=} \includepdf{aux/mc_f1.pdf}
+
+\setbeamercolor{background canvas}{bg=} \includepdf{aux/mc_t2.pdf}
+
+\setbeamercolor{background canvas}{bg=} \includepdf{aux/mc_f2aa.pdf}
+
+\setbeamercolor{background canvas}{bg=} \includepdf{aux/mc_f2a.pdf}
+
+\setbeamercolor{background canvas}{bg=} \includepdf{aux/mc_f2b.pdf}
+
+\setbeamercolor{background canvas}{bg=} \includepdf{aux/mc_f2c.pdf}
+
+\setbeamercolor{background canvas}{bg=} \includepdf{aux/mc_t4.pdf}
+
+\setbeamercolor{background canvas}{bg=} \includepdf{aux/mc_t5.pdf}
+\begin{frame}
+\centering
+\LARGE{Encore}
+\end{frame}
+
+\begin{frame}[plain]{Multiple Discontinuities}
+
+\begin{itemize}
+\item Often more than one discontinuity present. 
+\end{itemize}
+\medskip{}
+
+\begin{itemize}
+\item Nonparametric solution is to estimate each RD separately then average
+across them as desired. (see Black, Galdo, Smith 2007 AER) 
+
+\begin{itemize}
+\item Only feasible if discontinuities far enough apart to get a good estimate
+on either side 
+\end{itemize}
+\end{itemize}
+\medskip{}
+
+\begin{itemize}
+\item Second approach is to impose some sort of stationarity -- e.g. running
+variable becomes distance to nearest discontinuity. 
+\end{itemize}
+\medskip{}
+
+\begin{itemize}
+\item Third approach is to go fully parametric.
+\end{itemize}
+ See Angrist and Lavy (1999) for an example.
+\end{frame}
+
+
+\begin{frame}{Regression Kink Design}
+
+\begin{itemize}
+\item Recent extension of RD: The\textbf{ regression kink design }(RKD;
+Card et al., 2015) \medskip{}
+\item Instead of exploiting a discontinuity in the CEF of the treatment
+variable, the regression kink design exploits a kink in the CEF of
+a continuous treatment (i.e. a discontinuity in the first derivative)\medskip{}
+\item A corresponding kink in the distribution of the outcome variable suggests
+the presence of a treatment effect
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Regression Kink Design}
+
+\begin{itemize}
+\item Suppose the treatment of interest is a deterministic function of the
+running variable:
+\end{itemize}
+\begin{center}
+$S_{i}=b\left(R_{i}\right)$
+\par\end{center}
+\begin{itemize}
+\item Here $b(\cdot)$ is a continuous function with a kink at $c$\medskip{}
+\item Let $f_{i}(s)$ denote $i$'s potential outcome as a function of the
+treatment. The observed outcome is
+\end{itemize}
+\begin{center}
+$Y_{i}=f_{i}(S_{i})$
+\par\end{center}
+
+\end{frame}
+
+\begin{frame}{Regression Kink Design}
+
+\begin{itemize}
+\item Then under mild regularity conditions:
+\end{itemize}
+\begin{center}
+$\dfrac{{\displaystyle \lim_{r\rightarrow c^{+}}\tfrac{dE\left[Y_{i}|R_{i}=r\right]}{dr}-\lim_{r\rightarrow c^{-}}\tfrac{dE\left[Y_{i}|R_{i}=r\right]}{dr}}}{{\displaystyle \lim_{r\rightarrow c^{+}}b^{\prime}(r)}-{\displaystyle \lim_{r\rightarrow c^{-}}}b^{\prime}(r)}=E\left[f_{i}^{\prime}(S_{i})|R_{i}=c\right]$
+\par\end{center}
+\begin{itemize}
+\item The ratio of the discontinuity in the outcome derivative to the discontinuity
+in the treatment derivative identifies the average marginal effect
+of treatment for individuals at the threshold\medskip{}
+\item As before, the key assumption is that potential outcomes are smooth
+around the threshold -- any kink in the outcome CEF must be due to
+the treatment\medskip{}
+\item Diagnostics: Look for kinks in covariate distributions, or bunching
+in the density of $R_{i}$
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Fuzzy Regression Kink Design}
+
+\begin{itemize}
+\item As with RD, we can generalize RKD to a ``fuzzy'' scenario where
+the treatment is not a deterministic function of $R_{i}$
+\end{itemize}
+\begin{center}
+$S_{i}=b_{i}(R_{i})$
+\par\end{center}
+\begin{itemize}
+\item $b_{i}(r)$ may not depend on $r$ for some individuals, and may have
+a continuous derivative for others
+\item Monotonicity condition:
+\end{itemize}
+\begin{center}
+${\displaystyle \lim_{r\rightarrow c^{+}}b_{i}^{\prime}(r)\geq{\displaystyle \lim_{r\rightarrow c^{-}}b_{i}^{\prime}(r)\ \forall i}}$
+\par\end{center}
+\begin{itemize}
+\item All kinks in the treatment assignment rule work in the same direction
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Fuzzy Regression Kink Design}
+
+\begin{itemize}
+\item Then under appropriate regularity conditions:
+\end{itemize}
+\begin{center}
+$\dfrac{{\displaystyle \lim_{r\rightarrow c^{+}}\tfrac{dE\left[Y_{i}|R_{i}=r\right]}{dr}-\lim_{r\rightarrow c^{-}}\tfrac{dE\left[Y_{i}|R_{i}=r\right]}{dr}}}{{\displaystyle \lim_{r\rightarrow c^{+}}\tfrac{dE\left[S_{i}|R_{i}=r\right]}{dr}-\lim_{r\rightarrow c^{-}}\tfrac{dE\left[S_{i}|R_{i}=r\right]}{dr}}}=E\left[\omega_{i}\cdot f_{i}^{\prime}(S_{i})|R_{i}=c\right]$
+\par\end{center}
+\begin{itemize}
+\item $\omega_{i}$ can be thought of as a ``complier'' weight that captures
+the extent to which $i$ responds to the kink\medskip{}
+\item Estimation issues with RKD parallel those with RD\medskip{}
+\item Can be implemented via local polynomial regression with the analogue
+of the IK bandwidth and CCT robust CI\medskip{}
+\item Data requirements for nonparametric RKD estimation are substantial
+\end{itemize}
+\end{frame}
+
+\begin{frame}{RKD Estimation}
+
+\begin{itemize}
+\item Estimation issues with RKD parallel those with RD
+
+\begin{itemize}
+\item Can be implemented via local polynomial regression with the analogues
+of the IK bandwidth and CCT robust CI
+\item \emph{rdrobust} provides an implementation \medskip{}
+\end{itemize}
+\item Corresponding diagnostics
+
+\begin{itemize}
+\item Visualization
+\item Kinks in baseline covariates?
+\end{itemize}
+\medskip{}
+
+\item Need even more data to precisely estimate kinks than to estimate discontinuities
+\end{itemize}
+\end{frame}
+
+\end{document}
