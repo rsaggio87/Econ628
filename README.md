@@ -105,8 +105,8 @@ The [reading list](https://docs.google.com/document/d/1uiA55ukPEdkpN5MZnPv1U9w6Y
 | 15 | Nov 4 | Wed | Instrumental Variables | Sam | LATE theorem, Abadie's compliers | |
 | — | Nov 9 | Mon | **NO CLASS** — Fall break | | | |
 | — | Nov 11 | Wed | **NO CLASS** — Fall break | | | |
-| 16 | Nov 16 | Mon | Instrumental Variables | Sam | Overid with heterogeneous effects; testing exclusion | **PS3 due** |
-| 17 | Nov 18 | Wed | Instrumental Variables | Sam | Heckit / control function / discrete choice | |
+| 16 | Nov 16 | Mon | Instrumental Variables | Sam | Overid with heterogeneous effects; testing exclusion | |
+| 17 | Nov 18 | Wed | Instrumental Variables | Sam | Heckit / control function / discrete choice | **PS3 due** |
 | 18 | Nov 23 | Mon | Instrumental Variables | Sam | Heckit / control function / discrete choice + Lee bounds | |
 | 19 | Nov 25 | Wed | Panel Data | Raffa | Panel Data |  |
 | 20 | Nov 30 | Mon | Panel Data | Raffa | Panel Data | |
