@@ -642,7 +642,7 @@ This regression is forbidden!
 \end{frame}
 
 \begin{frame}{2SLS mistakes 3: the forbidden regression}
-To see why the forbidden regression is forbidden, rewrite the structural equation:
+To see why, rewrite the structural equation:
 \[
 Y_{i}=\alpha+\rho\hat{T}_{i}+X_{i}^{\prime}\theta+\left(\varepsilon_{i}+\rho(T_{i}-\hat{T}_{i})\right)
 \]
@@ -653,7 +653,6 @@ Y_{i}=\alpha+\rho\hat{T}_{i}+X_{i}^{\prime}\theta+\left(\varepsilon_{i}+\rho(T_{
 \end{itemize}
 \end{frame}
 \begin{frame}{Pop-quiz}
-\pause
 Suppose you came up with what you think is a good instrument, $Z_{i}$, but you're not 100\% sure about the exclusion restriction
 
 ~\\
@@ -673,7 +672,7 @@ Right? Wrong?
 
 \subsection{Many/Weak Instruments}
 \begin{frame}{Many/weak instruments: the problem}
-\small OLS is unbiased in finite samples (linear CEF or fixed regressors); IV is not, since it is a ratio of reduced form and first stage,
+\small IV is biased in finite samples, since it is a ratio of reduced form and first stage:
 \[
 E\left[\hat{\rho}_{IV}\right]=E\left[\dfrac{\hat{\delta}}{\hat{\pi}}\right]\neq\dfrac{E[\hat{\delta}]}{E[\hat{\pi}]}=\rho
 \]
@@ -690,15 +689,13 @@ E\left[\hat{\rho}_{IV}\right]=E\left[\dfrac{\hat{\delta}}{\hat{\pi}}\right]\neq\
 
 \begin{frame}{Bound, Jaeger and Baker (1995)}
 \small BJB revisit the Angrist and Krueger QOB instrument
-
-~\\
-The Wald estimates we studied are just-identified, so the many/weak critique does not apply to them (a common misconception)
-
-~\\
-But AK also report 2SLS estimates that add QOB $\times$ year-of-birth (30) and QOB $\times$ state-of-birth (150) interactions as instruments, overidentified by 179
+\begin{itemize}
+  \item The Wald estimates we studied are just-identified, so the many/weak critique does not apply to them
+\item But AK also report 2SLS estimates that add QOB $\times$ year-of-birth (30) and QOB $\times$ state-of-birth (150) interactions as instruments, overidentified by 179
 \begin{itemize}
 \item \footnotesize Rationale: compulsory schooling laws differ across states and cohorts
 \item \footnotesize Asymptotically this can only help: better first-stage fit, smaller standard errors
+\end{itemize}
 \end{itemize}
 ~\\
 The QOB first stage is small and most interactions are irrelevant, so this is a severe many/weak scenario
@@ -831,11 +828,11 @@ Many instruments (high $Q/N$) with little signal (low $V/\sigma^2_\eta$) is the 
 \footnotesize Diagnose: report the first-stage $F$ on the instruments
 \begin{itemize}
 \item Staiger and Stock (1997) rule of thumb: $F>10$
-\item Lee, McCrary, Moreira and Porter (2022): screening on $F>10$ causes inference issues (pre-testing); need a larger $F$, 104 for correct size in just-id IV
+\item Lee, McCrary, Moreira and Porter (2022): screening on $F>10$ causes inference issues (pre-testing); need a larger $F$ (104!) for correct size in just-id IV
 \item Provide the $tF$ correction for smaller $F$
 \end{itemize}
 ~\\
-Weak-IV robust inference: the Anderson-Rubin test is valid whatever the instrument strength
+Weak-IV robust inference: Anderson-Rubin is valid whatever the instrument strength
 \begin{itemize}
 \item Survey: Andrews, Stock and Sun (2019)
 \end{itemize}
@@ -843,6 +840,9 @@ Weak-IV robust inference: the Anderson-Rubin test is valid whatever the instrume
 
 \begin{frame}{JIVE (Angrist, Imbens and Krueger 1999)}
 \small The bias came from $i$'s own first-stage error entering $i$'s fitted value, so estimate the first stage leaving $i$ out and use $\hat{S}_{-i}=Z_{i}'\hat{\pi}_{-i}$ as the instrument: jackknife IV
+\begin{itemize}
+  \item (Read the NBER WP, not the JAE)
+\end{itemize}
 
 ~\\
 Why it helps: $\hat{S}_{-i}$ does not depend on $\eta_{i}$, so $E[\eta_{i}\hat{S}_{-i}\,|\,Z]=0$ and the $\eta'P_{Z}\varepsilon$ term disappears. JIVE is consistent under many-instrument asymptotics and with heteroskedasticity
