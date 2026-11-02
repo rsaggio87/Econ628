@@ -1,0 +1,2012 @@
+% Build with latexmk; watch with latexmk -pvc. See assets/README.md.
+\documentclass[notes=show]{beamer}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{ulem}
+\usepackage{pdflscape}
+\setbeamertemplate{caption}{\insertcaption}
+\usepackage{color,xcolor,ucs}
+\usepackage{beamerthemesplit}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage[export]{adjustbox}
+\usepackage{pdfpages} 
+\definecolor{mintgreen}{rgb}{0.6, 1.0, 0.6}
+\makeatletter
+\@addtoreset{subfigure}{framenumber}% subfigure counter resets every frame
+\makeatother
+\newcommand*{\Scale}[2][4]{\scalebox{#1}{$#2$}}%
+\newcommand*{\Resize}[2]{\resizebox{#1}{!}{$#2$}}%
+\usepackage{amsfonts}
+\usepackage{booktabs}
+\usepackage{color,soul}
+\usepackage{pdfpages}
+\setboolean{@twoside}{false}
+\usepackage{amsmath}
+\usepackage{pdflscape} 
+\usepackage{eurosym}
+\usepackage{amstext} % for \text
+\DeclareRobustCommand{\officialeuro}{%
+  \ifmmode\expandafter\text\fi
+  {\fontencoding{U}\fontfamily{eurosym}\selectfont e}}
+% Compatibility with the caption package shipped in TeX Live 2018.
+\makeatletter
+\providecommand\@@magyar@captionfix{}
+\makeatother
+\usepackage[caption = false]{subfig}
+\usepackage{appendixnumberbeamer} 
+\usepackage{graphicx}
+\usepackage{mathpazo}
+\usepackage{hyperref}
+\usepackage{multimedia}
+\usepackage{graphicx}
+\usepackage{multirow}
+\usepackage{subfig}
+\usepackage{verbatim}
+\usepackage{booktabs, multicol, multirow}
+\setcounter{MaxMatrixCols}{10}
+\input{assets/Macros.tex}
+\AtBeginSection[]
+{
+  \begin{frame}[noframenumbering]
+    \frametitle{Outline for section \thesection}
+    \tableofcontents[currentsection]
+  \end{frame}
+}
+
+
+\usepackage{xcolor,soul}
+\renewcommand<>{\hl}[1]{\only#2{\beameroriginal{\hl}}{#1}}
+
+% https://tex.stackexchange.com/questions/41683/why-is-it-that-coloring-in-soul-in-beamer-is-not-visible
+\makeatletter
+\newcommand\SoulColor{%
+  \let\set@color\beamerorig@set@color
+  \let\reset@color\beamerorig@reset@color}
+\makeatother
+\SoulColor
+\AtBeginSection{\frame{\sectionpage}}
+
+\newsavebox\mybox
+\newenvironment{aquote}[1]
+  {\savebox\mybox{#1}\begin{quote}\openautoquote\hspace*{-.7ex}}
+  {\unskip\closeautoquote\vspace*{1mm}\signed{\usebox\mybox}\end{quote}}
+
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{Assumption}[theorem]{Assumption}
+\newenvironment{stepenumerate}{\begin{enumerate}[<+->]}{\end{enumerate}}
+\newenvironment{stepitemize}{\begin{itemize}[<+->]}{\end{itemize} }
+\newenvironment{stepenumeratewithalert}{\begin{enumerate}[<+-| alert@+>]}{\end{enumerate}}
+\newenvironment{stepitemizewithalert}{\begin{itemize}[<+-| alert@+>]}{\end{itemize} }
+\usetheme{Madrid}
+\makeatletter
+\setbeamertemplate{footline}
+{
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}%
+    \usebeamerfont{author in head/foot}\insertshortauthor~~\beamer@ifempty{\insertshortinstitute}{}{(\insertshortinstitute)}
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+    \usebeamerfont{title in head/foot}\insertshorttitle
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,right]{date in head/foot}%
+    \usebeamerfont{date in head/foot}\insertshortdate{}\hspace*{2em}
+%    \insertframenumber{} / \inserttotalframenumber\hspace*{2ex} % DELETED
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+\makeatother
+\usepackage{pdfpages}
+\begin{document}
+	\title[]{\large Instrumental Variables
+	\vspace{0.5cm}
+	}
+	\author[Norris \& Saggio - Econ 628]{Sam Norris and Raffaele Saggio}
+	\institute[]{UBC}
+	\date{\today \\
+}
+	\maketitle
+
+\begin{frame}{Introduction}
+Instrumental variables (IV) methods have been at the center of applied microeconometrics for decades
+\begin{itemize}
+\item Pioneered by economists and now widely used in other empirical fields
+\end{itemize}
+~\\
+We start with constant effects, then reinterpret IV with heterogeneous effects
+\end{frame}
+
+\begin{frame}{IV history}
+IV methods were developed to deal with two seemingly unrelated problems
+\begin{itemize}
+\item Philip and Sewall Wright (1920s): estimating supply and demand from equilibrium prices and quantities
+\begin{itemize}
+\item Grew into the study of simultaneous equations models
+\end{itemize}
+\item Wald (1940): estimating a regression line when the regressor is measured with error
+\end{itemize}
+~\\
+Today IV is mostly used to eliminate omitted variables bias in single-equation causal models
+\end{frame}
+
+\begin{frame}{Outline}
+Part I covers IV with constant treatment effects
+\begin{itemize}
+\item Simple IV: one instrument, one endogenous variable
+\item Multiple instruments and 2SLS
+\item IV as GMM
+\item Overidentification tests
+\item Imperfect compliance
+\item 2SLS mistakes
+\item Many/weak instruments
+\end{itemize}
+~\\
+Part II covers IV with heterogeneous treatment effects
+\begin{itemize}
+\item The LATE theorem
+\item Characterizing compliers
+\item Overidentification tests with heterogeneous effects
+\end{itemize}
+~\\
+Main reference: Mostly Harmless Econometrics
+\end{frame}
+
+\section{Part I: Constant effects}
+
+\begin{frame}{A simple causal model}
+Consider a constant-effects causal model of schooling and earnings:
+\[
+Y_{i}(s)=\alpha+\rho s+\varepsilon_{i}
+\]
+\begin{itemize}
+\item $Y_{i}(s)$ is $i$'s potential wage with $s$ years of schooling
+\item Additive separability implies constant causal effects:
+\end{itemize}
+\[
+Y_{i}(s)-Y_{i}(s-1)=\rho\quad\forall\,(i,s)
+\]
+~\\
+We observe schooling $S_{i}$ and earnings $Y_{i}(S_{i})$
+\end{frame}
+
+\begin{frame}{Observed earnings and unobserved ability}
+Observed earnings follow the structural equation
+\[
+Y_{i}=\alpha+\rho S_{i}+\varepsilon_{i}
+\]
+\begin{itemize}
+\item This is not a regression, so nothing guarantees $Cov(S_{i},\varepsilon_{i})=0$
+\end{itemize}
+~\\
+Project $\varepsilon_{i}$ onto unobserved ability $A_{i}$:
+\[
+\varepsilon_{i}=\gamma A_{i}+v_{i}
+\]
+\begin{itemize}
+\item $Cov(A_{i},v_{i})=0$ by definition, and we assume $Cov(S_{i},v_{i})=0$
+\item Unobserved ability is a potential source of omitted variables bias
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Long and short regressions}
+The long regression controls for ability, and the short regression omits it:
+\begin{align*}
+\text{Long:}\quad & Y_{i}=\alpha+\rho S_{i}+\gamma A_{i}+v_{i}\\
+\text{Short:}\quad & Y_{i}=\alpha_{s}+\rho_{s}S_{i}+v_{is}
+\end{align*}
+~\\
+The omitted variables bias formula links the two:
+\[
+\rho_{s}=\rho+\gamma\frac{Cov(S_{i},A_{i})}{Var(S_{i})}
+\]
+~\\
+The regression we've got (short) is not the regression we want (long)
+
+~\\
+IV recovers the long regression coefficient $\rho$ without data on $A_{i}$
+\end{frame}
+
+\begin{frame}{Instrumental variables}
+Consider an instrument $Z_{i}$ for $S_{i}$ in the causal model
+\[
+Y_{i}=\alpha+\rho S_{i}+\varepsilon_{i}
+\]
+An instrument must satisfy two conditions:
+\medskip
+\begin{enumerate}
+\item First stage: $Cov(S_{i},Z_{i})\neq0$
+\begin{itemize}
+  \item I.e., instrument is correlated with treatment (how to test?)
+\end{itemize}
+\pause
+\medskip
+\item Exclusion restriction: $Cov(\varepsilon_{i},Z_{i})=0$
+\begin{itemize}
+  \item Can think of as two sub-conditions:
+\begin{itemize}
+\item $Z_{i}$ is uncorrelated with unobserved determinants of earnings
+\item $Z_{i}$ has no direct effect on $Y_{i}$
+\end{itemize}
+\item Exclusion is not testable (caveats later)
+\end{itemize}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{The IV coefficient}
+The exclusion restriction implies
+\[
+Cov(Y_{i},Z_{i})=Cov(\alpha+\rho S_{i}+\varepsilon_{i},Z_{i})=\rho Cov(S_{i},Z_{i})
+\]
+~\\
+If the first stage holds, we can divide by $Cov(S_{i},Z_{i})$:
+\[
+\frac{Cov(Y_{i},Z_{i})}{Cov(S_{i},Z_{i})}=\rho
+\]
+\begin{itemize}
+\item This ratio of covariances is the population IV coefficient
+\end{itemize}
+\end{frame}
+
+\begin{frame}{The reduced form and the first stage}
+Divide the numerator and denominator by $Var(Z_{i})$:
+\[
+\frac{Cov(Y_{i},Z_{i})/Var(Z_{i})}{Cov(S_{i},Z_{i})/Var(Z_{i})}=\rho
+\]
+What is the interpretation of this expression?
+\pause
+\begin{itemize}
+  \item It is a ratio of two OLS regression coefficients:
+\begin{align*}
+\text{Reduced form:}\quad & Y_{i}=\lambda+\delta Z_{i}+u_{i}\\
+\text{First stage:}\quad & S_{i}=\kappa+\pi Z_{i}+\eta_{i}
+\end{align*}
+  \item $\rho_{IV}=\delta/\pi$, the reduced form divided by the first stage
+\end{itemize}
+~\\
+If both IV assumptions hold, then $\rho_{IV}=\rho$
+\end{frame}
+
+\begin{frame}{IV example: Angrist and Krueger (1991)}
+
+Where do instruments come from?~\\
+\begin{itemize}
+  \item Good instruments usually combine:
+  \begin{itemize}
+    \item Institutional knowledge
+    \item Plausible assumptions about behavioral relationships
+  \end{itemize} 
+\end{itemize}
+~\\
+Classic example: Angrist and Krueger (1991) on the returns to education
+\end{frame}
+
+\begin{frame}{Angrist and Krueger (1991)}
+AK estimate the causal effect of schooling on earnings
+
+~\\
+Their IV strategy is motivated by the interaction between compulsory schooling and age-at-entry laws
+\begin{itemize}
+\item Students can typically drop out of school on the day they turn 16
+\item Birth date cutoff for starting age: kids usually start school in the fall of the calendar year they turn six
+\end{itemize}
+~\\
+This generates differences in mean educational attainment by date of birth:
+\pause
+
+~\\
+\includegraphics[width=1\textwidth]{assets/6/qob_chart.pdf}
+\end{frame}
+\begin{frame}{Angrist and Krueger (1991)}
+Dropout + age-at-entry rules $\rightarrow$ less compulsory schooling if born early in the year
+\begin{itemize}
+\item Suggests date of birth as an instrument for schooling
+\item AK use a ``quarter of birth'' instrument, an indicator for being born early in the year (January--March)
+\end{itemize}
+~\\
+What are the first stage and exclusion restriction assumptions here?
+\end{frame}
+\setbeamercolor{background canvas}{bg=} \includepdf{assets/6/angrist_kruger_1991_f1.pdf}
+
+\setbeamercolor{background canvas}{bg=} \includepdf{assets/6/angrist_krueger_1991_f5.pdf}
+\begin{frame}{The Wald estimator}
+Recall the IV coefficient:
+\[
+\rho_{IV}=\frac{Cov(Y_{i},Z_{i})/Var(Z_{i})}{Cov(S_{i},Z_{i})/Var(Z_{i})}
+\]
+When $Z_{i}$ is binary, the FS and RF become differences in means:
+\[
+\rho_{IV}=\frac{E\left[Y_{i}|Z_{i}=1\right]-E\left[Y_{i}|Z_{i}=0\right]}{E\left[S_{i}|Z_{i}=1\right]-E\left[S_{i}|Z_{i}=0\right]}
+\]
+\begin{itemize}
+\item This is the population analogue of the Wald estimator
+\end{itemize}
+\end{frame}
+\setbeamercolor{background canvas}{bg=} \includepdf{assets/6/angrist_krueger_1991_t3.pdf}
+
+\begin{frame}{IV with covariates}
+When doing IV it's often necessary to control for additional variables
+\begin{itemize}
+\item E.g. QOB is correlated with age, which likely also affects earnings
+\item This suggests a violation of exclusion, so we may want to control for smooth functions of age
+\end{itemize}
+~\\
+The long regression of interest now includes the control vector $X_{i}$:
+\[
+Y_{i}=\alpha+\rho S_{i}+X_{i}^{\prime}\gamma+v_{i}
+\]
+\begin{itemize}
+  \item $X_i$ includes an age polynomial (plus possibly other variables)
+\item Control variables that are neither instruments nor instrumented are ``exogenous covariates''
+\end{itemize}
+\end{frame}
+
+\begin{frame}{IV with covariates}
+Reduced form and first stage regressions augmented with covariates:
+\begin{align*}
+& Y_{i}=\lambda+\delta Z_{i}+X_{i}^{\prime}\psi+u_{i}\\
+& S_{i}=\kappa+\pi Z_{i}+X_{i}^{\prime}\phi+\eta_{i}
+\end{align*}
+~\\
+As before we can solve for $\rho$ as $\delta/\pi$; applying the Frisch-Waugh-Lovell theorem, this equals
+\[
+\frac{\delta}{\pi}=\frac{Cov\left(Y_{i},\tilde{Z}_{i}\right)}{Cov\left(S_{i},\tilde{Z}_{i}\right)}
+\]
+\end{frame}
+
+\begin{frame}{Indirect least squares}
+\[
+\frac{\delta}{\pi}=\frac{Cov\left(Y_{i},\tilde{Z}_{i}\right)}{Cov\left(S_{i},\tilde{Z}_{i}\right)}
+\]
+\begin{itemize}
+\item The sample analogue of this ratio is called the indirect least squares (ILS) estimator
+\item Controlling for covariates is equivalent to using the residual from a regression of $Z_{i}$ on $X_{i}$ as the instrument
+\item The first stage and exclusion restriction assumptions now need to hold for $\tilde{Z}_{i}$ rather than $Z_{i}$
+\item Importantly, the first stage relationship between $S_{i}$ and $Z_{i}$ must survive the addition of the controls $X_{i}$
+\end{itemize}
+\end{frame}
+\subsection{2SLS and Multiple Instruments}
+\begin{frame}{Multiple instruments}
+Suppose we have instruments $Z_{i1},\ldots,Z_{iJ}$, collected in the $J\times1$ vector $Z_{i}$
+\begin{itemize}
+\item E.g. dummies for each quarter of birth, rather than just the first one
+\end{itemize}
+~\\
+It's no longer clear how to solve for the long regression coefficient $\rho$: we could use any one of the $J$ instruments, or any linear combination of them
+\begin{itemize}
+\item $\rho$ is now overidentified: there are multiple ways to solve for the parameter of interest
+\end{itemize}
+~\\
+How should we combine the available information?
+\end{frame}
+
+\begin{frame}{Multiple instruments}
+Our structural equation of interest is still
+\[
+Y_{i}=\alpha+\rho S_{i}+X_{i}^{\prime}\gamma+\varepsilon_{i}
+\]
+Consider a first-stage regression of $S_{i}$ on all the instruments and exogenous controls:
+\[
+S_{i}=\kappa+Z_{i}^{\prime}\pi+X_{i}^{\prime}\phi+\eta_{i}
+\]
+\end{frame}
+
+\begin{frame}{Multiple instruments}
+Substitute the first stage regression into the structural equation:
+\begin{align*}
+Y_{i} & =\alpha+\rho\left[\kappa+Z_{i}^{\prime}\pi+X_{i}^{\prime}\phi+\eta_{i}\right]+X_{i}^{\prime}\gamma+\varepsilon_{i}\\
+ & =\alpha+\rho\left(\kappa+Z_{i}^{\prime}\pi+X_{i}^{\prime}\phi\right)+X_{i}^{\prime}\gamma+\left(\rho\eta_{i}+\varepsilon_{i}\right)\\
+ & =\alpha+\rho\hat{S}_{i}+X_{i}^{\prime}\gamma+\nu_{i}
+\end{align*}
+\begin{itemize}
+\item $\hat{S}_{i}=\kappa+Z_{i}^{\prime}\pi+X_{i}^{\prime}\phi$ is the predicted value of $S_{i}$ from the first stage
+\item The new residual is $\nu_{i}=\rho\eta_{i}+\varepsilon_{i}=\rho(S_{i}-\hat{S}_{i})+\varepsilon_{i}$
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Two-stage least squares}
+\[
+Y_{i}=\alpha+\rho\hat{S}_{i}+X_{i}^{\prime}\gamma+\nu_{i}
+\]
+$\hat{S}_{i}$ and $X_{i}$ are uncorrelated with $\nu_{i}$ (why?)
+\begin{itemize}
+  \item $\rightarrow$ OLS recovers the parameters of this equation
+\end{itemize}
+
+~\\
+This is the two-stage least squares (2SLS) estimator:
+\begin{enumerate}
+\item Regress $S_{i}$ on all the instruments and exogenous controls, and obtain predicted values $\hat{S}_{i}$
+\item Regress $Y_{i}$ on $\hat{S}_{i}$ and the exogenous controls
+\end{enumerate}
+~\\
+2SLS provides one method for combining instruments. Do you think it is the most efficient?
+\end{frame}
+ 
+\subsection{IV as GMM}
+\begin{frame}{IV as GMM}
+With $N$ observations on $(Y_{i},S_{i},Z_{i},X_{i})$, write the structural equation as
+\[
+Y_{i}=\alpha+S_{i}^{\prime}\rho+X_{i}^{\prime}\gamma+\varepsilon_{i}
+\]
+\begin{itemize}
+\item $S_{i}$ is a $K\times1$ vector of endogenous variables
+\item $Z_{i}$ is a $J\times1$ vector of instruments ($J\geq K$)
+\item $X_{i}$ is an $L\times1$ vector of exogenous controls
+\item $\mathbf{Z}_{i}=(1,X_{i}^{\prime},Z_{i}^{\prime})^{\prime}$ collects instruments and controls
+\end{itemize}
+\pause
+~\\
+We know (from economic theory or institutional knowledge) that
+\[
+\E[\mathbf{Z}_{i}\varepsilon_{i}]=\E[\mathbf{Z}_{i}(y_{i}-\alpha-S_{i}^{\prime}\rho-X_{i}^{\prime}\gamma)]=\E[m_{i}(\theta)]=0
+\]
+where $\theta=(\rho;\gamma)$
+
+~\\
+What do we call this? How many equations? How many unknowns?
+\end{frame}
+%%
+\begin{frame}{Casting everything as GMM}
+Recall our class on GMM (Estimation slide deck)
+\begin{itemize}
+  \item GMM minimizes the following criterion function:
+\end{itemize}
+\vspace{3mm}
+\be
+\label{GMM_criterion}
+Q_{GMM}(\theta)=\E[m_{i}(\theta)'\mathbf{W} m_{i}(\theta)]
+\ee
+\vspace{-20pt} 
+\begin{itemize}
+\item What happens to $\mathbf{W}$ when $J=K$?
+\pause
+\medskip
+\item How do we choose $\mathbf{W}$ when $J>K$?
+\pause
+\medskip
+\item Efficient GMM: $\mathbf{W}^{*}=\boldsymbol{\Omega}^{-1}$, where $\boldsymbol{\Omega}=\E[m_{i}(\theta)m_{i}(\theta)']=\E[\varepsilon_{i}^{2}\mathbf{Z}_{i}\mathbf{Z}_{i}']$
+\vspace{-6pt} 
+\begin{itemize}
+\item Under homoskedasticity, $\E[\varepsilon_{i}^{2}|\mathbf{Z}_{i}]=\sigma^{2}$, so $\boldsymbol{\Omega}^{-1}=\sigma^{-2}\E[\mathbf{Z}_{i}\mathbf{Z}_{i}']^{-1}$
+\item With heteroskedasticity, $\boldsymbol{\Omega}$ must be estimated: $\hat{\boldsymbol{\Omega}}=\frac{1}{N}\sum_{i}\hat{\varepsilon}_{i}^{2}\mathbf{Z}_{i}\mathbf{Z}_{i}'$ using 2SLS residuals (two-step GMM)
+\end{itemize}
+\pause
+\item Turns out that 2SLS minimizes \eqref{GMM_criterion} by setting $\mathbf{W}=E[\mathbf{Z}_{i}\mathbf{Z}_{i}']^{-1}$
+\begin{itemize}
+\item  (See MHE 4.2.1 for the proof)
+\item  What does this mean for efficiency of 2SLS?
+\end{itemize}
+\end{itemize}
+\end{frame}
+%%
+%%
+\subsection{Overidentification Tests}
+\begin{frame}{Over-id test}
+The GMM formulation is also useful for testing the validity of the model
+\begin{itemize}
+\item When there are more instruments than endogenous variables ($J>K$), there are multiple ways to solve for the structural parameters
+\end{itemize}
+~\\
+An over-id test (see Estimation slides) tells us how close the moment conditions are to being satisfied
+\begin{itemize}
+\item In the IV setup, an overid test checks whether all the IV moment restrictions are close enough to being satisfied
+\end{itemize}`'
+\end{frame}
+%%
+\begin{frame}{Overid tests in the IV world}
+Let $\hat{\theta}$ be the minimizer of the sample GMM criterion function:
+\[
+\hat{\theta}=\argmin_{c}\hat{Q}_{GMM}(c)=N\hat{m}_{i}(c)'\mathbf{W} \hat{m}_{i}(c)
+\]
+where $\hat{m}_{i}(\theta)=\dfrac{1}{N}\mathbf{Z}_{i}(y_{i}-\alpha-S_{i}^{\prime}\rho-X_{i}^{\prime}\gamma)$ (evaluated at the ``truth'' $\theta$)
+\pause
+
+~\\
+If $\mathbf{W}=\E[\sqrt{N}\hat{m}_{i}(\theta)\sqrt{N}\hat{m}_{i}(\theta)']^{-1}$, then as $N\rightarrow\infty$
+\[
+\hat{Q}_{GMM}(\hat{\theta})\sim\chi^{2}_{J-K}
+\]
+\pause
+\begin{itemize}
+\item If $\hat{Q}_{GMM}(\hat{\theta})$ is large relative to the critical value of $\chi^{2}_{J-K}$, the model is rejected
+\item Rejection means that one of the $J$ instruments is false: there is one instrument for which $\E[Z_{i}\varepsilon_{i}]$ is actually not zero
+\item Sometimes this is also called the J-test in the IV setup
+\end{itemize}
+\end{frame}
+%%
+\begin{frame}{Intuition}
+Suppose there are no controls and we have one endogenous variable $S_{i}$ and two potential instruments $Z_{i1}$ and $Z_{i2}$
+
+~\\
+Two instruments give us two potential (simple) IV estimates of $\rho$
+\begin{itemize}
+\item First estimate of $\rho$ obtained by solving the moment condition
+\end{itemize}
+\[
+\E[Z_{i1}(y_{i}-S_{i}\rho_{1})]=0
+\]
+\begin{itemize}
+\item And the second is obtained by fitting
+\end{itemize}
+\[
+\E[Z_{i2}(y_{i}-S_{i}\rho_{2})]=0
+\]
+\pause
+~\\
+Over-id tests whether a model that imposes $\rho_{2}=\rho_{1}$ can fit the data
+\begin{itemize}
+  \item What is the key underlying assumption that makes this test useful?
+\end{itemize}
+\end{frame}
+
+\subsection{2SLS Mistakes}
+\begin{frame}{2SLS mistakes}
+2SLS is the workhorse IV estimator used by empirical researchers
+
+~\\
+It's worth covering some common pitfalls related to 2SLS estimation
+\end{frame}
+
+\begin{frame}{2SLS mistakes 1: standard errors}
+It's usually not a good idea to run the two stages of 2SLS manually
+\begin{itemize}
+\item For one thing, this will give the wrong standard errors
+\end{itemize}
+~\\
+Consider a setting with one endogenous variable $S_{i}$:
+\[
+Y_{i}=\alpha+\rho S_{i}+\varepsilon_{i}
+\]
+If you run 2SLS manually, the second stage is
+\[
+Y_{i}=\alpha+\rho\hat{S}_{i}+v_{i}
+\]
+where $v_{i}=\varepsilon_{i}+\rho(S_{i}-\hat{S}_{i})$
+
+~\\
+Manual 2SLS will typically generate standard errors that are too large
+\begin{itemize}
+\item The residual variance should be calculated from the structural residual $Y_{i}-\hat{\alpha}-\hat{\rho}S_{i}$, not the second-stage residual $Y_{i}-\hat{\alpha}-\hat{\rho}\hat{S}_{i}$
+\end{itemize}
+\end{frame}
+
+\begin{frame}{2SLS mistakes 2: covariate ambivalence}
+A second possible mistake in manual 2SLS is the treatment of covariates
+
+~\\
+Suppose we run the 2SLS procedure
+\begin{align*}
+S_{i} & =\kappa+Z_{i}^{\prime}\pi+X_{1i}^{\prime}\phi_{1}+\eta_{i}\\
+Y_{i} & =\alpha+\rho\hat{S}_{i}+X_{1i}^{\prime}\theta_{1}+X_{2i}^{\prime}\theta_{2}+v_{i}
+\end{align*}
+\begin{itemize}
+\item The covariate vector $X_{2i}$ is included in the second stage but not the first (the opposite of the instruments $Z_{i}$)
+\end{itemize}
+~\\
+What's wrong with this?
+\end{frame}
+
+\begin{frame}{2SLS mistakes 2: covariate ambivalence}
+\begin{align*}
+S_{i} & =\kappa+Z_{i}^{\prime}\pi+X_{1i}^{\prime}\phi_{1}+\eta_{i}\\
+Y_{i} & =\alpha+\rho\hat{S}_{i}+X_{1i}^{\prime}\theta_{1}+X_{2i}^{\prime}\theta_{2}+v_{i}
+\end{align*}
+\begin{itemize}
+\item The second-stage residual is $v_{i}=\varepsilon_{i}+\rho(S_{i}-\hat{S}_{i})$
+\item Since $S_{i}-\hat{S}_{i}$ is a residual from a regression that includes $X_{1i}$, $Cov(X_{1i},S_{i}-\hat{S}_{i})=0$
+\item But in general $Cov(S_{i}-\hat{S}_{i},X_{2i})\neq0$, so we may have created a correlation between the error term and covariates, leading to bias in all parameter estimates
+\item ``If a covariate is good enough for the second stage, it's good enough for the first''
+\end{itemize}
+\end{frame}
+
+\begin{frame}{2SLS mistakes 3: the forbidden regression}
+In response to repeated mistakes by graduate students, Jerry Hausman labeled one 2SLS mistake ``the forbidden regression''
+
+~\\
+The forbidden regression involves the erroneous application of 2SLS logic to nonlinear models
+
+~\\
+Suppose there is a dummy endogenous variable $T_{i}\in\{0,1\}$, a vector of covariates $X_{i}$, and a vector of instruments $Z_{i}$
+
+~\\
+The causal equation is
+\[
+Y_{i}=\alpha+\rho T_{i}+X_{i}^{\prime}\theta+\varepsilon_{i}
+\]
+\end{frame}
+
+\begin{frame}{2SLS mistakes 3: the forbidden regression}
+First stage regression:
+\[
+T_{i}=\kappa+Z_{i}^{\prime}\pi+X_{i}^{\prime}\phi+\eta_{i}
+\]
+Since $T_{i}$ is binary, $E\left[T_{i}|Z_{i},X_{i}\right]$ is likely nonlinear unless the model is saturated, so the first stage is a misspecified model of the CEF
+
+~\\
+One might be tempted to try a nonlinear model to better approximate the CEF, e.g. a probit:
+\[
+Pr\left[T_{i}=1|X_{i},Z_{i}\right]=\Phi\left(\kappa+Z_{i}^{\prime}\pi+X_{i}^{\prime}\phi\right)
+\]
+\end{frame}
+
+\begin{frame}{2SLS mistakes 3: the forbidden regression}
+The nonlinear first stage can be used to obtain predicted values:
+\[
+\hat{T}_{i}=\Phi\left(\hat{\kappa}+Z_{i}^{\prime}\hat{\pi}+X_{i}^{\prime}\hat{\phi}\right)
+\]
+One might then be tempted to run a 2SLS-style second stage:
+\[
+Y_{i}=\alpha+\rho\hat{T}_{i}+X_{i}^{\prime}\theta+\varepsilon_{i}
+\]
+This regression is forbidden!
+\end{frame}
+
+\begin{frame}{2SLS mistakes 3: the forbidden regression}
+To see why, rewrite the structural equation:
+\[
+Y_{i}=\alpha+\rho\hat{T}_{i}+X_{i}^{\prime}\theta+\left(\varepsilon_{i}+\rho(T_{i}-\hat{T}_{i})\right)
+\]
+\begin{itemize}
+\item If the first stage is estimated via OLS, the residual $(T_{i}-\hat{T}_{i})$ is guaranteed to be uncorrelated with the fit $\hat{T}_{i}$ and with the included covariates $X_{i}$
+\item Nonlinear residuals do not have this property: $Cov\left(T_{i}-\hat{T}_{i},\hat{T}_{i}\right)$ and $Cov\left(T_{i}-\hat{T}_{i},X_{i}\right)$ will generally equal zero only when $E\left[T_{i}|X_{i},Z_{i}\right]$ is really a probit
+\item Who knows whether the probit CEF is right? Better to stick with a linear first stage, which guarantees zero covariance between residuals and fits/regressors even if the CEF is misspecified
+\end{itemize}
+\end{frame}
+\begin{frame}{Pop-quiz}
+Suppose you came up with what you think is a good instrument, $Z_{i}$, but you're not 100\% sure about the exclusion restriction
+
+~\\
+Inspired by your knowledge of regression and the meaning of the exclusion restriction, you come up with the following test for the validity of the instrument:
+\[
+y_{i}=\alpha+\beta S_{i}+\gamma Z_{i}+r_{i}
+\]
+That is, you run a regression of your outcome on the endogenous variable $S_{i}$ and the instrument $Z_{i}$
+
+~\\
+Since the instrument only operates through $S_{i}$, you argue that if the exclusion restriction is valid, then $\beta=\rho$ (the true causal effect) and $\gamma=0$
+
+~\\
+Right? Wrong?
+\end{frame}
+
+
+\subsection{Many/Weak Instruments}
+\begin{frame}{Many/weak instruments: the problem}
+\small IV is biased in finite samples, since it is a ratio of reduced form and first stage:
+\[
+E\left[\hat{\rho}_{IV}\right]=E\left[\dfrac{\hat{\delta}}{\hat{\pi}}\right]\neq\dfrac{E[\hat{\delta}]}{E[\hat{\pi}]}=\rho
+\]
+\begin{itemize}
+\item Just-identified IV: a ratio of two (jointly normal) estimates $\rightarrow$ no moments and fat tails (Cauchy as $\pi\rightarrow0$), but approximately median unbiased: $Q_{0.5}(\hat{\rho}_{IV})\approx\rho$
+\medskip
+\item Overidentified 2SLS is worse: it is centered in the wrong place, biased towards OLS
+\medskip
+\item The bias grows with the number of instruments (overfitting the first stage) and as the first stage gets weaker $\rightarrow$ ``many/weak'' instruments
+\medskip
+\item Bound, Jaeger and Baker (1995) showed this matters in practice
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Bound, Jaeger and Baker (1995)}
+\small BJB revisit the Angrist and Krueger QOB instrument
+\begin{itemize}
+  \item The Wald estimates we studied are just-identified, so the many/weak critique does not apply to them
+\item But AK also report 2SLS estimates that add QOB $\times$ year-of-birth (30) and QOB $\times$ state-of-birth (150) interactions as instruments, overidentified by 179
+\begin{itemize}
+\item \footnotesize Rationale: compulsory schooling laws differ across states and cohorts
+\item \footnotesize Asymptotically this can only help: better first-stage fit, smaller standard errors
+\end{itemize}
+\end{itemize}
+~\\
+The QOB first stage is small and most interactions are irrelevant, so this is a severe many/weak scenario
+
+~\\
+BJB's experiment: replace QOB with randomly generated fake QOB, which has no first stage by construction, and re-run AK's 2SLS
+\end{frame}
+
+\begin{frame}{Bound, Jaeger and Baker (1995)}
+\begin{center}
+{\footnotesize{}}%
+\begin{tabular}{|c|c|c|c|}
+\hline 
+ & {\footnotesize{}2SLS (real QOB)} & {\footnotesize{}2SLS (fake QOB)} & {\footnotesize{}OLS}\tabularnewline
+\hline 
+\hline 
+{\footnotesize{}30 QOB{*}year} & {\footnotesize{}0.081} & {\footnotesize{}0.062} & {\footnotesize{}0.063}\tabularnewline
+\hline 
+{\footnotesize{}interactions} & {\footnotesize{}(0.016)} & {\footnotesize{}(0.037)} & {\footnotesize{}(0.000)}\tabularnewline
+\hline 
+ &  &  & \tabularnewline
+\hline 
+{\footnotesize{}180 QOB{*}year and state} & {\footnotesize{}0.083} & {\footnotesize{}0.060} & {\footnotesize{}0.063}\tabularnewline
+\hline 
+{\footnotesize{}interactions} & {\footnotesize{}(0.009)} & {\footnotesize{}(0.015)} & {\footnotesize{}(0.000)}\tabularnewline
+\hline 
+\end{tabular}{\footnotesize\par}
+\par\end{center}
+\medskip
+\begin{itemize}
+\item \small With junk instruments, 2SLS essentially reproduces OLS
+\medskip
+\item \small Conventional standard errors give no warning: the fake-QOB, 180-instrument estimate looks precise despite having no first stage
+\medskip
+\item \small Where does this bias come from, and how do we diagnose and correct it?
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Where the bias comes from: setup}
+\small One endogenous regressor, $Q$ instruments, in matrix form:
+\begin{align*}
+\text{Second stage:}\qquad & Y=\rho S+\varepsilon\\
+\text{First stage:}\qquad & S=Z\pi+\eta
+\end{align*}
+2SLS regresses $Y$ on $\hat{S}=P_{Z}S$, so
+\[
+\hat{\rho}_{2SLS}-\rho=(S'P_{Z}S)^{-1}S'P_{Z}\varepsilon=(S'P_{Z}S)^{-1}\left[\pi'Z'\varepsilon+\eta'P_{Z}\varepsilon\right]
+\]
+\pause
+~\\
+We want the expectation of this. Problem: $(S'P_{Z}S)^{-1}$ is random and correlated with the bracket (why?)
+
+~\\
+Bekker (1994): under asymptotics where $Q$ grows with $N$, replacing $(S'P_{Z}S)^{-1}$ by $(E[S'P_{Z}S])^{-1}$ is a good approximation:
+\[
+E\left[\hat{\rho}_{2SLS}-\rho\right]\approx\left(E[S'P_{Z}S]\right)^{-1}E\left[\pi'Z'\varepsilon+\eta'P_{Z}\varepsilon\right]
+\]
+\end{frame}
+
+\begin{frame}{Where the bias comes from: the trace trick}
+\small Condition on $Z$ and take the numerator one term at a time:
+\begin{itemize}
+\item First term: $E[\pi'Z'\varepsilon\,|\,Z]=\pi'Z'E[\varepsilon\,|\,Z]=0$ (why?)
+\pause
+\medskip
+\item Second term:
+\begin{align*}
+E[\eta'P_{Z}\varepsilon\,|\,Z] & =E\left[\mathrm{tr}(\eta'P_{Z}\varepsilon)\,|\,Z\right]=E\left[\mathrm{tr}(P_{Z}\varepsilon\eta')\,|\,Z\right]\\
+ & =\mathrm{tr}\left(P_{Z}\,E[\varepsilon\eta'\,|\,Z]\right)=\sigma_{\eta\varepsilon}\,\mathrm{tr}(P_{Z})=\sigma_{\eta\varepsilon}\,Q
+\end{align*}
+%using $E[\varepsilon\eta'\,|\,Z]=\sigma_{\eta\varepsilon}I$ and $\mathrm{tr}(P_{Z})=\mathrm{tr}\left((Z'Z)^{-1}Z'Z\right)=Q$
+\pause
+\medskip
+\item Uses two tricks: a scalar equals its trace, the trace is cyclic
+\item (also relies on IID residual, can be adapted)
+\item Nonzero because $\eta$ and $\varepsilon$ are correlated (why?)
+\begin{itemize}
+\item Intuition: each instrument lets $\hat{S}$ pick up a bit of $\eta$, hence of $\varepsilon$. More instruments, more leakage
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{The many/weak bias formula}
+\small Same trick on the denominator: $E[S'P_{Z}S]=E[\pi'Z'Z\pi]+E[\eta'P_{Z}\eta]=E[\pi'Z'Z\pi]+\sigma_{\eta}^{2}\,Q$. Hence
+\[
+E\left[\hat{\rho}_{2SLS}-\rho\right]\approx\dfrac{\sigma_{\eta\varepsilon}\,Q}{E[\pi'Z'Z\pi]+\sigma_{\eta}^{2}\,Q}=\dfrac{\sigma_{\eta\varepsilon}}{\sigma_{\eta}^{2}}\cdot\dfrac{1}{1+F},\qquad F\equiv\dfrac{E[\pi'Z'Z\pi]}{\sigma_{\eta}^{2}\,Q}
+\]
+where $F$ is the population first-stage $F$-statistic for the joint significance of the instruments
+\end{frame}
+
+\begin{frame}{Comparing to OLS}
+\small Let $V\equiv Var(Z_{i}'\pi)$. OLS regresses $Y$ on $S$, and $Var(S_{i})=V+\sigma_{\eta}^{2}$, so
+\[
+\text{OLS bias}=\dfrac{Cov(S_{i},\varepsilon_{i})}{Var(S_{i})}=\dfrac{\sigma_{\eta\varepsilon}}{V+\sigma_{\eta}^{2}}
+\]
+\pause
+~\\
+Rewrite what we just derived in these terms:
+\[
+E\left[\hat{\rho}_{2SLS}-\rho\right]\approx\dfrac{\sigma_{\eta\varepsilon}}{\sigma_{\eta}^{2}}\cdot\dfrac{1}{1+F}=\dfrac{\sigma_{\eta\varepsilon}}{V+\sigma_{\eta}^{2}}\cdot\dfrac{1+V/\sigma_{\eta}^{2}}{1+F}\approx\underbrace{\dfrac{\sigma_{\eta\varepsilon}}{V+\sigma_{\eta}^{2}}}_{\text{OLS bias}}\cdot\dfrac{1}{1+F}
+\]
+(what gives us the last step?)
+\pause
+
+~\\
+Nice way to think about IV bias!
+\begin{itemize}
+\item \footnotesize When $F$ is small, 2SLS is more biased towards OLS
+\item \footnotesize $F=E[\pi'Z'Z\pi]/(\sigma_{\eta}^{2}Q)$ small when instruments weak (small $\pi$) or many (large $Q$)
+\end{itemize}
+\end{frame}
+
+\begin{frame}{A different way to compare bias}
+\small With centered instruments $E[\pi'Z'Z\pi]=N\,V$, so the same expression is
+\[
+E\left[\hat{\rho}_{2SLS}-\rho\right]\approx\dfrac{\sigma_{\eta\varepsilon}\,Q}{N\,V+Q\,\sigma_{\eta}^{2}}=\underbrace{\dfrac{\sigma_{\eta\varepsilon}}{V+\sigma_{\eta}^{2}}}_{\text{OLS bias}}\times\dfrac{Q\,(V+\sigma_{\eta}^{2})}{N\,V+Q\,\sigma_{\eta}^{2}}
+\]
+\pause
+~\\
+The second factor equals 1 in two cases:
+\begin{itemize}
+\item \footnotesize No first stage, $V=0$
+\item \footnotesize As many instruments as observations, $Q=N$
+\end{itemize}
+~\\
+Many instruments (high $Q/N$) with little signal (low $V/\sigma^2_\eta$) is the bad case
+\end{frame}
+
+\begin{frame}{Many/weak in practice}
+\footnotesize Diagnose: report the first-stage $F$ on the instruments
+\begin{itemize}
+\item Staiger and Stock (1997) rule of thumb: $F>10$
+\item Lee, McCrary, Moreira and Porter (2022): screening on $F>10$ causes inference issues (pre-testing); need a larger $F$ (104!) for correct size in just-id IV
+\item Provide the $tF$ correction for smaller $F$
+\end{itemize}
+~\\
+Weak-IV robust inference: Anderson-Rubin is valid whatever the instrument strength
+\begin{itemize}
+\item Survey: Andrews, Stock and Sun (2019)
+\end{itemize}
+\end{frame}
+
+\begin{frame}{JIVE (Angrist, Imbens and Krueger 1999)}
+\small The bias came from $i$'s own first-stage error entering $i$'s fitted value, so estimate the first stage leaving $i$ out and use $\hat{S}_{-i}=Z_{i}'\hat{\pi}_{-i}$ as the instrument: jackknife IV
+\begin{itemize}
+  \item (Read the NBER WP, not the JAE)
+\end{itemize}
+
+~\\
+Why it helps: $\hat{S}_{-i}$ does not depend on $\eta_{i}$, so $E[\eta_{i}\hat{S}_{-i}\,|\,Z]=0$ and the $\eta'P_{Z}\varepsilon$ term disappears. JIVE is consistent under many-instrument asymptotics and with heteroskedasticity
+
+~\\
+Caveat: conventional 2SLS-style standard errors for JIVE are wrong in many/weak settings
+\end{frame}
+
+\begin{frame}{JIVE does not solve all our problems}
+\small Ackerberg and Devereux (2009): leaving out $i$ kills the own-observation term, but the JIVE estimators of Angrist, Imbens and Krueger (1999) remain substantially biased with many/weak instruments
+\begin{itemize}
+\item \footnotesize The culprit is the exogenous covariates: JIVE jackknifes them together with the instruments, which reintroduces a bias term of order $L/N$ ($L$ = number of covariates)
+\item \footnotesize Fix: partial the covariates out first, then jackknife (IJIVE); a further Nagar-type correction removes the remaining higher-order bias (UIJIVE)
+\item \footnotesize Monte Carlo: JIVE has large bias and dispersion when instruments are weak; IJIVE/UIJIVE behave like LIML, and unlike LIML stay consistent under heteroskedasticity
+\end{itemize}
+\pause
+~\\
+Bottom line: leave-out fixes the bias from many instruments; it does nothing about weak identification, which still shows up as bias, dispersion, and invalid standard errors
+\end{frame}
+
+\begin{frame}{UJIVE (Kolesár 2013)}
+\small Many-instrument designs usually also have many covariates $W$ (e.g. fixed effects for randomization cells)
+
+~\\
+With many covariates, JIVE is inconsistent under many-instrument asymptotics: the covariates must be jackknifed too
+
+~\\
+UJIVE: leave $i$ out of both the full first stage (on $Z$ and $W$) and the covariate-only regression (on $W$), and instrument with the difference,
+\[
+\tilde{S}_{i}=\dfrac{(P_{ZW}S)_{i}-(P_{ZW})_{ii}S_{i}}{1-(P_{ZW})_{ii}}-\dfrac{(P_{W}S)_{i}-(P_{W})_{ii}S_{i}}{1-(P_{W})_{ii}}
+\]
+\pause
+~\\
+Why it matters beyond bias: with heterogeneous effects, LIML and other $k$-class estimators are inconsistent for any causal parameter under many instruments. UJIVE is consistent for a convex combination of LATEs, and is robust to heteroskedasticity
+
+~\\
+In practice: use UJIVE rather than a leave-out instrument with covariates bolted on, and report many-instrument standard errors
+\end{frame}
+
+\begin{frame}{The judges design}
+\small Cases are randomly assigned (within court $\times$ year cells) to judges who differ in leniency. Examples: Kling (2006) on sentencing, Doyle (2007) on foster care, Dobbie (2015) on bankruptcy
+
+~\\
+Instrument $T_{i}$ with the leave-out leniency of $i$'s judge $j(i)$, which is JIVE on a full set of judge dummies:
+\[
+T_{i}^{*}=\dfrac{1}{n_{j(i)}-1}\sum_{k\neq i}1\left\{ j(k)=j(i)\right\} T_{k}
+\]
+\pause
+~\\
+Question: what features of this design make many/weak problems likely?
+\pause
+\begin{itemize}
+\item Many weak instruments: hundreds of judges, each only slightly different from average
+\item Many covariates: the cells that deliver random assignment. These leak even when you JIVE $\rightarrow$ UJIVE
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Many/weak inference: summary}
+\footnotesize Just-identified, one instrument. Report the first stage. Conventional $t$-test needs $F>104$ (Lee et al. 2022); otherwise use their $tF$ critical values or the Anderson-Rubin (AR) test, which is valid for any $F$. Angrist and Kolesár (2024): with modest endogeneity the usual inference is fine even at low $F$
+
+~\\
+Overidentified, few instruments. 2SLS is biased towards OLS. Diagnose with the partial $F$ and Stock-Yogo (2005) critical values; with heteroskedasticity or clustering use the effective $F$ of Montiel Olea and Pflueger (2013). Weak-IV robust confidence sets: AR or conditional likelihood ratio (Moreira 2003). LIML/Fuller for approximate median unbiasedness
+
+~\\
+Many instruments (judges, examiners). 2SLS is unreliable. Use UJIVE or HFUL (Hausman et al. 2012). Standard errors need the many-instrument correction (Chao et al. 2012; Kolesár 2013). If identification is also weak, the JIVE $t$-test fails: use the jackknife AR test and pre-test for identification strength (Mikusheva and Sun 2022)
+
+~\\
+Always: show the first stage and the reduced form. When in doubt, AR
+\end{frame}
+
+
+
+\section{Part II: Heterogeneous Treatment Effects}
+\begin{frame}{Heterogeneous effects}
+Our discussion of IV has focused on models with constant causal effects; we next consider models with heterogeneous effects
+\begin{itemize}
+\item Understanding effect heterogeneity is important for assessing external validity: when does a causal effect have predictive value for other populations or time periods?
+\item Effect heterogeneity also gives econometric models economic content (e.g. self-selection and comparative advantage)
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Heterogeneous effects: setup}
+Begin with a binary treatment, binary instrument model:
+\begin{itemize}
+\item Outcome $Y_{i}$
+\item Treatment $T_{i}\in\{0,1\}$
+\item Instrument $Z_{i}\in\{0,1\}$
+\end{itemize}
+~\\
+Define potential outcomes $Y_{i}(t,z)$, now indexed against both $T_{i}$ and $Z_{i}$
+
+~\\
+Define potential treatment statuses, $T_{i}(1)$ and $T_{i}(0)$
+\begin{itemize}
+\item $T_{i}(z)$ describes how individual $i$ responds to the instrument
+\end{itemize}
+~\\
+Observe $Z_{i}$, $T_{i}=T_{i}(Z_{i})$, and $Y_{i}=Y_{i}(T_{i},Z_{i})$
+\end{frame}
+
+\begin{frame}{Assumption 1: independence}
+First assumption in the heterogeneous effects framework: independence
+
+~\\
+The instrument is assumed independent of potential outcomes and potential treatment statuses:
+\[
+(Y_{i}(1,1),Y_{i}(1,0),Y_{i}(0,1),Y_{i}(0,0),T_{i}(1),T_{i}(0))\bot Z_{i}
+\]
+\begin{itemize}
+\item This means the instrument is as good as randomly assigned
+\item Independence implies that regressions of $Y_{i}$ and $T_{i}$ on $Z_{i}$ identify causal effects of the instrument
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Assumption 2: exclusion}
+Second assumption: exclusion of the instrument,
+\[
+Y_{i}(t,1)=Y_{i}(t,0)\quad\forall(i,t)
+\]
+\begin{itemize}
+\item The instrument has no direct causal effect on the outcome: $Z_{i}$ can only shift $Y_{i}$ by shifting $T_{i}$
+\item Random assignment does not give you exclusion; you must specify the right causal channel
+\item Exclusion allows us to write potential outcomes as $Y_{i}(t)$. Models that begin with this have implicitly imposed exclusion
+\item Exclusion and independence are distinct, though they are often grouped together in the single restriction
+\end{itemize}
+\[
+(Y_{i}(1),Y_{i}(0),T_{i}(1),T_{i}(0))\bot Z_{i}
+\]
+\end{frame}
+
+\begin{frame}{Assumption 3: first stage}
+Third assumption: the existence of a first stage,
+\[
+Pr\left[T_{i}=1|Z_{i}=1\right]>Pr\left[T_{i}=1|Z_{i}=0\right]
+\]
+\begin{itemize}
+\item The probability of treatment with the instrument switched on must exceed this probability with the instrument switched off
+\item This assumption is testable
+\item The direction of the inequality is not important; the key is that the instrument shifts the probability of treatment
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Assumption 4: monotonicity}
+Fourth assumption: monotonicity,
+\[
+T_{i}(1)\geq T_{i}(0)\quad\forall i
+\]
+\begin{itemize}
+\item Monotonicity requires that the instrument only moves treatment status in one direction
+\item $Z_{i}$ either induces an individual to take the treatment, or does nothing
+\item Relative to constant effects IV, monotonicity is the novel assumption
+\end{itemize}
+\end{frame}
+\begin{frame}{A popular IV}
+\includegraphics[width=1\textwidth]{assets/6/vietnam.pdf}
+\end{frame}
+
+\begin{frame}{Subpopulations}
+Monotonicity implies that we can partition the population into three groups:
+\begin{enumerate}
+\item Never takers have $T_{i}(1)=T_{i}(0)=0$: they don't take the treatment irrespective of the instrument
+\item Always takers have $T_{i}(1)=T_{i}(0)=1$: they take the treatment even if assigned $Z_{i}=0$
+\item Compliers have $T_{i}(1)=1$ and $T_{i}(0)=0$ (equivalently, $T_{i}(1)>T_{i}(0)$): they take the treatment if assigned $Z_{i}=1$, but not if assigned $Z_{i}=0$
+\end{enumerate}
+~\\
+Monotonicity rules out the existence of defiers, individuals with $T_{i}(1)=0$ but $T_{i}(0)=1$
+
+~\\
+This terminology comes from randomized trials where $Z_{i}$ is assignment to treatment and $T_{i}$ is receipt of treatment
+\end{frame}
+
+\begin{frame}{The LATE framework}
+\begin{enumerate}
+\item Independence/exclusion: $(Y_{i}(1),Y_{i}(0),T_{i}(1),T_{i}(0))\bot Z_{i}$
+\item First stage: $Pr\left[T_{i}=1|Z_{i}=1\right]>Pr\left[T_{i}=1|Z_{i}=0\right]$
+\item Monotonicity: $T_{i}(1)\geq T_{i}(0)\ \forall i$
+\end{enumerate}
+~\\
+These three (really, four) assumptions constitute the Local Average Treatment Effect (LATE) framework (Imbens and Angrist 1994; Angrist, Imbens and Rubin 1996)
+\end{frame}
+
+\begin{frame}{The LATE theorem}
+In the LATE framework, IV estimates can be interpreted as average causal effects for compliers, known as Local Average Treatment Effects:
+\footnotesize
+\[
+\frac{E\left[Y_{i}|Z_{i}=1\right]-E\left[Y_{i}|Z_{i}=0\right]}{E\left[T_{i}|Z_{i}=1\right]-E\left[T_{i}|Z_{i}=0\right]}=E\left[Y_{i}(1)-Y_{i}(0)|T_{i}(1)>T_{i}(0)\right]\equiv LATE
+\]
+\normalsize
+\begin{itemize}
+\item The left-hand side is the IV (Wald) estimand
+\item The right-hand side is the average effect of treatment for compliers, individuals who respond to the instrument by changing treatment status
+\item This effect is ``local'' in the sense that it is specific to the instrument used: different instruments may yield different LATEs
+\end{itemize}
+\end{frame}
+
+\begin{frame}{The LATE theorem: proof}
+\scriptsize
+The numerator of the Wald estimand, the reduced form, is
+\begin{align*}
+E\left[Y_{i}|Z_{i}=1\right]-E\left[Y_{i}|Z_{i}=0\right] & =E\left[Y_{i}(T_{i}(1))|Z_{i}=1\right]-E\left[Y_{i}(T_{i}(0))|Z_{i}=0\right]\\
+ & =E\left[Y_{i}(T_{i}(1))-Y_{i}(T_{i}(0))\right]\\
+ & =E\left[Y_{i}(T_{i}(1))-Y_{i}(T_{i}(0))|T_{i}(1)\neq T_{i}(0)\right]Pr\left[T_{i}(1)\neq T_{i}(0)\right]\\
+ & =E\left[Y_{i}(1)-Y_{i}(0)|T_{i}(1)>T_{i}(0)\right]Pr\left[T_{i}(1)>T_{i}(0)\right]
+\end{align*}
+\end{frame}
+
+\begin{frame}{The LATE theorem: proof}
+\scriptsize
+The denominator of the Wald estimand, the first stage, is
+\begin{align*}
+E\left[T_{i}|Z_{i}=1\right]-E\left[T_{i}|Z_{i}=0\right] & =E\left[T_{i}(1)|Z_{i}=1\right]-E\left[T_{i}(0)|Z_{i}=0\right]\\
+ & =E\left[T_{i}(1)-T_{i}(0)\right]\\
+ & =Pr\left[T_{i}(1)>T_{i}(0)\right]
+\end{align*}
+\end{frame}
+
+\begin{frame}{The LATE theorem: proof}
+\footnotesize
+Then the Wald estimand is
+\begin{align*}
+\frac{E\left[Y_{i}|Z_{i}=1\right]-E\left[Y_{i}|Z_{i}=0\right]}{E\left[T_{i}|Z_{i}=1\right]-E\left[T_{i}|Z_{i}=0\right]} & =\frac{E\left[Y_{i}(1)-Y_{i}(0)|T_{i}(1)>T_{i}(0)\right]Pr\left[T_{i}(1)>T_{i}(0)\right]}{Pr\left[T_{i}(1)>T_{i}(0)\right]}\\
+ & =E\left[Y_{i}(1)-Y_{i}(0)|T_{i}(1)>T_{i}(0)\right]
+\end{align*}
+\end{frame}
+
+\begin{frame}{The LATE theorem: discussion}
+The LATE model is nonparametric: the LATE theorem applies whether $Y_{i}$ is binary, continuous, count, or any other distribution
+
+~\\
+The LATE theorem provides useful guidance for interpreting IV estimates and thinking about external validity
+
+~\\
+Who are the compliers for the AK quarter of birth instrument?
+\end{frame}
+\setbeamercolor{background canvas}{bg=} \includepdf{assets/6/qob_chart.pdf}
+\setbeamercolor{background canvas}{bg=} \includepdf{assets/6/angrist_krueger_1991_t3.pdf}
+
+\begin{frame}{QOB compliers}
+The QOB compliers are individuals who drop out as soon as possible, and are required to stay longer when their birthdays fall late in the year
+
+~\\
+Perhaps returns to schooling are higher for these individuals, e.g. because returns are higher at low levels of schooling. Can this explain $IV\geq OLS$?
+\end{frame}
+
+\begin{frame}{LATE and other treatment effects}
+We can now add LATE to our catalogue of treatment effects:
+\begin{itemize}
+\item Average treatment effect: $ATE=E\left[Y_{i}(1)-Y_{i}(0)\right]$
+\item Effect of treatment on the treated: $TOT=E\left[Y_{i}(1)-Y_{i}(0)|T_{i}=1\right]$
+\item Effect of treatment on the non-treated: $TNT=E\left[Y_{i}(1)-Y_{i}(0)|T_{i}=0\right]$
+\item Local average treatment effect: $LATE=E\left[Y_{i}(1)-Y_{i}(0)|T_{i}(1)>T_{i}(0)\right]$
+\end{itemize}
+~\\
+How is LATE related to these other, more general parameters?
+\end{frame}
+
+\begin{frame}{The Bloom scenario}
+The $T_{i}=1$ population includes
+\begin{itemize}
+\item Compliers with $Z_{i}=1$
+\item Always takers
+\end{itemize}
+~\\
+IV estimates do not capture effects for always takers, so in general $LATE\neq TOT$
+
+~\\
+Suppose there is one-sided non-compliance, so that $Z_{i}=0\implies T_{i}=0$
+\begin{itemize}
+\item Example: a medical trial where researchers can prevent the control group from accessing the treatment but cannot force the treatment group to take it
+\end{itemize}
+~\\
+In this case there are no always takers, so $LATE=TOT$. This is the ``Bloom scenario,'' after Bloom (1984)
+\end{frame}
+
+\begin{frame}{LATE example: MDVE}
+LATE is useful for thinking about randomized experiments where forcing compliance is either impossible or unethical
+\begin{itemize}
+\item Example: the Minneapolis Domestic Violence Experiment (MDVE), an effort to determine the best response to domestic violence calls
+\end{itemize}
+~\\
+Police responding to domestic violence calls can follow two main strategies:
+\begin{itemize}
+\item Arrest the offender (harsh)
+\item Warning/referral to counseling (``coddling'')
+\end{itemize}
+~\\
+Which of these two approaches leads to less domestic violence in the future?
+\end{frame}
+
+\begin{frame}{LATE example: MDVE}
+In the MDVE, police were given randomly ordered color-coded charge sheets, where colors indicated the suggested strategy (arrest or coddle)
+
+~\\
+Enforcing compliance was unethical: some offenders are extremely violent and may inflict injury if not immediately arrested
+\begin{itemize}
+\item Police were free to ignore suggestions if they deemed it necessary
+\end{itemize}
+~\\
+The original MDVE literature looked only at the reduced-form effect of assignment to arrest (``intent to treat,'' ITT), but this is a perfect IV scenario
+\begin{itemize}
+\item It's very plausible that suggested arrest would weakly increase the probability of arrest in all cases
+\end{itemize}
+\end{frame}
+
+\begin{frame}{LATE example: MDVE}
+The MDVE maps directly into the IV framework:
+\begin{itemize}
+\item Treatment $T_{i}$ is arrest
+\item Instrument $Z_{i}$ is assignment to arrest
+\item Outcome $Y_{i}$ is an indicator for future offense
+\end{itemize}
+~\\
+In practice the police arrested everyone assigned to arrest, and also arrested some offenders assigned to coddling
+
+~\\
+How should we interpret IV estimates from the MDVE?
+\end{frame}
+
+\begin{frame}{LATE example: MDVE}
+In the MDVE, $Z_{i}=1\implies T_{i}=1$
+\begin{itemize}
+\item There are no never takers, since everyone assigned to treatment is treated
+\item Everyone who is coddled is a complier
+\end{itemize}
+~\\
+This is the flip of the Bloom scenario: $LATE=TNT$
+\begin{itemize}
+\item The MDVE identifies the effect of arrest on the coddled
+\end{itemize}
+\end{frame}
+\subsection{Characterizing Compliers}
+\begin{frame}{Characterizing compliers}
+To interpret any IV estimate, it's useful to ask: who are the compliers? It turns out we can learn a lot about them
+
+~\\
+Consider the subpopulations captured in each combination of $T_{i}$ and $Z_{i}$:
+\begin{center}
+\small
+\begin{tabular}{|c|c|c|}
+\hline 
+ & $T_{i}=1$ & $T_{i}=0$\tabularnewline
+\hline 
+\hline 
+$Z_{i}=1$ & Compliers and always takers & Never takers\tabularnewline
+\hline 
+$Z_{i}=0$ & Always takers & Compliers and never takers\tabularnewline
+\hline 
+\end{tabular}
+\par\end{center}
+\end{frame}
+
+\begin{frame}{Characterizing compliers}
+\footnotesize
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline 
+ & $T_{i}=1$ & $T_{i}=0$\tabularnewline
+\hline 
+\hline 
+$Z_{i}=1$ & Compliers and always takers & Never takers\tabularnewline
+\hline 
+$Z_{i}=0$ & Always takers & Compliers and never takers\tabularnewline
+\hline 
+\end{tabular}
+\par\end{center}
+\begin{itemize}
+\item Always takers are directly observable in the $(Z_{i}=0,T_{i}=1)$ group
+\item Never takers are directly observable in the $(Z_{i}=1,T_{i}=0)$ group
+\item The groups with $T_{i}=Z_{i}$ are mixtures of ATs/compliers and NTs/compliers
+\end{itemize}
+But the mixing probabilities are identified, since
+\[
+\pi^{at}=Pr\left[T_{i}(1)=T_{i}(0)=1\right]=Pr\left[T_{i}=1|Z_{i}=0\right]
+\]
+\[
+\pi^{nt}=Pr\left[T_{i}(1)=T_{i}(0)=0\right]=Pr\left[T_{i}=0|Z_{i}=1\right]
+\]
+\[
+\pi^{c}=Pr\left[T_{i}(1)>T_{i}(0)\right]=Pr\left[T_{i}=1|Z_{i}=1\right]-Pr\left[T_{i}=1|Z_{i}=0\right]
+\]
+\end{frame}
+
+\begin{frame}{Characterizing compliers}
+\footnotesize
+For an observed covariate $X_{i}$ we have
+\begin{align*}
+E\left[X_{i}|T_{i}=Z_{i}=1\right]= & \left(\tfrac{\pi^{c}}{\pi^{c}+\pi^{at}}\right)E\left[X_{i}|T_{i}(1)>T_{i}(0)\right]\\
+ & +\left(\tfrac{\pi^{at}}{\pi^{c}+\pi^{at}}\right)E\left[X_{i}|T_{i}(1)=T_{i}(0)=1\right]
+\end{align*}
+\begin{itemize}
+\item The mean for the $T_{i}=Z_{i}=1$ group is a weighted average of complier and always taker means, with known weights
+\item The always taker mean is identified since $E\left[X_{i}|T_{i}(1)=T_{i}(0)=1\right]=E\left[X_{i}|T_{i}=1,Z_{i}=0\right]$
+\item Then the complier mean is also identified:
+\end{itemize}
+\begin{align*}
+E\left[X_{i}|T_{i}(1)>T_{i}(0)\right]= & \left(\tfrac{\pi^{c}+\pi^{at}}{\pi^{c}}\right)E\left[X_{i}|T_{i}=Z_{i}=1\right]\\
+ & -\left(\tfrac{\pi^{at}}{\pi^{c}}\right)E\left[X_{i}|T_{i}=1,Z_{i}=0\right]
+\end{align*}
+\end{frame}
+
+\begin{frame}{Characterizing compliers}
+\footnotesize
+\begin{align*}
+E\left[X_{i}|T_{i}(1)>T_{i}(0)\right]= & \left(\tfrac{\pi^{c}+\pi^{at}}{\pi^{c}}\right)E\left[X_{i}|T_{i}=Z_{i}=1\right]\\
+ & -\left(\tfrac{\pi^{at}}{\pi^{c}}\right)E\left[X_{i}|T_{i}=1,Z_{i}=0\right]
+\end{align*}
+\begin{itemize}
+\item The complier mean of $X_{i}$ can be recovered by removing the always taker mean from the complier/always taker mixture, adjusting appropriately for relative probabilities
+\item This means we can learn the observed characteristics of compliers as if they were observable in our data
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Complier mean potential outcomes}
+We could have substituted the outcome $Y_{i}$ in place of $X_{i}$ in this argument
+\begin{itemize}
+\item This implies that the marginal mean of $Y_{i}(1)$ for compliers, $E\left[Y_{i}(1)|T_{i}(1)>T_{i}(0)\right]$, is also identified
+\item Likewise, $E\left[Y_{i}(0)|T_{i}(1)>T_{i}(0)\right]$ can be obtained by removing the never taker mean outcome from the $Z_{i}=T_{i}=0$ mixture
+\end{itemize}
+~\\
+The levels of complier mean potential outcomes are therefore identified, not just the difference between them
+\end{frame}
+
+\begin{frame}{Computing complier characteristics}
+Abadie (2002) provides a convenient method for computing complier characteristics
+
+~\\
+For any measurable function $g(X_{i},Y_{i})$:
+\scriptsize
+\[
+\frac{E\left[g(X_{i},Y_{i})T_{i}|Z_{i}=1\right]-E\left[g(X_{i},Y_{i})T_{i}|Z_{i}=0\right]}{E\left[T_{i}|Z_{i}=1\right]-E\left[T_{i}|Z_{i}=0\right]}=E\left[g(X_{i},Y_{i}(1))|T_{i}(1)>T_{i}(0)\right]
+\]
+\[
+\frac{E\left[g(X_{i},Y_{i})(1-T_{i})|Z_{i}=1\right]-E\left[g(X_{i},Y_{i})(1-T_{i})|Z_{i}=0\right]}{E\left[1-T_{i}|Z_{i}=1\right]-E\left[1-T_{i}|Z_{i}=0\right]}=E\left[g(X_{i},Y_{i}(0))|T_{i}(1)>T_{i}(0)\right]
+\]
+\end{frame}
+
+\begin{frame}{Computing complier characteristics}
+Abadie's result shows that in the IV system
+\begin{align*}
+g(X_{i},Y_{i})T_{i} & =\alpha+\gamma T_{i}+u_{i}\\
+T_{i} & =\lambda+\pi Z_{i}+\eta_{i}
+\end{align*}
+the IV coefficient $\gamma$ recovers the treated complier mean of $g$:
+\[
+\gamma=E\left[g(X_{i},Y_{i}(1))|T_{i}(1)>T_{i}(0)\right]
+\]
+\begin{itemize}
+\item Substitute $(1-T_{i})$ for $T_{i}$ in both equations to obtain the untreated complier mean
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Computing complier characteristics}
+Useful special cases:
+\begin{itemize}
+\item $g(X_{i},Y_{i})=X_{i}$: complier mean of $X_{i}$
+\item $g(X_{i},Y_{i})=Y_{i}$: marginal complier means of $Y_{i}(1)$ and $Y_{i}(0)$
+\item $g(X_{i},Y_{i})=1\left\{ Y_{i}\leq y\right\} $: complier CDFs of $Y_{i}(1)$ and $Y_{i}(0)$ evaluated at $y$
+\end{itemize}
+~\\
+This last result shows that the full marginal distributions of $Y_{i}(1)$ and $Y_{i}(0)$ are identified for compliers
+\end{frame}
+ \setbeamercolor{background canvas}{bg=}\includepdf{assets/6/exp1.pdf}
+ \setbeamercolor{background canvas}{bg=}\includepdf{assets/6/exp2.pdf}
+  \setbeamercolor{background canvas}{bg=}\includepdf{assets/6/exp3.pdf}
+
+
+
+\begin{frame}{Testing exclusion}
+We can actually say something about exclusion even with only one instrument and no covariates
+
+~\\
+Suppose that the outcome, treatment, and instrument are all binary. We observe the treatment probabilities
+\begin{align*}
+Pr\left[T_{i}=1|Z_{i}=1\right] & =0.9\\
+Pr\left[T_{i}=1|Z_{i}=0\right] & =0.8
+\end{align*}
+and the outcome probabilities
+\begin{align*}
+Pr\left[Y_{i}=1|T_{i}=1,Z_{i}=1\right] & =0.2\\
+Pr\left[Y_{i}=1|T_{i}=1,Z_{i}=0\right] & =0.8\\
+Pr\left[Y_{i}=1|T_{i}=0,Z_{i}=1\right] & =0.35\\
+Pr\left[Y_{i}=1|T_{i}=0,Z_{i}=0\right] & =0.4
+\end{align*}
+Notice anything?
+\end{frame}
+
+\begin{frame}{Testing exclusion}
+Based on the mixture table:
+\begin{itemize}
+\item What is the share of always takers, $\pi_{at}$?
+\item What is the share of compliers, $\pi_{c}$?
+\item What is the share of never takers, $\pi_{nt}$?
+\end{itemize}
+\pause
+~\\
+\begin{itemize}
+\item Tell me how to identify $E[Y_{i}(1)\vert T_{i}(1)=1,T_{i}(0)=0]$
+\item Tell me what number you find for it
+\item Tell me what you think is going on
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Testing exclusion}
+The first stage is too small to rationalize the difference between the always taker mean outcome and the complier/always taker mix
+\begin{itemize}
+\item There are not enough compliers to generate a drop from 0.8 to 0.2, even if all compliers have $Y_{i}(1)=0$
+\end{itemize}
+~\\
+This implies that $T_{i}$ cannot be the only channel through which $Z_{i}$ affects $Y_{i}$
+\end{frame}
+
+\begin{frame}{Testing exclusion}
+\footnotesize
+More generally, let $p^{at}=\pi^{at}/(\pi^{c}+\pi^{at})$ be the fraction of compliers in the $T_{i}=Z_{i}=1$ mixture. Then
+\begin{align*}
+E\left[Y_{i}(1)|T_{i}(1)=T_{i}(0)=1\right] & \leq E\left[Y_{i}|Y_{i}\geq Q_{1-p^{at}}(Y_{i}|T_{i}=Z_{i}=1),T_{i}=Z_{i}=1\right]\\
+E\left[Y_{i}(1)|T_{i}(1)=T_{i}(0)=1\right] & \geq E\left[Y_{i}|Y_{i}\leq Q_{p^{at}}(Y_{i}|T_{i}=Z_{i}=1),T_{i}=Z_{i}=1\right]
+\end{align*}
+\begin{itemize}
+\item Under the most extreme possible assumptions, always takers compose either the upper $p^{at}$ portion or the lower $p^{at}$ portion of the mixture distribution
+\item This generates bounds on the always taker means that can be rationalized by the mixture
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Testing exclusion}
+\footnotesize
+\begin{align*}
+E\left[Y_{i}(1)|T_{i}(1)=T_{i}(0)=1\right] & \leq E\left[Y_{i}|Y_{i}\geq Q_{1-p^{at}}(Y_{i}|T_{i}=Z_{i}=1),T_{i}=Z_{i}=1\right]\\
+E\left[Y_{i}(1)|T_{i}(1)=T_{i}(0)=1\right] & \geq E\left[Y_{i}|Y_{i}\leq Q_{p^{at}}(Y_{i}|T_{i}=Z_{i}=1),T_{i}=Z_{i}=1\right]
+\end{align*}
+\begin{itemize}
+\item But the always taker mean is also point identified as $E\left[Y_{i}|T_{i}=1,Z_{i}=0\right]$
+\item If the observed always taker mean is outside the bounds implied by the mixture, the exclusion restriction must be violated
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Testing exclusion}
+A similar argument can be used to bound the never taker mean and compare the bounds to $E\left[Y_{i}|T_{i}=0,Z_{i}=1\right]$
+\begin{itemize}
+\item Huber and Mellace (2015) propose a formal test of the exclusion restriction based on this idea
+\item Kitagawa (2015) develops a related test that amounts to checking whether complier CDFs are non-decreasing
+\begin{itemize}
+\item This paper provides a ``sharp'' result: the IV assumptions provide no other testable implications
+\end{itemize}
+\item These tests are generalizations of the ``no first stage sample'' idea: there is a limit on how large the reduced form can be given the share of the population that complies
+\item Such tests may not be informative in practice, since the bounds will be wide unless the first stage is very small
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Continuous treatments}
+Classic treatment is from Angrist and Imbens (1995)
+\begin{itemize}
+\item Treatment is ordered for $j=0,1,\ldots,J$
+\item Potential outcomes $Y(j)$
+\item Very natural for some things like prices, transfer amounts
+\item Less natural for treatments like (no post-secondary, trade school, university)
+\end{itemize}
+~\\
+Single binary instrument $Z$:
+\begin{itemize}
+\item Monotonicity assumption: $Pr(D(1)\geq D(0))=1$ or $Pr(D(1)\leq D(0))=1$
+\item What does this mean?
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Continuous treatments}
+Main result: the Wald estimand is a weighted average of average causal responses $Y(j)-Y(j-1)$:
+\begin{align*}
+\frac{E[Y|Z{=}1]-E[Y|Z{=}0]}{E[D|Z{=}1]-E[D|Z{=}0]}=\sum_{j=1}^{J}\omega_{j}E[Y(j)-Y(j{-}1)\mid D(1)\geq j>D(0)]
+\end{align*}
+\begin{align*}
+\omega_{j}=\frac{P[D(1)\geq j>D(0)]}{\sum_{\ell=1}^{J}P[D(1)\geq\ell>D(0)]}
+\end{align*}
+Note that $\omega$ can be estimated!
+\begin{itemize}
+\item Good practice to estimate/report the ACR weights
+\item Estimating complier means is actually harder (see Garin et al. 2024)
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\begin{center}
+\includegraphics[scale=0.6]{assets/6/acr_wts.png}
+\par\end{center}  
+\end{frame}
+
+\begin{frame}{Continuous treatments and exclusion}
+Suppose that you have a continuous treatment like schooling $S$, and an instrument for it
+\begin{itemize}
+\item Assume that it satisfies the Angrist and Imbens (1995) conditions
+\end{itemize}
+~\\
+Define a new treatment, $T_i\equiv1[S\geq12]$
+\begin{itemize}
+\item Can you instrument for that? Why or why not?
+\end{itemize}
+\pause
+~\\
+Requires assuming extensive margin compliers only (EMCO) (Rose and Shem-Tov, 2024)
+\begin{itemize}
+\item Some testable implications
+\item Remember: exclusion is instrument and treatment specific
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Back to overid tests}
+Informed by our discussion of heterogeneous effects, let's return to overid tests
+
+~\\
+As discussed earlier, overid tests reject when different instruments yield different parameter estimates
+\begin{itemize}
+\item In a constant effects model, this implies that at least one must be invalid
+\item In a heterogeneous effect model, they may identify different LATEs
+\end{itemize}
+~\\
+Can we distinguish between invalid instruments and treatment effect heterogeneity?
+\end{frame}
+
+\begin{frame}{Back to overid tests}
+To fix ideas, return to a model with binary treatment $T_{i}$, binary instrument $Z_{i}$, and covariates $X_{i}$. Saturated 2SLS model:
+\begin{align*}
+Y_{i} & =X_{i}^{\prime}\alpha+\rho T_{i}+\varepsilon_{i}\\
+T_{i} & =X_{i}^{\prime}\lambda+Z_{i}\cdot X_{i}^{\prime}\pi+\eta_{i}
+\end{align*}
+The overid test for this model checks whether Wald estimates are the same for each value of $X_{i}$
+
+~\\
+Covariate-specific reduced forms and first stages:
+\begin{align*}
+\delta(x) & =E\left[Y_{i}|Z_{i}=1,X_{i}=x\right]-E\left[Y_{i}|Z_{i}=0,X_{i}=x\right]\\
+\pi(x) & =E\left[T_{i}|Z_{i}=1,X_{i}=x\right]-E\left[T_{i}|Z_{i}=0,X_{i}=x\right]
+\end{align*}
+~\\
+Suppose the overid test rejects, and consider two possible plots of $\hat{\delta}(x)$ against $\hat{\pi}(x)$
+\end{frame}
+\setbeamercolor{background canvas}{bg=} \includepdf{assets/6/overid_combined.pdf}
+
+\begin{frame}{IV makes its way in clinical trials}
+Research question: do pre-cancer screenings improve health?
+
+~\\
+Doctors and patients can't be forced to test, so researchers have tried to answer this by randomizing the opportunity to screen
+\begin{itemize}
+\item Studies in this area thus report intention-to-treat (or intention-to-screen) effects: $\E[Y_{i}\vert Z_{i}=1]-\E[Y_{i}\vert Z_{i}=0]$
+\item There seems to be a lot of heterogeneity in the ITTs estimated across a whole variety of studies
+\end{itemize}
+~\\
+Angrist and Hull (2023) ask whether these intention-to-treat observations are applicable to other clinical environments
+\end{frame}
+\begin{frame}[plain]
+
+\begin{center}
+\includegraphics[scale=0.4]{assets/6/angrist_hull_IV_1}
+\par\end{center}
+
+
+\end{frame}
+\begin{frame}[plain]
+
+\begin{center}
+\includegraphics[scale=0.4]{assets/6/angrist_hull_IV_0}
+\par\end{center}
+
+
+\end{frame}
+\begin{frame}[plain]
+
+\begin{center}
+\includegraphics[scale=0.3]{assets/6/angrist_hull_IV_2}
+\par\end{center}
+
+
+\end{frame}
+
+\begin{frame}{Final thoughts}
+IV is a powerful tool to deal with omitted variable bias
+\begin{itemize}
+\item Robust to heterogeneous effects
+\end{itemize}
+~\\
+Often overlooked parts of thinking about an instrument:
+\begin{itemize}
+\item Who does my instrument affect (compliers / relationship to ITT/TOT/TNT/ATE)
+\item What does my instrument do (ACR weights / exclusion / future mechanisms)
+\end{itemize}
+\end{frame}
+
+\appendix
+\begin{frame}
+\centering
+{\LARGE APPENDIX}\\[1em]
+{\small Original many/weak slides, kept for comparison with the rewritten section. Also contains the trace derivation of the Bekker approximation.}
+\end{frame}
+
+\begin{frame}{IV in Finite Samples}
+
+\begin{itemize}
+\item {\small{}OLS is an unbiased
+estimator of population projection coefficients in finite samples
+(with a linear CEF or nonstochastic regressors)\medskip{}
+}{\small\par}
+\item {\small{}IV estimators do not have this property\medskip{}
+}{\small\par}
+\item {\small{}IV is a ratio of reduced form and first stage coefficients:}{\small\par}
+\end{itemize}
+\begin{center}
+{\small{}$E\left[\hat{\rho}_{IV}\right]=E\left[\dfrac{\hat{\delta}}{\hat{\pi}}\right]$}{\small\par}
+\par\end{center}
+
+\begin{center}
+{\small{}$\neq\dfrac{E\left[\hat{\delta}\right]}{E\left[\hat{\pi}\right]}$}{\small\par}
+\par\end{center}
+
+\begin{center}
+{\small{}$=\rho$}{\small\par}
+\par\end{center}
+
+\end{frame}
+
+\begin{frame}{IV in Finite Samples: Example}
+
+\begin{itemize}
+\item {\footnotesize{}Consider the following reduced form and first stage:}{\footnotesize\par}
+\end{itemize}
+\begin{center}
+{\footnotesize{}$Y_{i}=\lambda+\delta Z_{i}+u_{i}$}{\footnotesize\par}
+\par\end{center}
+
+\begin{center}
+{\footnotesize{}$S_{i}=\kappa+\pi Z_{i}+\eta_{i}$}{\footnotesize\par}
+\par\end{center}
+\begin{itemize}
+\item {\footnotesize{}Suppose the instruments are non-stochastic, and }{\footnotesize\par}
+\end{itemize}
+\begin{center}
+{\footnotesize{}$(u_{i},\eta_{i})\sim N\left(0,\left[\begin{array}{cc}
+\sigma_{u}^{2} & \tau\sigma_{u}\sigma_{\eta}\\
+\tau\sigma_{u}\sigma_{\eta} & \sigma_{\eta}^{2}
+\end{array}\right]\right)$}{\footnotesize\par}
+\par\end{center}
+\begin{itemize}
+\item {\footnotesize{}Then the finite-sample distribution of the reduced
+form and first stage coefficients is}{\footnotesize\par}
+\end{itemize}
+\begin{center}
+{\footnotesize{}$\left(\hat{\delta},\hat{\pi}\right)\sim N\left((\delta,\pi),\left[\begin{array}{cc}
+\sigma_{u}^{2}\left[\sum_{i}(Z_{i}-\bar{Z})^{2}\right]^{-1} & \tau\sigma_{u}\sigma_{\eta}\left[\sum_{i}(Z_{i}-\bar{Z})^{2}\right]^{-1}\\
+\tau\sigma_{u}\sigma_{\eta}\left[\sum_{i}(Z_{i}-\bar{Z})^{2}\right]^{-1} & \sigma_{\eta}^{2}\left[\sum_{i}(Z_{i}-\bar{Z})^{2}\right]^{-1}
+\end{array}\right]\right)$}{\footnotesize\par}
+\par\end{center}
+
+\end{frame}
+
+\begin{frame}{IV in Finite Samples: Example}
+
+\begin{itemize}
+\item The IV coefficient, $\hat{\rho}=\hat{\delta}/\hat{\pi}$, is a ratio
+of two jointly normal random variables{\small{}\medskip{}
+}{\small\par}
+\item $\hat{\rho}$ therefore follows a normal ratio distribution {\small{}\medskip{}
+}{\small\par}
+\item Normal ratio distributions do not have moments, so $E\left[\hat{\rho}\right]$,
+$Var\left(\hat{\rho}\right)$, and all higher moments do not exist.
+In this sense $\hat{\rho}$ is biased{\small{}\medskip{}
+}{\small\par}
+\item If $\tau=0$ and $\pi\rightarrow0$, $\hat{\rho}$ becomes the ratio
+of two independent mean zero normals, which follows a Cauchy distribution
+(see Nelson and Starz 1990 for more)
+\end{itemize}
+\end{frame}
+
+\begin{frame}{IV in Finite Samples: Many/Weak Problems}
+
+\begin{itemize}
+\item {\footnotesize{}In general, just-identified IV estimators have no
+moments and fat tails\medskip{}
+}{\footnotesize\par}
+\item {\footnotesize{}However, just-id estimators are approximately centered
+in the right place in the sense that $Q_{0.5}(\hat{\rho}_{IV})\approx\rho$
+(more details later)\medskip{}
+}{\footnotesize\par}
+\item {\footnotesize{}It turns out that overidentified IV estimators are
+not centered at the right place: they are biased towards OLS\medskip{}
+}{\footnotesize\par}
+\item {\footnotesize{}The severity of finite-sample bias increases with
+the degree of overfitting AND as the first-stage relationship
+between instruments and endogenous regressors gets weaker\medskip{}
+}{\footnotesize\par}
+\item {\footnotesize{}IV bias is therefore worse when the instruments are
+``many/weak''\medskip{}
+}{\footnotesize\par}
+\item {\footnotesize{}Bound, Jaeger and Baker (1995) showed that this problem
+can be important in practice, spawning a large literature on dealing
+with many/weak instruments}{\footnotesize\par}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Bound, Jaeger and Baker (1995)}
+
+\begin{itemize}
+\item {\footnotesize{}Bound, Jaeger and Baker (1995) revisit the Angrist/Krueger
+QOB instrument\medskip{}
+}{\footnotesize\par}
+\item {\footnotesize{}The Wald estimates we studied are just-identified,
+so the many/weak critique does not apply (a common misconception)
+\medskip{}
+}{\footnotesize\par}
+\item {\footnotesize{}However, AK also estimate overidentified 2SLS models
+of the form}{\footnotesize\par}
+\end{itemize}
+\begin{center}
+{\footnotesize{}$Y_{i}=\rho S_{i}+\sum_{b=1}^{50}\theta_{b}B_{ib}+\sum_{t=1}^{30}\psi_{t}T_{it}+\varepsilon_{i}$}{\footnotesize\par}
+\par\end{center}
+
+\begin{center}
+{\footnotesize{}$S_{i}=\sum_{q=1}^{3}\left[\sum_{b=1}^{50}\pi_{qb}B_{ib}Q_{iq}+\sum_{t=1}^{30}\tau_{qt}T_{it}Q_{iq}\right]$}{\footnotesize\par}
+\par\end{center}
+
+\begin{center}
+{\footnotesize{}$+\sum_{b=1}^{50}\kappa_{b}B_{ib}+\sum_{t=1}^{30}\phi_{t}T_{it}+\eta_{i}$}{\footnotesize\par}
+\par\end{center}
+\begin{itemize}
+\item {\footnotesize{}Here $B_{ib}$ is a dummy for birth in state $b$,
+$T_{it}$ is a dummy for birth in year $t$, and $Q_{iq}$ is a dummy
+for birth in quarter $q$}{\footnotesize\par}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Bound, Jaeger and Baker (1995)}
+
+\begin{itemize}
+\item {\footnotesize{}The AK model uses 30 quarter/year and 150 quarter/state
+interactions as instruments, so is overidentified by 179\medskip{}
+}{\footnotesize\par}
+\item {\footnotesize{}The interactions are meant to capture differences
+in the effects of compulsory schooling laws across states and over
+time\medskip{}
+}{\footnotesize\par}
+\item {\footnotesize{}From the point of view of 2SLS asymptotics, adding
+the interactions can only be a plus: more instruments improve the
+first stage fit and drive down standard errors\medskip{}
+}{\footnotesize\par}
+\item {\footnotesize{}But the QOB first stage is small and many of the interactions
+are likely to be irrelevant, so this is a severe many/weak scenario\medskip{}
+}{\footnotesize\par}
+\item {\footnotesize{}Bound, Jaeger and Baker replace the QOB dummies with
+randomly-generated fake QOB variables that have no first stage by
+design}{\footnotesize\par}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Bound, Jaeger and Baker (1995)}
+
+\begin{center}
+{\footnotesize{}}%
+\begin{tabular}{|c|c|c|c|}
+\hline 
+ & {\footnotesize{}2SLS (real QOB)} & {\footnotesize{}2SLS (fake QOB)} & {\footnotesize{}OLS}\tabularnewline
+\hline 
+\hline 
+{\footnotesize{}30 QOB{*}year} & {\footnotesize{}0.081} & {\footnotesize{}0.062} & {\footnotesize{}0.063}\tabularnewline
+\hline 
+{\footnotesize{}interactions} & {\footnotesize{}(0.016)} & {\footnotesize{}(0.037)} & {\footnotesize{}(0.000)}\tabularnewline
+\hline 
+ &  &  & \tabularnewline
+\hline 
+{\footnotesize{}180 QOB{*}year and state} & {\footnotesize{}0.083} & {\footnotesize{}0.060} & {\footnotesize{}0.063}\tabularnewline
+\hline 
+{\footnotesize{}interactions} & {\footnotesize{}(0.009)} & {\footnotesize{}(0.015)} & {\footnotesize{}(0.000)}\tabularnewline
+\hline 
+\end{tabular}{\footnotesize\par}
+\par\end{center}
+
+\end{frame}
+
+\begin{frame}{Bound, Jaeger and Baker (1995)}
+
+\begin{itemize}
+\item {\small{}The Bound, Jaeger and Baker results show that the AK 2SLS
+specification essentially reproduces OLS even if the instruments are
+junk unrelated to schooling\medskip{}
+}{\small\par}
+\item {\small{}Disturbingly, conventional IV standard errors give no indication
+of the extent of the problem\medskip{}
+}{\small\par}
+\item {\small{}The fake QOB 180-instrument model generates an estimate that
+looks precise despite the lack of a first stage\medskip{}
+}{\small\par}
+\item {\small{}How can we diagnose many/weak problems, and correct them
+if they are present?}{\small\par}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Many/Weak Bias}
+
+\begin{itemize}
+\item {\small{}Consider a model with a single endogenous regressor and $Q$
+instruments, written in matrix form:}{\small\par}
+\end{itemize}
+\begin{center}
+$Y=\rho S+\varepsilon$
+\par\end{center}
+
+\begin{center}
+$S=Z\pi+\eta$
+\par\end{center}
+\begin{itemize}
+\item Remember that we can write $\hat{S}=P_{Z}S$
+\item We can thus re-write the 2SLS estimator of $\rho$ (regression of $Y$ on $\hat{S}$) as 
+\end{itemize}
+\begin{center}
+$\hat{\rho}_{2SLS}=\rho+(S^{\prime}P_{Z}S)^{-1}S^{\prime}P_{Z}\varepsilon$
+\par\end{center}
+
+\begin{center}
+$=\rho+\left(S^{\prime}P_{Z}S\right)^{-1}(\pi^{\prime}Z^{\prime}+\eta^{\prime})P_{Z}\varepsilon$
+\par\end{center}
+
+\begin{center}
+$=\rho+(S^{\prime}P_{Z}S)^{-1}\pi^{\prime}Z^{\prime}\varepsilon+\left(S^{\prime}P_{Z}S\right)^{-1}\eta^{\prime}P_{Z}\varepsilon$
+\par\end{center}
+
+\end{frame}
+
+\begin{frame}{Many/Weak Bias}
+
+\begin{center}
+{\small{}$E\left[\hat{\rho}_{2SLS}-\rho\right]=E\left[(S^{\prime}P_{Z}S)^{-1}\pi^{\prime}Z^{\prime}\varepsilon\right]+E\left[\left(S^{\prime}P_{Z}S\right)^{-1}\eta^{\prime}P_{Z}\varepsilon\right]$}{\small\par}
+\par\end{center}
+\begin{itemize}
+\item {\small{}It's difficult to make further progress since we cannot pass
+expectations inside the inverse\medskip{}
+}{\small\par}
+\item {\small{}Bekker (1994): passing the expectations through provides
+an accurate approximation under group asymptotics that allow $Q$
+to grow with $N$\medskip{}
+}{\small\par}
+\item {\small{}Then the finite-sample bias of 2SLS can be approximated}{\small\par}
+\end{itemize}
+\begin{center}
+{\small{}$E\left[\hat{\rho}_{2SLS}-\rho\right]\approx(E\left[S^{\prime}P_{Z}S\right])^{-1}\pi^{\prime}E\left[Z^{\prime}\varepsilon\right]+\left(E\left[S^{\prime}P_{Z}S\right]\right)^{-1}E\left[\eta^{\prime}P_{Z}\varepsilon\right]$}{\small\par}
+\par\end{center}
+
+\end{frame}
+
+\begin{frame}{Many/Weak Bias}
+
+\begin{center}
+{\small{}$E\left[\hat{\rho}_{2SLS}-\rho\right]\approx(E\left[S^{\prime}P_{Z}S\right])^{-1}\pi^{\prime}E\left[Z^{\prime}\varepsilon\right]+\left(E\left[S^{\prime}P_{Z}S\right]\right)^{-1}E\left[\eta^{\prime}P_{Z}\varepsilon\right]$}{\small\par}
+\par\end{center}
+\begin{itemize}
+\item {\small{}The first term is zero (why)?\medskip{}
+}{\small\par}
+\item {\small{}The finite-sample bias of 2SLS comes from the fact that the
+numerator of the second term is not zero:\medskip{}
+}{\small\par}
+\end{itemize}
+\begin{center}
+$E\left[\eta^{\prime}P_{Z}\varepsilon\right]\neq0$
+\par\end{center}
+\begin{itemize}
+\item What is the intuition for this?
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{Many/Weak Bias}
+
+\begin{itemize}
+\item {\footnotesize{}To make further progress, let's use some matrix tricks}
+
+\begin{itemize}
+\item {\footnotesize{}A scalar equals its trace}{\footnotesize\par}
+\item {\footnotesize{}Trace is invariant to cyclic permutations}{\footnotesize\par}
+\item {\footnotesize{}Trace is a linear operator that passes through expectations}{\footnotesize\par}
+\end{itemize}
+\end{itemize}
+\begin{center}
+{\footnotesize{}$E\left[\eta^{\prime}P_{Z}\varepsilon|Z\right]=E\left[tr\left(\eta^{\prime}P_{Z}\varepsilon\right)|Z\right]$}{\footnotesize\par}
+\par\end{center}
+
+\begin{center}
+{\footnotesize{}$=E\left[tr\left(P_{Z}\varepsilon\eta^{\prime}\right)|Z\right]$}{\footnotesize\par}
+\par\end{center}
+
+\begin{center}
+{\footnotesize{}$=tr\left(P_{Z}E\left[\varepsilon\eta^{\prime}|Z\right]\right)$}{\footnotesize\par}
+\par\end{center}
+
+\begin{center}
+{\footnotesize{}$=\sigma_{\eta\varepsilon}tr\left(Z(Z^{\prime}Z)^{-1}Z^{\prime}\right)$}{\footnotesize\par}
+\par\end{center}
+
+\begin{center}
+{\footnotesize{}$=\sigma_{\eta\varepsilon}tr\left((Z^{\prime}Z)^{-1}Z^{\prime}Z\right)$}{\footnotesize\par}
+\par\end{center}
+
+\begin{center}
+{\footnotesize{}$=\sigma_{\eta\varepsilon}Q$}{\footnotesize\par}
+\par\end{center}
+
+\end{frame}
+
+\begin{frame}{Many/Weak Bias}
+
+\begin{itemize}
+\item {\footnotesize{}The denominator of the bias is}{\footnotesize\par}
+\end{itemize}
+\begin{center}
+{\footnotesize{}$E\left[S^{\prime}P_{Z}S\right]=E\left[(\pi^{\prime}Z^{\prime}+\eta^{\prime})P_{Z}(Z\pi+\eta)\right]$}{\footnotesize\par}
+\par\end{center}
+
+\begin{center}
+{\footnotesize{}$=E\left[\pi^{\prime}Z^{\prime}Z\pi\right]+E\left[\eta^{\prime}P_{Z}\eta\right]$}{\footnotesize\par}
+\par\end{center}
+\begin{itemize}
+\item {\footnotesize{}Applying the same trace tricks to the second term
+shows that $E\left[\eta^{\prime}P_{Z}\eta\right]=\sigma_{\eta}^{2}Q$}{\small{}\medskip{}
+}{\small\par}
+\item {\footnotesize{}Then}{\footnotesize\par}
+\end{itemize}
+\begin{center}
+{\footnotesize{}$E\left[\hat{\rho}_{2SLS}-\rho\right]\approx\dfrac{\sigma_{\eta\varepsilon}Q}{E\left[\pi^{\prime}Z^{\prime}Z\pi\right]+\sigma_{\eta}^{2}Q}$}{\footnotesize\par}
+\par\end{center}
+
+\begin{center}
+{\footnotesize{}$=\dfrac{\sigma_{\eta\varepsilon}}{\sigma_{\eta^{2}}}\cdot\dfrac{1}{1+E\left[\pi^{\prime}Z^{\prime}Z\pi\right]/(\sigma_{\eta}^{2}Q)}$}{\footnotesize\par}
+\par\end{center}
+
+\end{frame}
+
+\begin{frame}{Many/Weak Bias}
+
+\begin{center}
+{\small{}$E\left[\hat{\rho}_{2SLS}-\rho\right]\approx\dfrac{\sigma_{\eta\varepsilon}}{\sigma_{\eta^{2}}}\cdot\dfrac{1}{1+E\left[\pi^{\prime}Z^{\prime}Z\pi\right]/(\sigma_{\eta}^{2}Q)}$}{\small\par}
+\par\end{center}
+\begin{itemize}
+\item {\small{}Notice that $E\left[\pi^{\prime}Z^{\prime}Z\pi\right]$ is
+the explained sum of squares from the regression of $S$ on $Z$,
+while $\sigma_{\eta}^{2}$ is the residual sum of squares divided
+by $N$\medskip{}
+}{\small\par}
+\item {\small{}Then }{\small\par}
+\end{itemize}
+\begin{center}
+{\small{}$E\left[\hat{\rho}_{2SLS}-\rho\right]\approx\dfrac{\sigma_{\eta\varepsilon}}{\sigma_{\eta^{2}}}\cdot\dfrac{1}{1+F}$}{\small\par}
+\par\end{center}
+\begin{itemize}
+\item {\small{}Here $F$ is the first stage (population) $F$-statistic for the joint
+significance of all the instruments}{\small\par}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Many/Weak Bias}
+
+\begin{center}
+{\small{}$E\left[\hat{\rho}_{2SLS}-\rho\right]=\dfrac{\sigma_{\eta\varepsilon}}{\sigma_{\eta^{2}}}\cdot\dfrac{1}{1+F}$}{\small\par}
+\par\end{center}
+\begin{itemize}
+\item {\small{}Note also that when $F$ goes to zero, the 2SLS bias becomes
+$\sigma_{\eta\varepsilon}/\sigma_{\eta}^{2}$\medskip{}
+}{\small\par}
+\item {\small{}With a zero first stage, $S=\eta$ so $\sigma_{\eta\varepsilon}/\sigma_{\eta}^{2}=Cov(S_{i},\varepsilon_{i})/Var(S_{i})$,
+the bias of OLS\medskip{}
+}{\small\par}
+\item {\small{}As the first stage shrinks to zero, all of the variance in
+the fitted values comes from the endogenous part of $\hat{S}$, and
+the bias of 2SLS equals the bias of OLS}{\small\par}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Many/Weak In Practice}
+
+\begin{itemize}
+\item {\small{}In practice it is a good idea to look at the first stage
+$F$-statistic \medskip{}
+}{\small\par}
+\item {\small{}In models with exogenous controls this should be the }\emph{\small{}partial
+$F$ }{\small{}on the excluded instruments\medskip{}
+}{\small\par}
+\item {\small{}Stock and Staiger (1997) suggest that many weak typically
+becomes a problem when $F<10$, though this is not a theorem\medskip{}
+}{\small\par}
+\item {\small{}Standard errors based on Bekker (1994) asymptotics are more
+accurate in many/weak scenarios (see also Hansen et al. 2008)}{\small\par}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Many/Weak In Practice}
+
+\begin{itemize}
+\item {\footnotesize{}The Limited Information Maximum Likelihood (LIML)
+estimator coincides with 2SLS for just-id models and is approximately
+median unbiased for overidentified models \medskip{}
+}{\footnotesize\par}
+\item {\footnotesize{}A comparison of LIML and 2SLS can help determine whether
+many/weak is a problem (though conventional LIML standard errors are
+too small) \medskip{}
+}{\footnotesize\par}
+\item {\footnotesize{}LIML has some unattractive features, however: it has
+fat tails (no moments), and is inconsistent with heteroskedasticity\medskip{}
+}{\footnotesize\par}
+\item {\footnotesize{}There are other estimators (e.g. Fuller) that correct
+some of the deficiencies of LIML; see Stock and Yogo (2005)\medskip{}
+}{\footnotesize\par}
+\item {\footnotesize{}The Anderson-Rubin (AR) test provides a method for
+testing hypotheses about $\rho$ that is robust to weak instruments,
+though it has low power when the instruments are weak}{\footnotesize\par}
+\end{itemize}
+\end{frame}
+%%
+\begin{frame}{The Judges Design}
+
+\begin{itemize}
+\item {\footnotesize{}But when it sensible to talk about a research design with ``many" instruments?
+$\rightarrow$ a research design that uses differences
+in the harshness/leniency of judges or other examiners is a research design that often has to deal with many/weak potential problems\medskip{}
+}{\footnotesize\par}
+\item {\footnotesize{}Examples: Kling (2006) on criminal sentencing, Doyle
+(2007) on foster care, Maestas et al. (2013) on disability insurance,
+Dobbie (2015) on bankruptcy \medskip{}
+}{\footnotesize\par}
+\item {\footnotesize{}If judges are randomly assigned, the identity of the
+judge is a plausible instrument (there are many fixed effects for judges!)\medskip{}
+}{\footnotesize\par}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{The Judges Design}
+
+\begin{itemize}
+\item {\small{}Common approach to the judges design: Define}{\small\par}
+\end{itemize}
+\begin{center}
+{\small{}$T_{i}^{*}=\dfrac{1}{n_{j(i)}-1}{\displaystyle \sum_{k\neq i}1\left\{ j(k)=j(i)\right\} T_{k}}$}{\small\par}
+\par\end{center}
+\begin{itemize}
+\item {\small{}$T_{i}^{*}$ is the mean treatment rate (e.g. incarceration
+rate) for the judge assigned to $i$, $j(i)$, for all cases not involving
+$i$\medskip{}
+}{\small\par}
+\item {\small{}$T_{i}^{*}$ is then used as an instrument for $i$'s actual
+treatment $T_{i}$}{\small\par}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{The Judges Design: JIVE}
+
+\begin{itemize}
+\item {\small{}Note that $T_{i}^{*}$ is the fitted value from a first stage
+regression of removal on all the judge dummies, leaving out $i$\medskip{}
+}{\small\par}
+\item {\small{}The instruments are implicitly a full set of judge dummies,
+which may lead to many/weak problems\medskip{}
+}{\small\par}
+\item {\small{}Using a leave-out mean changes the estimator from 2SLS to
+jackknife IV (JIVE), which is one solution to the many/weak problem
+but not necessarily the optimal one\medskip{}
+}{\small\par}
+\item {\small{}Conventional standard errors for JIVE are also incorrect
+in many/weak scenarios.}{\small\par}
+\medskip
+\item {\small{}Despite this, many papers use judges design given its implicit attractiveness plus the possibility to summarize nicely heterogenous treatment effects (see the marginal treatment effects literature pioneered by Heckman and Vytacil, 1999,2005).  }{\small\par}
+\end{itemize}
+\end{frame}
+
+\end{document}
