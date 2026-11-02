@@ -100,14 +100,14 @@ The [reading list](https://docs.google.com/document/d/1uiA55ukPEdkpN5MZnPv1U9w6Y
 | 10 | Oct 19 | Mon | Selection on Observables | Raffa | CIA, matching estimator, propensity score theorem | |
 | 11 | Oct 21 | Wed | Selection on Observables | Raffa | Reweighting, Oaxaca decomposition | **PS2 due**  |
 | 12 | Oct 26 | Mon | Selection on Observables | Raffa | Selection of controls, Lasso; Dale and Krueger (2002) | |
-| 13 | Oct 28 | Wed | Instrumental Variables | Sam | Basic review; IV/Wald, 2SLS, overid, IV mistakes | |
-| 14 | Nov 2 | Mon | Instrumental Variables | Sam | LATE theorem, Abadie's compliers | |
-| 15 | Nov 4 | Wed | Instrumental Variables | Sam | Overid with heterogeneous effects; testing exclusion | |
+| 13 | Oct 28 | Wed | Regression Discontinuity | Raffa | Identification; sharp / fuzzy RD; estimation; inference | |
+| 14 | Nov 2 | Mon | Instrumental Variables | Sam | Basic review; IV/Wald, 2SLS, overid, IV mistakes | Sam takes over |
+| 15 | Nov 4 | Wed | Instrumental Variables | Sam | LATE theorem, Abadie's compliers | |
 | — | Nov 9 | Mon | **NO CLASS** — Fall break | | | |
 | — | Nov 11 | Wed | **NO CLASS** — Fall break | | | |
-| 16 | Nov 16 | Mon | Instrumental Variables | Sam | Heckit / control function / discrete choice | **PS3 due** |
-| 17 | Nov 18 | Wed | Instrumental Variables | Sam | Heckit / control function / discrete choice + Lee bounds | |
-| 18 | Nov 23 | Mon | Regression Discontinuity | Raffa | Identification; sharp / fuzzy RD; estimation; inference | |
+| 16 | Nov 16 | Mon | Instrumental Variables | Sam | Overid with heterogeneous effects; testing exclusion | **PS3 due** |
+| 17 | Nov 18 | Wed | Instrumental Variables | Sam | Heckit / control function / discrete choice | |
+| 18 | Nov 23 | Mon | Instrumental Variables | Sam | Heckit / control function / discrete choice + Lee bounds | |
 | 19 | Nov 25 | Wed | Panel Data | Raffa | Panel Data |  |
 | 20 | Nov 30 | Mon | Panel Data | Raffa | Panel Data | |
 | 21 | Dec 2 | Wed | Difference-in-Differences | Raffa | 2×2 diff-in-diff; parallel trends assumption | |
