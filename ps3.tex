@@ -18,76 +18,33 @@
 \par\end{center}
 
 \begin{center}
-Due on November 18th by 12.30pm. Send solution to econ628vse@gmail.com  \\
+Due on November 23rd by 12.30pm. Send solution to econ628vse@gmail.com  \\
 Answers must be typed. You can work in teams under the constraint: Max(Team Size)=2 \\
 
 \par\end{center}
 \begin{enumerate}
-\item (\textbf{Control Function}) 
-Suppose you are interested in the nonlinear triangular system:
-\begin{eqnarray*}
-Y_{i} & = & \beta_{0}+\beta_{1}X_{i}+\beta_{2}X_{i}^{2}+\varepsilon_{i}\\
-X_{i} & = & \gamma_{0}+\gamma_{1}Z_{i}+v_{i}\\
- &  & \left(\varepsilon_{i},v_{i}\right)\overset{iid}{\sim}N\left(0,\begin{array}{cc}
-\sigma_{\varepsilon}^{2} & \sigma_{\varepsilon v}\\
-\sigma_{\varepsilon v} & \sigma_{v}^{2}
-\end{array}\right)
-\end{eqnarray*}
-The parameters of interest are $\beta=\left[\beta_{0},\beta_{1},\beta_{2}\right]$.
-One method of estimating these parameters is via 2SLS using $Z_{i}$
-and $Z_{i}^{2}$ as instruments for $X_{i}$ and $X_{i}^{2}$. A second
-approach uses the observation that, given the structure of the above
-model, we can write
-\[
-E\left[Y_{i}|X_{i},X_{i}^{2},v_{i}\right]=\beta_{0}+\beta_{1}X_{i}+\beta_{2}X_{i}^{2}+\rho\frac{\sigma_{\varepsilon}}{\sigma_{v}}v_{i}
-\]
-where $\rho\equiv\frac{\sigma_{\varepsilon v}}{\sigma_{\varepsilon}\sigma_{v}}$.
-The two step control function estimator constructs the error $\widehat{v}_{i}$
-as a first stage residual from the regression of $X_{i}$ on $Z_{i}$
-and then regresses $Y_{i}$ on $X_{i},X_{i}^{2}$, and the first stage
-residual $\widehat{v}_{i}$ to get estimates of $\beta$ and $\rho\frac{\sigma_{\varepsilon}}{\sigma_{v}}$.
+\item (\textbf{Overid tests of instrumental validity}) 
 
-a) Write the moment conditions defining the 2SLS estimator.
+Use the dataset \texttt{overid.csv} to answer the following questions. 
 
-b) Write the moment conditions defining the Control Function estimator
-(Hint: there are six of them).
+\begin{enumerate}
+    \item Estimate and report the effect of \texttt{d} on \texttt{y}, controlling for \texttt{x}. Report the OLS estimate, as well as each of the 2SLS estimates using \texttt{z1} and \texttt{z2} as instruments. Run the 2SLS regressions by hand, and report the variance of the predicted treatments.
 
-c) Does one estimator rely on stronger conditions than the other?
+    \item Report the standard errors from the by-hand 2SLS regression. Redo them using the correct second-stage variance, and explain why they differ.
 
-d) Which estimator do you think would work better when the instrument
-$Z$ is not very strong?
+    \item Estimate the two-instrument 2SLS. Report the estimated effect of \texttt{d}. Show that two-instrument 2SLS is a weighted average of the single-instrument estimates (hint: start with the definition of the 2SLS coefficient using the predicted first stage as an instrument, and plug in. You can assume the instruments are uncorrelated to ease the derivation) What are these weights, and what is the intuition for why one is larger? 
+    
+    \item  Use the two-instrument 2SLS estimates to construct the optimal 4x4 GMM weight matrix. Using the estimated weight matrix, run the optimal GMM and report the estimates (hint: in Stata, \texttt{ivreg2} will take a user-supplied weight matrix as an option). Compare and contrast to the 2SLS.
+    
+    \item Report the diagonal weight matrix entries for each of the instruments. Provide some intuition for why one instrument has a larger weight. Then, estimate the implicit weights on the single-instrument 2SLS estimates (to do this, just find the weights on them that sum to 1 and give the GMM estimate). How do these relate to the diagonal weight matrix entries? How do they relate to the two-instrument 2SLS weights?
 
-e) Write a Stata program named 'getestimates' that, for a given value
-of the parameter $\gamma_{1}$, simulates 1,000 observations from
-the above model using the following assumptions regarding the DGP:
-\begin{eqnarray*}
-\left(Z_{i},\varepsilon_{i},v_{i}\right) & \sim & N\left(0,\begin{array}{ccc}
-1 & 0 & 0\\
-0 & 1 & .2\\
-0 & .2 & 1
-\end{array}\right)\\
-\gamma_{0} & = & \beta_{0}=0\\
-\beta_{1} & = & \beta_{2}=1
-\end{eqnarray*}
-After simulating the data, the getestimates program should report
-2SLS and Control Function estimates of $\left(\beta_{1},\beta_{2}\right)$
-which we will refer to as $\left(\beta_{1}^{2SLS},\beta_{2}^{2SLS},\beta_{1}^{CF},\beta_{2}^{CF}\right)$
-using the 'return scalar' command. Set the random number generator
-seed to 12345 and use the 'simulate' command to simulate your getestimates
-program 1,000 times for parameter values $\gamma_{1}\in\left\{ .3,.2,.1\right\} $.
-Use the 'tabstat' command to report the mean, median, standard deviation,
-and interquartile range across simulations of $\left(\beta_{1}^{2SLS},\beta_{2}^{2SLS},\beta_{1}^{CF},\beta_{2}^{CF}\right)$
-for each value of $\gamma_{1}$.
+    \item By hand, calculate and report the $J$ statistic, degrees of freedom, and corresponding $p$-value. What are the inputs you need for this? 
 
-\ i) Which approach appears to be more efficient? Why?
+    \item Stack the data and estimate the two single-instrument 2SLS specifications in one regression. Confirm the coefficients match the ones from the unstacked regression. Report the covariance between the two estimates of the effect of $d$. Test equality of the coefficients, and report the $p$-value. Does this match the $p$ from the prior question? If not, why not? 
 
-\ ii) What happens to the 2SLS estimator as the parameter $\gamma_{1}$
-shrinks? How about the CF estimator?
+\end{enumerate}
 
-\ iii) Suppose you want to test the null hypothesis that $\rho\frac{\sigma_{\varepsilon}}{\sigma_{v}}=0$
-(no endogeneity). Describe a technique for accounting for the fact
-that the control function $\widehat{v}_{i}$ was generated when conducting
-hypothesis tests in Stata.
+
 
 \item (\textbf{IV with Heterogeneous Effects) }There is an
 outcome variable $Y_{i}$, a binary treatment $T_{i}$, a binary instrument
@@ -156,64 +113,6 @@ and estimate the two-sample 2SLS as
 
 Usually best practise is to estimate the standard errors via the bootstrap, which can accomodate potential correlation between the samples. However, sometimes this is infeasible, and so an alternative is to use the delta method while assuming that the estimates are uncorrelated. Do this (note: take a linear approximation of the $\widehat{\beta}^{TS2SLS}$ around the population value, then take the variance of that).
 
-
-\item  (\textbf{IV and CF}) Consider the following triangular
-model of treatment effects:
-
-\[
-Y_{i}\left(1\right)=\mu_{1}+\rho_{1}V_{i}+\varepsilon_{i1}
-\]
-
-\[
-Y_{i}\left(0\right)=\mu_{0}+\rho_{0}V_{i}+\varepsilon_{i0}
-\]
-
-\[
-D_{i}=1\left\{ \gamma Z_{i}>V_{i}\right\} 
-\]
-
-\[
-Y_{i}=DY_{i}\left(1\right)+\left(1-D\right)Y_{i}\left(0\right)
-\]
-where $\theta\equiv\left(\mu_{1},\mu_{0},\rho_{0},\rho_{1},\gamma\right)$
-are constants and $Z_{i}$ is a binary random variable taking values
-in $\left\{ 0,1\right\} $. Assume that
-\[
-V_{i}|Z_{i},\varepsilon_{i0},\varepsilon_{i1}\sim Uniform\left(0,1\right)
-\]
-
-\[
-E\left[\varepsilon_{id}|v_{i},Z_{i}\right]=0\mbox{ for \ensuremath{d\in\left\{ 0,1\right\} }}
-\]
-
-\noindent Answer the following questions assuming you have an $iid$
-random sample of size $N$ comprised of the observations $\left\{ Y_{i},D_{i},Z_{i}\right\} _{i=1}^{N}$
-
-a) Derive an expression for $P\left(D_{i}=1|Z_{i}\right)$.
-
-b) Derive an expression for $E\left[V_{i}|D_{i}=1,Z_{i}\right]$.
-
-c) Use your answer above to derive an expression for $E\left[Y_{i}|D_{i}=d,Z_{i}\right]$
-for $d\in\left\{ 0,1\right\} $.
-
-d) Use your answers above to propose a 2-step ``control function''
-estimator of $\left(\rho_{0},\mu_{0}\right)$ (hint: note that compliance
-is '1-sided' here which prevents you from fitting an OLS regression
-of $Y$ on $\left(1,Z\right)$ in the $D=1$ sample).
-
-e) Derive an expression for the local average treatment effect (LATE)
-in terms of the elements of $\theta$.
-
-f) Derive an expression for $E\left[Y_{i}|D_{i}=1\right]$ in terms
-of the elements of $\theta$.
-
-g) Propose an estimator of LATE that uses the control function estimates
-of $\left(\rho_{0},\mu_{0}\right)$ from part (d).
-
-h) How does this estimator differ from IV?
-
-i) Discuss why the average treatment effect (ATE) is not identified
-in this setting.
 
 \end{enumerate}
 
