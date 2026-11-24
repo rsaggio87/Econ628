@@ -12,7 +12,7 @@
 | **Time** | 2:00–3:30 pm |
 | **Location** | **Iona 001** |
 | **First class** | Wednesday, September 9, 2026 |
-| **Last class** | Wednesday, December 9, 2026 |
+| **Last class** | Monday, December 7, 2026 |
 | **Office hours (Raffa)** | [Sign-up sheet](https://docs.google.com/spreadsheets/d/1Dy5X2-y1rHHJBudKsgVyccgiDZfDtujryRy1iLWprUY/edit?gid=2013906753#gid=2013906753). Email me if you cannot find a spot. |
 | **Office hours (Sam)** | [Sign-up sheet](https://docs.google.com/spreadsheets/d/1gjwfeD4u8dPJyW4oMMKKNo1y77LAU8JameyeEogHa4Q/edit?gid=0#gid=0). Email to schedule outside these times. |
 
@@ -111,5 +111,5 @@ The [reading list](https://docs.google.com/document/d/1uiA55ukPEdkpN5MZnPv1U9w6Y
 | 19 | Nov 25 | Wed | Panel Data | Raffa | Panel Data |  |
 | 20 | Nov 30 | Mon | Panel Data | Raffa | Panel Data | |
 | 21 | Dec 2 | Wed | Difference-in-Differences | Raffa | 2×2 diff-in-diff; parallel trends assumption | |
-| 22 | Dec 7 | Mon | Difference-in-Differences | Raffa | Staggered design; event studies |**PS4 due**|
-| 23 | Dec 9 | Wed | Difference-in-Differences | Raffa | Staggered design; event studies |  |
+| 22 | Dec 7 | Mon | Difference-in-Differences | Raffa | Staggered design; event studies | |
+| — | Dec 9 | Wed | **NO CLASS** — last class is Dec 7 | | | **PS4 due** |
