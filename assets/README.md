@@ -1,10 +1,11 @@
-# Building the IV and sample-selection slides
+# Building the slide decks
 
-Edit `6---Instrumental-Variables.tex` (figures in `assets/6/`) or
+Edit `6---Instrumental-Variables.tex` (figures in `assets/6/`),
+`8---Panel.tex` (figures in `assets/8/`) or
 `11---Sample-Selection-Models.tex` (figures in `assets/11/`). Shared
 commands are in `assets/Macros.tex`.
 
-From this folder, compile both decks with:
+From this folder, compile every deck with:
 
 ```sh
 latexmk
@@ -21,7 +22,7 @@ latexmk -pvc
 Temporary build files are kept in `build/`. After each successful build,
 the PDF is copied to the top level.
 
-The outputs are `6---Instrumental-Variables.pdf` and
+The outputs are `6---Instrumental-Variables.pdf`, `8---Panel.pdf` and
 `11---Sample-Selection-Models.pdf` in this folder. Open it in
 a PDF viewer that reloads changed files. The watcher does not launch a viewer.
 Stop a foreground watcher with Ctrl-C.

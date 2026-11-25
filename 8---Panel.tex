@@ -1,0 +1,838 @@
+\documentclass[notes=show]{beamer}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\AtBeginSubsection[
+  {\frame<beamer>{\frametitle{Outline}   
+    \tableofcontents[currentsection,currentsubsection]}}%
+]%
+{
+  \frame<beamer>{ 
+    \frametitle{Outline}   
+    \tableofcontents[currentsection,currentsubsection]}
+}
+\usepackage{ulem}
+\usepackage{pdflscape}
+\setbeamertemplate{caption}{\insertcaption}
+\usepackage{color,xcolor,ucs}
+\usepackage{beamerthemesplit}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{adjustbox}
+\usepackage{pdfpages} 
+\definecolor{mintgreen}{rgb}{0.6, 1.0, 0.6}
+\makeatletter
+\@addtoreset{subfigure}{framenumber}% subfigure counter resets every frame
+\makeatother
+\newcommand*{\Scale}[2][4]{\scalebox{#1}{$#2$}}%
+\newcommand*{\Resize}[2]{\resizebox{#1}{!}{$#2$}}%
+\usepackage{amsfonts}
+\usepackage{booktabs}
+\usepackage{color,soul}
+\usepackage{pdfpages}
+\setboolean{@twoside}{false}
+\usepackage{amsmath}
+\usepackage{pdflscape} 
+\usepackage{eurosym}
+\usepackage{amstext} % for \text
+\DeclareRobustCommand{\officialeuro}{%
+  \ifmmode\expandafter\text\fi
+  {\fontencoding{U}\fontfamily{eurosym}\selectfont e}}
+\usepackage[caption = false]{subfig}
+\usepackage{appendixnumberbeamer} 
+\usepackage{graphicx}
+\usepackage{mathpazo}
+\usepackage{hyperref}
+\usepackage{multimedia}
+\usepackage{graphicx}
+\usepackage{multirow}
+\usepackage{subfig}
+\usepackage{verbatim}
+\usepackage{booktabs, multicol, multirow}
+\setcounter{MaxMatrixCols}{10}
+\input{assets/Macros.tex}
+\AtBeginSection[]
+{
+  \begin{frame}[noframenumbering]
+    \frametitle{Outline for section \thesection}
+    \tableofcontents[currentsection]
+  \end{frame}
+}
+
+
+\usepackage{xcolor,soul}
+\renewcommand<>{\hl}[1]{\only#2{\beameroriginal{\hl}}{#1}}
+
+% https://tex.stackexchange.com/questions/41683/why-is-it-that-coloring-in-soul-in-beamer-is-not-visible
+\makeatletter
+\newcommand\SoulColor{%
+  \let\set@color\beamerorig@set@color
+  \let\reset@color\beamerorig@reset@color}
+\makeatother
+\SoulColor
+\AtBeginSection{\frame{\sectionpage}}
+
+\newsavebox\mybox
+\newenvironment{aquote}[1]
+  {\savebox\mybox{#1}\begin{quote}\openautoquote\hspace*{-.7ex}}
+  {\unskip\closeautoquote\vspace*{1mm}\signed{\usebox\mybox}\end{quote}}
+
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{Assumption}[theorem]{Assumption}
+\newenvironment{stepenumerate}{\begin{enumerate}[<+->]}{\end{enumerate}}
+\newenvironment{stepitemize}{\begin{itemize}[<+->]}{\end{itemize} }
+\newenvironment{stepenumeratewithalert}{\begin{enumerate}[<+-| alert@+>]}{\end{enumerate}}
+\newenvironment{stepitemizewithalert}{\begin{itemize}[<+-| alert@+>]}{\end{itemize} }
+\usetheme{Madrid}
+\makeatletter
+\setbeamertemplate{footline}
+{
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}%
+    \usebeamerfont{author in head/foot}\insertshortauthor~~\beamer@ifempty{\insertshortinstitute}{}{(\insertshortinstitute)}
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+    \usebeamerfont{title in head/foot}\insertshorttitle
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,right]{date in head/foot}%
+    \usebeamerfont{date in head/foot}\insertshortdate{}\hspace*{2em}
+%    \insertframenumber{} / \inserttotalframenumber\hspace*{2ex} % DELETED
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+\makeatother
+\usepackage{pdfpages}
+\begin{document}
+	\title[]{\large Panel Data
+	\vspace{0.5cm}
+	}
+	\author[Raffaele Saggio - Econ 628]{Raffaele Saggio}
+	\institute[]{UBC}
+	\date{\today \\
+}
+	\maketitle
+
+\begin{frame}{What is panel data?}
+\begin{itemize}
+\item By panel data, we label a data configuration in which we have multiple observations for a given (cross-sectional) unit.
+\medskip
+\item Typical example: individuals observed over multiple periods.
+\medskip
+\item Increasing availability of panel data sets $\rightarrow$ ``explosion" of microeconometric studies (both structural and reduced form).
+\end{itemize}
+\end{frame}
+%%
+\begin{frame}{Why panel data?}
+\begin{enumerate}
+\item Selection on observables strategy.
+\medskip
+\item Permits to Disentangle components of variance.
+\medskip
+\item Leads to Difference-in-Differences Research Design.  
+\end{enumerate}
+\end{frame}
+\begin{frame}
+\frametitle{Main References}
+\begin{itemize}
+\item Manuel Arellano book + free lecture notes online: \url{https://www.cemfi.es/~arellano/} (mostly for topic 1 and 2). Cameron and Trivedi book also is really good.
+\medskip
+\item Stuff on the Correlated Random Effect model can be found on Chamberlain's (amazing) handbook chapter published in 1984.
+\medskip
+\item Mostly Harmeless Econometrics for DiD (next slide-deck).  
+\end{itemize}
+\end{frame}
+%%
+\section{The Linear Fixed Effects Model}
+%%
+\begin{frame}{Farming Panel Data}
+\begin{itemize}
+\item Suppose you have a cross-sectional (structural) regression of the form
+\be
+y_{i1} = \beta x_{i1} + \eta_{i} + v_{i1}
+\ee
+\begin{itemize}
+\item $y_{i1}\equiv$ log output.
+\item $x_{i1}\equiv$ log labor.
+\item $\eta_{i}\equiv$ soil quality.
+\item $v_{i1}\equiv$ stochastic input outside farmer's control (e.g. weather).
+\end{itemize}
+\pause
+\item We have that $\E[v_{i1} \vert  x_{i1}, \eta_{i}]=0$. 
+\medskip
+\item Suppose that $\eta_{i}$ is not observed $\rightarrow$ Short regression won't work (unless...).
+ \medskip
+ \item No IV's are available.
+ \pause
+ \item But Suppose I give you another ``round" of data
+ \be
+ y_{i2} = \beta x_{i2} + \eta_{i} + v_{i2}
+ \ee
+ with $\E[v_{i2} \vert  x_{i2}, \eta_{i}]=0$
+\end{itemize}
+\end{frame}
+%%
+\begin{frame}{Farming Panel Data}
+\begin{itemize}
+\item One can then take \underline{first differences}
+\be
+ y_{i2}- y_{i1} = \beta_{1}(x_{i2}-x_{i1}) + v_{i2}-v_{i1}
+\ee
+\item Is the regression above going to identify $\beta_{1}$?
+\medskip
+\item Which observations drive the identification here?
+\medskip
+\pause
+\item Panel data allowed us to control for unobserved time invariant heterogeneity. 
+\medskip
+\item Sometimes (but not always!) panel data can lead to convincing research designs.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[plain]{A Famous Example: Ashenfelter and Krueger (1994, AER)}
+\centering
+\includegraphics[scale=0.4]{assets/8/twins}
+\\
+Twins Days Festival, a Festival in Twinsburg, Ohio
+\end{frame}
+\begin{frame}
+\frametitle{Ashenfelter and Krueger (1994, AER)}
+\begin{itemize}
+\item AK attended  the 16th Annual Twins Days Festival in Twinsburg, Ohio, in August of 1992
+\medskip
+\item This is the largest gathering of twins in the world ($\approx$ 3,000 sets of twins).
+\medskip
+\item AK collected data on 495 separate individuals over age 18.
+\medskip
+\item Idea: test for returns to college education by comparing identical twins with different levels of education. 
+ \medskip
+ \item In this empirical application $\eta_{i}$ genetic and other characteristics that are common across twins. 
+ \end{itemize}
+\end{frame}
+%%%%%%%%
+\begin{frame}[plain]{Summary Stats}
+\centering
+\includegraphics[scale=0.4]{assets/8/ak1}
+\end{frame}
+%%%%%%%%
+\begin{frame}[plain]{Results}
+\centering
+\includegraphics[scale=0.4]{assets/8/ak2}
+\be
+w_{it} = \alpha_{i} + \beta X_{it} + \varepsilon_{it}
+\ee
+\end{frame}
+%%%%%%%%
+\begin{frame}[plain]{The linear FE model aka Heterogeneity as Nuisance}
+
+Textbook panel ``fixed effects'' model:
+\[
+Y_{it}=\alpha_{i}+X_{it}'\beta+u_{it}\mbox{ \ensuremath{\left(\ensuremath{t=1,...,T}\right)}}
+\]
+\begin{itemize}
+\item Interested in $\beta$, view $\left\{ \alpha_{i}\right\} $
+as ``nuisance''. 
+\bigskip
+\item We are unwilling to impose any restriction on the distribution of $(\alpha_{i} \vert X_{it})$ $\rightarrow$ Can we still identify $\beta$?
+\pause
+\bigskip
+\item ``Fixed Effects" approach: do not impose any assumption on $G(\alpha_{i} \vert X_{i,1}, \hdots  X_{i,T})$.
+\bigskip
+\item ``Random Effects" approach: impose some restrictions on $G(\alpha_{i} \vert X_{i,1}, \hdots  X_{i,T})$.
+
+
+\end{itemize}
+\end{frame}
+\begin{frame}
+\frametitle{The Linear FE Model}
+\begin{itemize}
+\item {\footnotesize{}Three forms of exogeneity (can weaken to non-correlation):}{\footnotesize\par}
+\end{itemize}
+\begin{enumerate}
+\item {\footnotesize{}\emph{{\footnotesize{}Strict}} exogeneity
+\[
+\mathbb{E}\left[u_{it}|\alpha_{i},X_{i1},...,X_{iT}\right]=0
+\]
+}{\footnotesize\par}
+\item {\footnotesize{}\emph{{\footnotesize{}Sequential}} exogeneity
+\[
+\mathbb{E}\left[u_{it}|\alpha_{i},X_{i1},...,X_{it}\right]=0
+\]
+}{\footnotesize\par}
+\item {\footnotesize{}\emph{{\footnotesize{}Contemporaneous}} exogeneity
+\[
+\mathbb{E}\left[u_{it}|\alpha_{i},X_{it}\right]=0
+\]
+}{\footnotesize\par}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}[plain]{Within transformation}
+
+\begin{itemize}
+\item Subtract $ith$ specific means
+\[
+Y_{it}-\bar{Y}_{i}=\left(X_{it}-\bar{X}_{i}\right)'\beta+u_{it}-\bar{u}_{i}
+\]
+\item Does this ring any bell?
+\pause
+\medskip
+\item Estimating the equation above with OLS yields the within-group of fixed effect estimator of $\beta$ (aka the least-square-dummy-variable LSDV estimator).
+\medskip
+\pause
+\item For OLS to be consistent we need
+\[
+\mathbb{E}\left[\left(u_{it}-\bar{u}_{i}\right)X_{it}\right]=0
+\]
+\item Strict exogeneity implies these conditions hold
+\item But somewhat restrictive b/c $X_{it}$ can't depend on future or past
+errors
+
+\begin{itemize}
+\item violated in simple forward looking models w/ learning (Mundlak, 1961)
+\item see also agriculture example from beginning of class. 
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[plain]{First differenced estimation}
+
+\begin{itemize}
+\item Alternative strategy is to estimate in 1st differences
+\[
+Y_{it}-Y_{it-1}=\left(X_{it}-X_{it-1}\right)'\beta+u_{it}-u_{it-1}
+\]
+\item Here we need only a differenced form of contemporaneous exogeneity
+\[
+\mathbb{E}\left[\left(u_{it}-u_{it-1}\right)\left(X_{it}-X_{it-1}\right)\right]=0
+\]
+\end{itemize}
+
+\pause{}
+\begin{itemize}
+\item However this could still be violated if $X_{it}$ depends on $u_{it-1}$
+
+\begin{itemize}
+\item Could always solve by instrumenting $\left(X_{it}-X_{it-1}\right)$
+with $X_{it-1}$ (under sequential exog)
+\end{itemize}
+\end{itemize}
+
+\pause{}
+\begin{itemize}
+\item What if we run OLS on stacked differences? 
+\medskip
+\item Can prove that Feasible GLS in stacked differences model is the within group fixed effects estimator, see section 1.2 of \url{https://www.cemfi.es/~arellano/static-panels-class-note.pdf}
+\end{itemize}
+\end{frame}
+%%%%%%%%%%%
+\begin{frame}{Correlated Random Effects }
+
+\begin{itemize}
+\item Suppose \emph{balanced} panel w/ $T$ time periods
+
+\begin{itemize}
+\item See Wooldridge (2009) for extension to unbalanced case
+\end{itemize}
+\item Linear ``fixed effects'' panel model revisited
+\[
+Y_{it}=\alpha_{i}+\beta X_{it}+u_{it}
+\]
+\[
+\mathbb{E}^{*}\left[u_{is}|X_{it},\alpha_{i},\right]=0,\mbox{ \ensuremath{\forall s\in\left\{ 1,...,T\right\} }}
+\]
+where $\mathbb{E}^{*}$ denotes linear projection operator
+\item Object of interest is $\beta$, $\left\{ \alpha_{i}\right\} $ are
+``nuisance''
+\end{itemize}
+
+\pause{}
+\begin{itemize}
+\item Chamberlain (1982): 
+
+\begin{itemize}
+\item $\beta$ is heavily over-identified based upon moments that are estimable
+at conventional rates
+\item Can use to improve efficiency \& test model
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[plain]{The power of thinking ``wide''}
+
+\begin{itemize}
+\item Collect observables $\mathbf{X}_{i}=\left[X_{i1},X_{i2},...,X_{iT}\right]'$
+and $\mathbf{Y}_{i}=\left[Y_{i1},Y_{i2},...,Y_{iT}\right]'$. 
+\pause{}
+\begin{itemize}
+\item Now Treat $\alpha_{i}$ as ``omitted variable'' and think about its projection on $\mathbf{X}_{i}$ :
+\[
+\mathbb{E}^{*}\left[\alpha_{i}|\mathbf{X}_{i}\right]=\eta+\lambda_{1}X_{i1}+\lambda_{2}X_{i2}+...+\lambda_{T}X_{iT}\equiv z_{i}
+\]
+\item Basic idea: need to control for $z_{i}$ to remove OVB!
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[plain]{Estimating $z_{i}$}
+
+\begin{itemize}
+\item Chamberlain (1982): can do better than Mundlak by imposing a true
+restriction on $\mathbb{E}^{*}\left[\alpha_{i}|\mathbf{X}_{i}\right]$ 
+\item Get $z_{i}$ from system of reduced form regressions:{\small{}
+\begin{eqnarray*}
+\mathbb{E}^{*}\left[Y_{it}|\mathbf{X}_{i}\right] & = & \mathbb{E}^{*}\left[\alpha_{i}|\mathbf{X}_{i}\right]+\gamma_{t}+\beta X_{it}\\
+ & = & \eta+\gamma_{t}+\lambda_{1}X_{i1}+...+\left(\lambda_{t}+\beta\right)X_{it}+...+\lambda_{T}X_{iT}\\
+ & = & \eta+\gamma_{t}+\pi_{t1}X_{i1}+...+\pi_{tt}X_{it}+...+\pi_{tT}X_{iT}
+\end{eqnarray*}
+}{\small\par}
+\end{itemize}
+
+\pause{}
+\begin{itemize}
+\item Note: we've rewritten a problem with $N$ nuisance parameters $\left\{ \alpha_{i}\right\} _{i=1}^{N}$
+as one with $T<<N$ nuisance params $\left\{ \lambda_{t}\right\} _{t=1}^{T}$
+\item We can then use CMD to exploit model restrictions
+\end{itemize}
+\end{frame}
+
+\begin{frame}[plain]{CRE Identification}
+
+\begin{itemize}
+\item Collect $\left\{ \pi_{tk}\right\} _{t=1,t'=1}^{T,T}$ into $T\times T$
+matrix $\boldsymbol{\Pi}$ of RF coefficients
+\item FE model implies:
+\[
+\boldsymbol{\Pi}=\beta\boldsymbol{I}_{T}+\boldsymbol{1}_{T}\boldsymbol{\lambda}'
+\]
+\item Order condition holds when $T\geq2$: 
+
+\begin{itemize}
+\item $T^{2}$ RF moments
+\item Only $T+1$ structural unknowns
+\end{itemize}
+\item Rank condition: generically satisfied here
+\item CMD estimation $\Rightarrow$ $\chi^{2}$ goodness of fit
+\end{itemize}
+\end{frame}
+
+\begin{frame}[plain]{Example ($T=2$)}
+
+\begin{eqnarray*}
+\boldsymbol{\Pi} & = & \left[\begin{array}{cc}
+\pi_{11} & \pi_{12}\\
+\pi_{21} & \pi_{22}
+\end{array}\right]\\
+ & = & \left[\begin{array}{cc}
+\beta+\lambda_{1} & \lambda_{2}\\
+\lambda_{1} & \beta+\lambda_{2}
+\end{array}\right]
+\end{eqnarray*}
+
+\begin{itemize}
+\item $\beta$ is over-identified:
+\[
+\beta=\pi_{11}-\pi_{21}=\pi_{22}-\pi_{12}
+\]
+\end{itemize}
+
+\pause{}
+\begin{itemize}
+\item Equal and opposite restriction on $\boldsymbol{X}_{i}$:
+\[
+\Delta Y_{it}=\Delta\gamma_{t}+\beta X_{it}-\beta X_{it-1}+\Delta u_{it}
+\]
+\item Is violation interesting? 
+
+\begin{itemize}
+\item Symmetry: joining a union same as leaving a union?
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[plain]{Interpretation issues}
+
+\begin{itemize}
+\item Allowing dynamics changes the test. Following model is just-identified
+with $T=2$:
+\[
+Y_{it}=\alpha_{i}+\gamma_{t}+\beta_{1}X_{it}+\beta_{2}X_{it-1}+u_{it}
+\]
+\item For $T>2$, CMD is testing stationarity of coefficients + restrictions
+on dynamics
+\end{itemize}
+\end{frame}
+\begin{frame}{Why panel data?}
+\begin{enumerate}
+\item Natural selection on observables strategy.
+\medskip
+\item Disentangle components of variance, study transition and dynamics.  
+\end{enumerate}
+\pause
+\bigskip
+We went over point 1. Now we will examine topics related to point 2. Non-Linear FE models are presented in the appendix.  
+\end{frame}
+%%
+\section{Dynamic Panel Data}
+\begin{frame}{Dynamics in Panel Data}
+\begin{itemize}
+\item Often interested in analyzing dynamics, e.g.  separate out permanent from transitory components in consumption decisions. 
+\medskip
+\item Several examples: Hall and Mishkin (1982), Abowd and Card (1989) and Blundell, Pistaferri, and Preston (2008). 
+\medskip
+\item Idea: by plotting time series of a given outcome we can infer underlying ``structure" and rule out alternative models.
+\end{itemize}
+\end{frame}
+%%
+\begin{frame}{Motivating Example: Genuine Dynamics vs. Unobserved Heterogeneity}
+\begin{itemize}
+\item First model
+
+\be
+y_{it} = \alpha_{i} + v_{it}\qquad t=1,2
+\ee
+where $\Var(\alpha_{i})=\sigma_{\alpha}^{2}$ and $\Var(v_{it})=\sigma^{2}_{v}$
+\end{itemize}
+\begin{itemize}
+\item Competing model
+
+\be
+y_{it} = \alpha + v_{it}\qquad t=1,2 
+\ee
+\be
+v_{it} = \rho v_{it-1} + \varepsilon_{it}\qquad t=1,2 
+\ee
+where $\vert \rho \vert<1$, $v_{it}\sim_{iid}(0;\sigma^{2}_{v})$; $\varepsilon_{it}\sim_{iid}(0;\sigma^{2}_{\varepsilon})$
+\pause
+\item Can we distinguish between the two models when $T=2$?
+\end{itemize}
+\end{frame}
+\begin{frame}{Motivating Example: Genuine Dynamics vs. Unobserved Heterogeneity}
+\begin{itemize}
+\item Can we distinguish between the two models when $T=3$?
+\pause
+\item Yes! Think about the following moment condition:
+\be
+\dfrac{\Cov(y_{i1},y_{i2})}{\Cov(y_{i1},y_{i3})} = ?
+\ee
+\pause
+\item How to estimate these models? Usual answer is CMD which provides useful over-id tests as we have seen.
+\end{itemize}
+\end{frame}
+\begin{frame}[plain]{The linear dynamic panel model}
+
+\[
+Y_{it}=\alpha_{i}+\delta Y_{it-1}+X_{it}'\beta+\varepsilon_{it}
+\]
+\[
+\mathbb{E}\left[\varepsilon_{it}|\alpha_{i},Y_{it-1},X_{it}\right]=0
+\]
+
+\begin{itemize}
+\item What is this model saying? 
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Dynamic Panel Data $\rightarrow$ Restriction on dynamic effects of $X$}
+\begin{itemize}
+\item By repeated substitution:  
+\be
+Y_{it} = \dfrac{\alpha_{i}}{1-\delta}+\beta\sum_{k=0}^{\infty}\delta^{k}X_{it-k}+\sum_{k=0}^{\infty}\delta^{k}\varepsilon_{it}
+\ee
+\item Effect of $X_{it}$ on $Y_{it}$ $\rightarrow$ $\beta$
+\item Effect of $X_{it-1}$ on $Y_{it}$ $\rightarrow$ $\beta \delta$.
+\item Etc...
+\item Dynamic effects dampen geometrically (this is clearly restrictive!).
+\end{itemize}
+\end{frame}
+
+\begin{frame}[plain]{Estimation}
+
+\begin{itemize}
+\item Putting in unit dummies equivalent to demeaning
+\[
+Y_{it}-\bar{Y}_{i}=\delta\left(Y_{it-1}-\bar{Y}_{i}\right)+\left(X_{it}-\bar{X}_{i}\right)'\beta+\varepsilon_{it}-\bar{\varepsilon}_{i}
+\]
+\item Nickell (1981) bias: $\mathbb{E}\left[\left(Y_{it-1}-\bar{Y}_{i}\right)\left(\varepsilon_{it}-\bar{\varepsilon}_{i}\right)\right]\neq0$!
+\end{itemize}
+
+\pause{}
+\begin{itemize}
+\item Arellano-Bond (1991): first difference to get
+\[
+\Delta Y_{it}=\delta\Delta Y_{it-1}+\Delta X_{it}'\beta+\Delta\varepsilon_{it}
+\]
+
+\begin{itemize}
+\item Instrument $\Delta Y_{it-1}$ using lags of $X_{it}$ and $\left(Y_{i1},...,Y_{it-2}\right)$
+\end{itemize}
+\end{itemize}
+
+\pause{}
+\begin{itemize}
+\item Credibility: $\left(Y_{i1},...,Y_{it-2}\right)$ only valid IV if
+$\varepsilon_{it}$ serially uncorrelated
+\item Statistical problem: 2SLS poorly behaved w/ lots of instruments
+\end{itemize}
+\end{frame}
+%%
+\begin{frame}
+\centering
+\huge{Non-Linear Panel Data Models}
+\end{frame}
+
+\begin{frame}[plain]{Panel Probit}
+
+\[
+Y_{it}^{*}=\alpha_{i}+\gamma_{t}+\beta X_{it}+\varepsilon_{it}
+\]
+\[
+\varepsilon_{it}\sim N\left(0,1\right)
+\]
+\[
+Y_{it}=1\left\{ Y_{it}^{*}>0\right\} 
+\]
+
+\begin{itemize}
+\item Heckman (1981): incidental parameters bias small when $T>8$
+\item Fernandez-Val (2009) / Fernandez-Val and Weidner (2016): Bias corrections
+for FE probit
+
+\begin{itemize}
+\item Implemented in Stata w/ ``probitfe'' package
+\end{itemize}
+\item Alternate approach: Correlated random effects Probit (Chamberlain,
+1980)
+\end{itemize}
+\end{frame}
+
+\begin{frame}[plain]{CRE Probit Model}
+
+\begin{itemize}
+\item Restrict conditional \emph{distribution} of unobserved effect
+\begin{eqnarray*}
+\alpha_{i} & = & \eta+\lambda_{1}X_{i1}+\lambda_{2}X_{i2}+...+\lambda_{T}X_{iT}+v_{i}\\
+ & \equiv & z_{i}+v_{i}
+\end{eqnarray*}
+\[
+v_{i}|\boldsymbol{X}_{i},\gamma_{t}\sim N\left(0,\sigma_{v}^{2}\right)
+\]
+\item Now we have
+\begin{eqnarray*}
+Y_{it}^{*} & = & \eta+\gamma_{t}+\lambda_{1}X_{i1}+...+\left(\beta+\lambda_{t}\right)X_{it}+...+\lambda_{T}X_{iT}+\varepsilon_{it}\\
+ & = & \dot{\gamma}_{t}+\sum_{j=1}^{T}\pi_{tj}X_{ij}+u_{it}
+\end{eqnarray*}
+where $u_{it}\sim N\left(0,1+\sigma_{v}^{2}\right)$ and $\dot{\gamma}_{t}=\eta+\gamma_{t}$.
+\item Can fit this via standard RE Probit routines to get $\left(\sigma_{v}^{2},\Pi\right)$
+\end{itemize}
+\end{frame}
+
+\begin{frame}[plain]{A limited information approach}
+
+\begin{itemize}
+\item Can also just ignore random effect and use the fact that 
+\begin{eqnarray*}
+\Pr\left(Y_{it}=1|\mathbf{X}_{i}\right) & = & \Phi\left(\frac{\dot{\gamma}_{t}+\sum_{j=1}^{T}\pi_{tj}X_{ij}}{\sqrt{1+\sigma_{v}^{2}}}\right)\\
+ & = & \Phi\left(\tilde{\gamma}_{t}+\sum_{j=1}^{T}\tilde{\pi}_{tj}X_{ij}\right)
+\end{eqnarray*}
+which can be fit via a conventional Probit
+\end{itemize}
+
+\pause{}
+\begin{itemize}
+\item Recover $\tilde{\beta}=\frac{\beta}{\sqrt{1+\sigma_{v}^{2}}}$ in
+second step from
+\[
+\boldsymbol{\tilde{\Pi}}=\tilde{\beta}\boldsymbol{I}_{T}+\boldsymbol{1}_{T}\boldsymbol{\tilde{\lambda}}'
+\]
+\item Example ($T=2$):
+\[
+\boldsymbol{\tilde{\Pi}}=\frac{1}{\sqrt{1+\sigma_{v}^{2}}}\left[\begin{array}{cc}
+\beta+\lambda_{1} & \lambda_{2}\\
+\lambda_{1} & \beta+\lambda_{2}
+\end{array}\right]
+\]
+\end{itemize}
+\end{frame}
+
+\begin{frame}[plain]{Which parameters are interesting?}
+
+\begin{itemize}
+\item Marginal effect at at given $\alpha_{i}$ depends on $\beta$:
+\[
+\frac{\partial}{\partial x}\Pr\left(Y_{it}=1|X_{it}=x,\gamma_{t},\alpha_{i}\right)=\beta\phi\left(\beta X_{it}+\gamma_{t}+\alpha_{i}\right)
+\]
+But which $\alpha_{i}$ to use in evaluating MFX?
+\end{itemize}
+
+\pause{}
+\begin{itemize}
+\item Average partial effect (APE) depends on $\tilde{\beta}$:{\small{}
+\begin{eqnarray*}
+\mathbb{E}\left[\frac{\partial}{\partial X_{it}}\Pr\left(Y_{it}=1|X_{it},\alpha_{i},\gamma_{t}\right)\right] & = & \mathbb{E}\left[\frac{\partial}{\partial X_{it}}\Pr\left(Y_{it}=1|X_{it},\dot{\gamma}_{t},z_{i},v_{i}\right)\right]\\
+ & = & \mathbb{E}\left[\frac{\partial}{\partial X_{it}}\Phi\left(\frac{\beta X_{it}+z_{i}+\dot{\gamma}_{t}}{\sqrt{1+\sigma_{v}^{2}}}\right)\right]\\
+ & = & \frac{\beta}{\sqrt{1+\sigma_{v}^{2}}}\mathbb{E}\left[\phi\left(\frac{\beta X_{it}+z_{i}+\dot{\gamma}_{t}}{\sqrt{1+\sigma_{v}^{2}}}\right)\right]\\
+ & = & \tilde{\beta}\mathbb{E}\left[\phi\left(\tilde{\beta}X_{it}+\tilde{z}_{i}+\tilde{\gamma}_{t}\right)\right]
+\end{eqnarray*}
+}{\small\par}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[plain]{Fixed Effects Logit}
+
+\begin{itemize}
+\item Suppose now that error is logit so that
+\[
+\Pr\left(Y_{it}=1|\boldsymbol{X}_{i},\alpha_{i}\right)=\Lambda\left(X_{it}'\beta+\alpha_{i}\right)
+\]
+where $\Lambda\left(x\right)=\left[1+\exp\left(-x\right)\right]^{-1}$
+\end{itemize}
+
+\pause{}
+\begin{itemize}
+\item Chamberlain (1980): use sufficient statistic $n_{i}=\sum_{t=1}^{T}Y_{it}$
+to remove influence of nuisance effects
+\[
+\Pr\left(Y_{it}=1|\boldsymbol{X}_{i},\alpha_{i}\right)=\Pr\left(Y_{it}=1|\boldsymbol{X}_{i},n_{i}\right)
+\]
+\end{itemize}
+\end{frame}
+
+\begin{frame}[plain]{Example ($T=2$)}
+
+Logit functional form yields expression analogous to 1st difference:{\scriptsize{}
+\begin{eqnarray*}
+\Pr\left(Y_{i2}=1|\boldsymbol{X}_{i},\alpha_{i},n_{i}=1\right) & = & \frac{\Pr\left(Y_{i2}=1,n_{i}=1|\boldsymbol{X}_{i},\alpha_{i}\right)}{\Pr\left(n_{i}=1|\boldsymbol{X}_{i},\alpha_{i}\right)}\\
+ & = & \frac{\Pr\left(Y_{i2}=1,Y_{i1}=0|\boldsymbol{X}_{i},\alpha_{i}\right)}{\Pr\left(Y_{i2}=1,Y_{i1}=0|\boldsymbol{X}_{i},\alpha_{i}\right)+\Pr\left(Y_{i2}=0,Y_{i1}=1|\boldsymbol{X}_{i},\alpha_{i}\right)}\\
+ & = & \frac{\Lambda\left(X_{i2}'\beta+\alpha_{i}\right)\left[1-\Lambda\left(X_{i1}'\beta+\alpha_{i}\right)\right]}{\sum_{\left(t,t'\right)\in\left\{ \left\{ 1,2\right\} ,\left\{ 2,1\right\} \right\} }\Lambda\left(X_{it'}'\beta+\alpha_{i}\right)\left[1-\Lambda\left(X_{it}'\beta+\alpha_{i}\right)\right]}\\
+ & = & \Lambda\left(\left(X_{i2}-X_{i1}\right)'\beta\right)
+\end{eqnarray*}
+}{\scriptsize\par}
+\begin{itemize}
+\item ML $\Rightarrow$ ``conditional fixed effects'' estimation
+\item Interpretation: for \emph{any} $\alpha_{i}$, logit $\beta$ has
+interpretation as effect on log odds that $Y_{it}=1$
+\end{itemize}
+\end{frame}
+\begin{frame}[plain]{State Dependence / Heterogeneity}
+
+\begin{itemize}
+\item Question: does work experience raise the probability of being employed?
+
+\begin{itemize}
+\item heterogeneity: skilled workers more likely to be employed this period
+and in the past
+\item state dependence: working today \emph{causes} work tomorrow
+\end{itemize}
+
+\pause{}
+\item Ideal design: randomly assign employment today
+
+\begin{itemize}
+\item Or instrument employment today using randomly assigned offer
+\end{itemize}
+\item Panel literature: use observational variation but control for influence
+of time-invariant heterogeneity
+\end{itemize}
+\end{frame}
+
+\begin{frame}[plain]{State dependent binary choice}
+
+Suppose $Y_{it}$ is indicator for working and $Y_{it}^{*}$ net utility
+of working:
+\[
+Y_{it}^{*}=\alpha_{i}+\gamma Y_{it-1}+\beta X_{it}+\varepsilon_{it}
+\]
+\[
+Y_{it}=1\left\{ Y_{it}^{*}>0\right\} 
+\]
+
+\begin{itemize}
+\item Note: $Y_{it}^{*}$ depends on $Y_{it-1}^{*}$ only thru $Y_{it-1}$
+
+\begin{itemize}
+\item $\gamma$ gives effect of work experience on net utility of working
+\end{itemize}
+\item Incidental parameters problem when $T$ short. Usual solutions
+
+\begin{itemize}
+\item Correlated random effects
+\item Conditional fixed effects
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[plain]{Random Effects Approach}
+
+\begin{itemize}
+\item Likelihood{\footnotesize{}
+\begin{eqnarray*}
+\Pr\left(Y_{iT},Y_{iT-1},...,Y_{i0}|\boldsymbol{X}_{i}\right) & = & \int\Pr\left(Y_{iT},Y_{iT-1},...,Y_{i0}|\boldsymbol{X}_{i},\alpha\right)dG\left(\alpha|\boldsymbol{X}_{i}\right)\\
+ & = & \int\prod_{t=1}^{T}\underbrace{\Pr\left(Y_{it}|Y_{it-1},\boldsymbol{X}_{i},\alpha\right)}_{\mbox{choice model}}\underbrace{\Pr\left(Y_{i0}|\boldsymbol{X}_{i},\alpha\right)}_{\mbox{initial}\mbox{ }\mbox{cond.}}\\
+ &  & \times\underbrace{dG\left(\alpha|\boldsymbol{X}_{i}\right)}_{\mbox{heterogeneity}}
+\end{eqnarray*}
+}{\footnotesize\par}
+\end{itemize}
+
+\pause{}
+\begin{itemize}
+\item Probit choice model: $\Pr\left(Y_{it}=1|Y_{it-1},\boldsymbol{X}_{i},\alpha\right)=\Phi\left(\alpha+\gamma Y_{it-1}+\beta X_{it}\right)$
+\item ``Correlated'' normal mixing: $dG\left(\alpha|\boldsymbol{X}_{i}\right)=\frac{1}{\sigma}\phi\left(\frac{\lambda\bar{X}_{i}-\alpha}{\sigma}\right)d\alpha$
+\item Initial conditions: 
+
+\begin{itemize}
+\item Ignorable when everyone has same $Y_{i0}$ (e.g. sampling kids before
+they enter labor market)
+\item Ad hoc (but flexible) modeling: $\Pr\left(Y_{i0}|\boldsymbol{X}_{i},\alpha\right)=\Phi\left(\psi\alpha+\phi X_{i0}\right)$
+(Heckman, 1981)
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[plain]{Initial conditions: alternate factorization}
+
+Wooldridge (2005): condition on 1st period obs{\scriptsize{}
+\begin{eqnarray*}
+\Pr\left(Y_{iT},Y_{iT-1},...,Y_{i1}|\boldsymbol{X}_{i},Y_{i0}\right) & = & \int\underbrace{\Pr\left(Y_{iT},Y_{iT-1},...,Y_{i1}|\boldsymbol{X}_{i},Y_{i0},\alpha\right)}_{\mbox{choice model}}\\
+ &  & \times\underbrace{dG\left(\alpha|\boldsymbol{X}_{i},Y_{i0}\right)}_{\mbox{init cond + het}}
+\end{eqnarray*}
+}{\scriptsize\par}
+
+\pause{}
+\begin{itemize}
+\item Normal mixing:
+\[
+\alpha_{i}=\delta_{0}+\delta_{1}Y_{i0}+\boldsymbol{X}_{i}\zeta+\eta_{i}
+\]
+\[
+\eta_{i}|Y_{i0},\boldsymbol{X}_{i}\sim N\left(0,\sigma_{\eta}\right)
+\]
+\end{itemize}
+\end{frame}
+
+\begin{frame}[plain]{Mass point mixing}
+
+Heckman and Singer (1984): Semi-parametric heterogeneity
+\[
+dG\left(\alpha|\boldsymbol{X}_{i},Y_{i0}\right)=\sum_{a\in\mathcal{A}_{n}}1\left\{ \alpha=a\right\} \pi_{a}\left(\boldsymbol{X}_{i},Y_{i0}\right)
+\]
+
+\begin{itemize}
+\item In principle ``sieve space'' $\mathcal{A}_{n}$ grows with $n$
+\item Type probabilities
+\[
+\pi_{a}=\frac{\exp\left(\delta_{0a}+\delta_{1a}Y_{i0}+\boldsymbol{X}_{i}\zeta_{a}\right)}{\sum_{l\in\mathcal{A}_{n}}\exp\left(\delta_{0l}+\delta_{1l}Y_{i0}+\boldsymbol{X}_{i}\zeta_{l}\right)}
+\]
+\end{itemize}
+
+\pause{}
+
+Bonhomme and Manresa (2015, Ecta): ``Grouped fixed effects''
+\begin{itemize}
+\item Treat type assignments as parameters to be estimated instead of random
+variables
+\item Bonhomme, Lamadon, Manresa (2017): requires bias correction when viewed
+as sieve
+\end{itemize}
+\end{frame}
+
+\end{document}

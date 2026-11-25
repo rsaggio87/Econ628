@@ -8,7 +8,7 @@
 # One-shot `latexmk` builds every deck listed here.
 # NOTE: -pvc requires exactly one filename, so name the deck explicitly:
 #   latexmk -pdf -pvc 6---Instrumental-Variables.tex
-@default_files = ('6---Instrumental-Variables.tex', '11---Sample-Selection-Models.tex');
+@default_files = ('6---Instrumental-Variables.tex', '8---Panel.tex', '11---Sample-Selection-Models.tex');
 
 $pdf_mode = 1;
 
