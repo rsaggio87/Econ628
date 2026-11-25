@@ -1,9 +1,10 @@
 # Building the slide decks
 
 Edit `6---Instrumental-Variables.tex` (figures in `assets/6/`),
-`8---Panel.tex` (figures in `assets/8/`) or
-`11---Sample-Selection-Models.tex` (figures in `assets/11/`). Shared
-commands are in `assets/Macros.tex`.
+`8---Panel.tex` (figures in `aux/`, which is local-only and not in the
+repo) or `11---Sample-Selection-Models.tex` (figures in `assets/11/`).
+Shared commands are in `assets/Macros.tex`; `8---Panel.tex` instead
+inputs the local root `Macros.tex`, an identical copy.
 
 From this folder, compile every deck with:
 

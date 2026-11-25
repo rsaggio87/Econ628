@@ -48,7 +48,7 @@
 \usepackage{verbatim}
 \usepackage{booktabs, multicol, multirow}
 \setcounter{MaxMatrixCols}{10}
-\input{assets/Macros.tex}
+\input{Macros.tex}
 \AtBeginSection[]
 {
   \begin{frame}[noframenumbering]
@@ -189,7 +189,7 @@ y_{i1} = \beta x_{i1} + \eta_{i} + v_{i1}
 
 \begin{frame}[plain]{A Famous Example: Ashenfelter and Krueger (1994, AER)}
 \centering
-\includegraphics[scale=0.4]{assets/8/twins}
+\includegraphics[scale=0.4]{aux/twins}
 \\
 Twins Days Festival, a Festival in Twinsburg, Ohio
 \end{frame}
@@ -210,12 +210,12 @@ Twins Days Festival, a Festival in Twinsburg, Ohio
 %%%%%%%%
 \begin{frame}[plain]{Summary Stats}
 \centering
-\includegraphics[scale=0.4]{assets/8/ak1}
+\includegraphics[scale=0.4]{aux/ak1}
 \end{frame}
 %%%%%%%%
 \begin{frame}[plain]{Results}
 \centering
-\includegraphics[scale=0.4]{assets/8/ak2}
+\includegraphics[scale=0.4]{aux/ak2}
 \be
 w_{it} = \alpha_{i} + \beta X_{it} + \varepsilon_{it}
 \ee
@@ -397,7 +397,7 @@ as one with $T<<N$ nuisance params $\left\{ \lambda_{t}\right\} _{t=1}^{T}$
 \begin{frame}[plain]{CRE Identification}
 
 \begin{itemize}
-\item Collect $\left\{ \pi_{tk}\right\} _{t=1,t'=1}^{T,T}$ into $T\times T$
+\item Collect $\left\{ \pi_{tt'}\right\} _{t=1,t'=1}^{T,T}$ into $T\times T$
 matrix $\boldsymbol{\Pi}$ of RF coefficients
 \item FE model implies:
 \[
